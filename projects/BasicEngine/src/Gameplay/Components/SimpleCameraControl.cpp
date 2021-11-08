@@ -25,21 +25,45 @@ void SimpleCameraControl::Awake() {
 
 void SimpleCameraControl::Update(float deltaTime)
 {
-	if (glfwGetMouseButton(_window, 0)) {
+	/*if (glfwGetMouseButton(_window, 0)) {
 		if (_isMousePressed == false) {
 			glfwGetCursorPos(_window, &_prevMousePos.x, &_prevMousePos.y);
 		}
 		_isMousePressed = true;
 	} else {
 		_isMousePressed = false;
+	}*/
+
+	if (glfwGetKey(_window, GLFW_KEY_M) && _allowMouse == false) {
+		_isMousePressed = !_isMousePressed;
+		_allowMouse = true;
+		std::cout << "Chaning mouse tyhing\n";
 	}
+	else if (!glfwGetKey(_window, GLFW_KEY_M)){
+		_allowMouse = false;
+	}
+
+	//_isMousePressed = true;
 
 	if (_isMousePressed) {
 		glm::dvec2 currentMousePos;
 		glfwGetCursorPos(_window, &currentMousePos.x, &currentMousePos.y);
 
-		_currentRot.x += static_cast<float>(currentMousePos.x - _prevMousePos.x) * _mouseSensitivity.x;
-		_currentRot.y += static_cast<float>(currentMousePos.y - _prevMousePos.y) * _mouseSensitivity.y;
+		int wsizex, wsizey;
+
+		glfwGetWindowSize(_window, &wsizex, &wsizey);
+
+		float centerx = (wsizex / 2);
+		float centery = (wsizey / 2);
+
+		float xoffset = centerx - currentMousePos.x;
+		float yoffset = centery - currentMousePos.y;
+
+		glfwSetCursorPos(_window, centerx, centery);
+		glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+
+		_currentRot.x += static_cast<float>(xoffset) * _mouseSensitivity.x;  //_currentRot.x += static_cast<float>(currentMousePos.x - _prevMousePos.x) * _mouseSensitivity.x;
+		_currentRot.y += static_cast<float>(yoffset) * _mouseSensitivity.y;
 		glm::quat rotX = glm::angleAxis(glm::radians(_currentRot.x), glm::vec3(0, 0, 1));
 		glm::quat rotY = glm::angleAxis(glm::radians(_currentRot.y), glm::vec3(1, 0, 0));
 		glm::quat currentRot = rotX * rotY;
@@ -74,7 +98,23 @@ void SimpleCameraControl::Update(float deltaTime)
 		input *= deltaTime;
 
 		glm::vec3 worldMovement = currentRot * glm::vec4(input, 1.0f);
-		GetGameObject()->SetPostion(GetGameObject()->GetPosition() + worldMovement);
+		
+		auto _body = GetComponent<Gameplay::Physics::RigidBody>();
+		
+		if (_body == nullptr) {
+			GetGameObject()->SetPostion(GetGameObject()->GetPosition() + worldMovement);
+			return;
+		}
+
+		_body->SetAngularFactor(glm::vec3(0,0,0));
+
+		glm::vec3 physicsMovement = worldMovement;
+		physicsMovement.z = 0;
+
+		_body->ApplyImpulse(glm::vec3(physicsMovement));
+	}
+	else {
+		glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 }
 

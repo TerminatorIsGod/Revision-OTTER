@@ -2,6 +2,8 @@
 
 #include "Utils/ResourceManager/ResourceManager.h"
 
+#include "Gameplay/Material.h"
+
 
 RenderComponent::RenderComponent(const Gameplay::MeshResource::Sptr& mesh, const Gameplay::Material::Sptr& material) :
 	_mesh(mesh), 
@@ -56,4 +58,25 @@ void RenderComponent::RenderImGui() {
 	ImGui::Text("Source:    %s", (_mesh == nullptr || _mesh->Filename.empty()) ? "Generated" : _mesh->Filename.c_str());
 	ImGui::Separator();
 	ImGui::Text("Material:  %s", _material != nullptr ? _material->Name.c_str() : "NULL");
+	/*char setMat[25];
+	ImGui::InputText("Set Material File", setMat, 25);
+	if (ImGui::Button("Set Material")) {
+		
+		Shader::Sptr basicShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
+			{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
+			{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
+		});
+
+		Texture2D::Sptr    textor = ResourceManager::CreateAsset<Texture2D>(setMat);
+
+		Gameplay::Material::Sptr boxMaterial = ResourceManager::CreateAsset<Gameplay::Material>();
+		{
+			boxMaterial->Name = setMat;
+			boxMaterial->MatShader = basicShader;
+			boxMaterial->Texture = textor;
+			boxMaterial->Shininess = 0.1f;
+		}
+
+		
+	}*/
 }
