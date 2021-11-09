@@ -52,6 +52,9 @@
 #include "Gameplay/Components/RenderComponent.h"
 #include "Gameplay/Components/MaterialSwapBehaviour.h"
 
+#include "Gameplay/Components/InventorySystem.h"
+#include "Gameplay/Components/SceneSwapSystem.h"
+
 // Physics
 #include "Gameplay/Physics/RigidBody.h"
 #include "Gameplay/Physics/Colliders/BoxCollider.h"
@@ -255,13 +258,16 @@ int main() {
 	ComponentManager::RegisterType<TriggerVolumeEnterBehaviour>();
 	ComponentManager::RegisterType<SimpleCameraControl>();
 
+	ComponentManager::RegisterType<InventorySystem>();
+	ComponentManager::RegisterType<SceneSwapSystem>();
+
 	// GL states, we'll enable depth testing and backface fulling
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
-	bool loadScene = true;
+	bool loadScene = false;
 	// For now we can use a toggle to generate our scene vs load from file
 	if (loadScene) {
 		ResourceManager::LoadManifest("manifest.json");
@@ -358,6 +364,8 @@ int main() {
 			//add physics body
 			RigidBody::Sptr physics = camera->Add<RigidBody>(RigidBodyType::Dynamic);
 			physics->AddCollider(SphereCollider::Create());
+
+			InventorySystem::Sptr inven = camera->Add<InventorySystem>();
 		}
 
 		// Set up all our sample objects
