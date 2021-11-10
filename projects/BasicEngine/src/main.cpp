@@ -55,11 +55,15 @@
 #include "Gameplay/Components/InventorySystem.h"
 #include "Gameplay/Components/SceneSwapSystem.h"
 
+#include "Gameplay/Components/NavNode.h"
+#include "Gameplay/Components/pathfindingManager.h"
+
 // Physics
 #include "Gameplay/Physics/RigidBody.h"
 #include "Gameplay/Physics/Colliders/BoxCollider.h"
 #include "Gameplay/Physics/Colliders/PlaneCollider.h"
 #include "Gameplay/Physics/Colliders/SphereCollider.h"
+#include "Gameplay/Physics/Colliders/CapsuleCollider.h"
 #include "Gameplay/Physics/Colliders/ConvexMeshCollider.h"
 #include "Gameplay/Physics/TriggerVolume.h"
 #include "Graphics/DebugDraw.h"
@@ -84,23 +88,23 @@
 void GlDebugMessage(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
 	std::string sourceTxt;
 	switch (source) {
-		case GL_DEBUG_SOURCE_API: sourceTxt = "DEBUG"; break;
-		case GL_DEBUG_SOURCE_WINDOW_SYSTEM: sourceTxt = "WINDOW"; break;
-		case GL_DEBUG_SOURCE_SHADER_COMPILER: sourceTxt = "SHADER"; break;
-		case GL_DEBUG_SOURCE_THIRD_PARTY: sourceTxt = "THIRD PARTY"; break;
-		case GL_DEBUG_SOURCE_APPLICATION: sourceTxt = "APP"; break;
-		case GL_DEBUG_SOURCE_OTHER: default: sourceTxt = "OTHER"; break;
+	case GL_DEBUG_SOURCE_API: sourceTxt = "DEBUG"; break;
+	case GL_DEBUG_SOURCE_WINDOW_SYSTEM: sourceTxt = "WINDOW"; break;
+	case GL_DEBUG_SOURCE_SHADER_COMPILER: sourceTxt = "SHADER"; break;
+	case GL_DEBUG_SOURCE_THIRD_PARTY: sourceTxt = "THIRD PARTY"; break;
+	case GL_DEBUG_SOURCE_APPLICATION: sourceTxt = "APP"; break;
+	case GL_DEBUG_SOURCE_OTHER: default: sourceTxt = "OTHER"; break;
 	}
 	switch (severity) {
-		case GL_DEBUG_SEVERITY_LOW:          LOG_INFO("[{}] {}", sourceTxt, message); break;
-		case GL_DEBUG_SEVERITY_MEDIUM:       LOG_WARN("[{}] {}", sourceTxt, message); break;
-		case GL_DEBUG_SEVERITY_HIGH:         LOG_ERROR("[{}] {}", sourceTxt, message); break;
-			#ifdef LOG_GL_NOTIFICATIONS
-		case GL_DEBUG_SEVERITY_NOTIFICATION: LOG_INFO("[{}] {}", sourceTxt, message); break;
-			#endif
-		default: break;
+	case GL_DEBUG_SEVERITY_LOW:          LOG_INFO("[{}] {}", sourceTxt, message); break;
+	case GL_DEBUG_SEVERITY_MEDIUM:       LOG_WARN("[{}] {}", sourceTxt, message); break;
+	case GL_DEBUG_SEVERITY_HIGH:         LOG_ERROR("[{}] {}", sourceTxt, message); break;
+#ifdef LOG_GL_NOTIFICATIONS
+	case GL_DEBUG_SEVERITY_NOTIFICATION: LOG_INFO("[{}] {}", sourceTxt, message); break;
+#endif
+	default: break;
 	}
-}  
+}
 
 // Stores our GLFW window in a global variable for now
 GLFWwindow* window;
@@ -139,7 +143,7 @@ bool initGLFW() {
 	//Create a new GLFW window and make it current
 	window = glfwCreateWindow(windowSize.x, windowSize.y, windowTitle.c_str(), nullptr, nullptr);
 	glfwMakeContextCurrent(window);
-	
+
 	// Set our window resized callback
 	glfwSetWindowSizeCallback(window, GlfwWindowResizedCallback);
 
@@ -218,6 +222,26 @@ bool DrawLightImGui(const Scene::Sptr& scene, const char* title, int ix) {
 	return result;
 }
 
+void createNavNode(glm::vec3 pos, MeshResource::Sptr mesh, Material::Sptr material) {
+
+	GameObject::Sptr navNode = scene->CreateGameObject("Node " + std::to_string(scene->navNodes.size() + 1));
+	{
+		// Set position in the scene
+		navNode->SetPostion(pos);
+
+		// Create and attach a renderer
+		RenderComponent::Sptr renderer = navNode->Add<RenderComponent>();
+		renderer->SetMesh(mesh);
+		renderer->SetMaterial(material);
+
+		NavNode::Sptr behaviour = navNode->Add<NavNode>();
+
+		scene->navNodes.push_back(navNode);
+	}
+}
+
+
+
 int main() {
 	Logger::Init(); // We'll borrow the logger from the toolkit, but we need to initialize it
 
@@ -257,6 +281,8 @@ int main() {
 	ComponentManager::RegisterType<MaterialSwapBehaviour>();
 	ComponentManager::RegisterType<TriggerVolumeEnterBehaviour>();
 	ComponentManager::RegisterType<SimpleCameraControl>();
+	ComponentManager::RegisterType<NavNode>();
+	ComponentManager::RegisterType<pathfindingManager>();
 
 	ComponentManager::RegisterType<InventorySystem>();
 	ComponentManager::RegisterType<SceneSwapSystem>();
@@ -276,33 +302,39 @@ int main() {
 		// Call scene awake to start up all of our components
 		scene->Window = window;
 		scene->Awake();
-	} 
+	}
 	else {
 		// This time we'll have 2 different shaders, and share data between both of them using the UBO
 		// This shader will handle reflective materials
 		Shader::Sptr reflectiveShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
-			{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },  
-			{ ShaderPartType::Fragment, "shaders/frag_environment_reflective.glsl" }  
-		}); 
+			{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
+			{ ShaderPartType::Fragment, "shaders/frag_environment_reflective.glsl" }
+		});
 
 		// This shader handles our basic materials without reflections (cause they expensive)
 		Shader::Sptr basicShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
 			{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
 			{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
 		});
-		
 
+		//Meshes
 		MeshResource::Sptr monkeyMesh = ResourceManager::CreateAsset<MeshResource>("Monkey.obj");
+		MeshResource::Sptr mapMesh = ResourceManager::CreateAsset<MeshResource>("map.obj");
+		MeshResource::Sptr navNodeMesh = ResourceManager::CreateAsset<MeshResource>("Puck.obj");
+
+		//Textures
 		Texture2D::Sptr    boxTexture = ResourceManager::CreateAsset<Texture2D>("textures/box-diffuse.png");
-		Texture2D::Sptr    monkeyTex  = ResourceManager::CreateAsset<Texture2D>("textures/monkey-uvMap.png");  
+		Texture2D::Sptr    monkeyTex = ResourceManager::CreateAsset<Texture2D>("textures/monkey-uvMap.png");
+		Texture2D::Sptr    pinkTex = ResourceManager::CreateAsset<Texture2D>("textures/pink.jpg");
+		Texture2D::Sptr    whiteTex = ResourceManager::CreateAsset<Texture2D>("textures/white.jpg");
 
 		// Here we'll load in the cubemap, as well as a special shader to handle drawing the skybox
 		TextureCube::Sptr testCubemap = ResourceManager::CreateAsset<TextureCube>("cubemaps/ocean/ocean.jpg");
 		Shader::Sptr      skyboxShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
 			{ ShaderPartType::Vertex, "shaders/skybox_vert.glsl" },
 			{ ShaderPartType::Fragment, "shaders/skybox_frag.glsl" }
-		});   
-		 
+		});
+
 		// Create an empty scene
 		scene = std::make_shared<Scene>();
 
@@ -317,31 +349,47 @@ int main() {
 		Material::Sptr boxMaterial = ResourceManager::CreateAsset<Material>();
 		{
 			boxMaterial->Name = "Box";
-			boxMaterial->MatShader = basicShader; 
+			boxMaterial->MatShader = basicShader;
 			boxMaterial->Texture = boxTexture;
-			boxMaterial->Shininess = 0.1f;  
-		}	
-		 
+			boxMaterial->Shininess = 0.1f;
+		}
+
 		// This will be the reflective material, we'll make the whole thing 90% reflective
 		Material::Sptr monkeyMaterial = ResourceManager::CreateAsset<Material>();
 		{
 			monkeyMaterial->Name = "Monkey";
 			monkeyMaterial->MatShader = reflectiveShader;
-			monkeyMaterial->Texture = monkeyTex; 
+			monkeyMaterial->Texture = monkeyTex;
 			monkeyMaterial->Shininess = 1.0f;
 
 		}
 
+		Material::Sptr pinkMaterial = ResourceManager::CreateAsset<Material>();
+		{
+			pinkMaterial->Name = "Pink";
+			pinkMaterial->MatShader = basicShader;
+			pinkMaterial->Texture = pinkTex;
+			pinkMaterial->Shininess = 1.0f;
+		}
+
+		Material::Sptr whiteMaterial = ResourceManager::CreateAsset<Material>();
+		{
+			whiteMaterial->Name = "White";
+			whiteMaterial->MatShader = basicShader;
+			whiteMaterial->Texture = whiteTex;
+			whiteMaterial->Shininess = 1.0f;
+		}
+
 		// Create some lights for our scene
 		scene->Lights.resize(3);
-		scene->Lights[0].Position = glm::vec3(0.0f, 1.0f, 3.0f);
+		scene->Lights[0].Position = glm::vec3(0.0f, 30.0f, 3.0f);
 		scene->Lights[0].Color = glm::vec3(1.0f, 1.0f, 1.0f);
 		scene->Lights[0].Range = 100.0f;
 
 		scene->Lights[1].Position = glm::vec3(1.0f, 0.0f, 3.0f);
 		scene->Lights[1].Color = glm::vec3(0.2f, 0.8f, 0.1f);
 
-		scene->Lights[2].Position = glm::vec3(0.0f, 1.0f, 3.0f);
+		scene->Lights[2].Position = glm::vec3(0.0f, 0.0f, 3.0f);
 		scene->Lights[2].Color = glm::vec3(1.0f, 0.2f, 0.1f);
 
 		// We'll create a mesh that is a simple plane that we can resize later
@@ -350,9 +398,9 @@ int main() {
 		planeMesh->GenerateMesh();
 
 		// Set up the scene's camera
-		GameObject::Sptr camera = scene->CreateGameObject("Main Camera");
+		GameObject::Sptr camera = scene->CreateGameObject("Main Camera"); //At some point the camera should be seperate from player, and parented to it.
 		{
-			camera->SetPostion(glm::vec3(5.0f));
+			camera->SetPostion(glm::vec3(5.0f, -5.0f, 5.0f));
 			camera->LookAt(glm::vec3(0.0f));
 
 			camera->Add<SimpleCameraControl>();
@@ -363,7 +411,9 @@ int main() {
 
 			//add physics body
 			RigidBody::Sptr physics = camera->Add<RigidBody>(RigidBodyType::Dynamic);
-			physics->AddCollider(SphereCollider::Create());
+			//physics->AddCollider(CapsuleCollider::Create(3.0f, 6.0f));
+			physics->AddCollider(SphereCollider::Create(6.0f));
+
 
 			InventorySystem::Sptr inven = camera->Add<InventorySystem>();
 		}
@@ -371,19 +421,20 @@ int main() {
 		// Set up all our sample objects
 		GameObject::Sptr plane = scene->CreateGameObject("Plane");
 		{
+			//plane->SetScale()
 			// Make a big tiled mesh
 			MeshResource::Sptr tiledMesh = ResourceManager::CreateAsset<MeshResource>();
 			tiledMesh->AddParam(MeshBuilderParam::CreatePlane(ZERO, UNIT_Z, UNIT_X, glm::vec2(100.0f), glm::vec2(20.0f)));
 			tiledMesh->GenerateMesh();
 
 			// Create and attach a RenderComponent to the object to draw our mesh
-			RenderComponent::Sptr renderer = plane->Add<RenderComponent>();
-			renderer->SetMesh(tiledMesh);
-			renderer->SetMaterial(boxMaterial);
+			//RenderComponent::Sptr renderer = plane->Add<RenderComponent>();
+			//renderer->SetMesh(tiledMesh);
+			//renderer->SetMaterial(boxMaterial);
 
 			// Attach a plane collider that extends infinitely along the X/Y axis
 			RigidBody::Sptr physics = plane->Add<RigidBody>(/*static by default*/);
-			physics->AddCollider(BoxCollider::Create(glm::vec3(50.0f, 50.0f, 1.0f)))->SetPosition({0,0,-1});
+			physics->AddCollider(BoxCollider::Create(glm::vec3(50.0f, 50.0f, 1.0f)))->SetPosition({ 0,0,-1 });
 		}
 
 		GameObject::Sptr square = scene->CreateGameObject("Square");
@@ -402,47 +453,79 @@ int main() {
 			// physics bodies attached!
 		}
 
-		GameObject::Sptr monkey1 = scene->CreateGameObject("Monkey 1");
+		// Set up all our sample objects
+		GameObject::Sptr map = scene->CreateGameObject("Map");
 		{
-			// Set position in the scene
-			monkey1->SetPostion(glm::vec3(1.5f, 0.0f, 1.0f));
+			// Scale up the plane
+			map->SetScale(glm::vec3(4.0f, 4.0f, 4.0f));
+			map->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
+			// Create and attach a RenderComponent to the object to draw our mesh
+			RenderComponent::Sptr renderer = map->Add<RenderComponent>();
+			renderer->SetMesh(mapMesh);
+			renderer->SetMaterial(whiteMaterial);
 
-			// Add some behaviour that relies on the physics body
-			monkey1->Add<JumpBehaviour>();
-
-			// Create and attach a renderer for the monkey
-			RenderComponent::Sptr renderer = monkey1->Add<RenderComponent>();
-			renderer->SetMesh(monkeyMesh);
-			renderer->SetMaterial(monkeyMaterial);
-
-			// Add a dynamic rigid body to this monkey
-			RigidBody::Sptr physics = monkey1->Add<RigidBody>(RigidBodyType::Dynamic);
-			physics->AddCollider(ConvexMeshCollider::Create());
+			// Attach a plane collider that extends infinitely along the X/Y axis
+			//RigidBody::Sptr physics = plane->Add<RigidBody>(/*static by default*/);
+			//physics->AddCollider(PlaneCollider::Create());
 		}
 
-		GameObject::Sptr monkey2 = scene->CreateGameObject("Complex Object");
+		//Generate Nodes
+		for (int x = -2; x < 5; x++)
 		{
-			// Set and rotation position in the scene
-			monkey2->SetPostion(glm::vec3(-1.5f, 0.0f, 1.0f));
-			monkey2->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
-
-			// Add a render component
-			RenderComponent::Sptr renderer = monkey2->Add<RenderComponent>();
-			renderer->SetMesh(monkeyMesh);
-			renderer->SetMaterial(boxMaterial);
-
-			// This is an example of attaching a component and setting some parameters
-			RotatingBehaviour::Sptr behaviour = monkey2->Add<RotatingBehaviour>();
-			behaviour->RotationSpeed = glm::vec3(0.0f, 0.0f, -90.0f);
+			for (int y = -2; y < 5; y++)
+			{
+				createNavNode(glm::vec3(x * 5, y * 5, 1.0f), navNodeMesh, pinkMaterial);
+			}
 		}
+
+
+		//Create pathfindingManager, and send it the list of nodes
+		GameObject::Sptr PathfindingManager = scene->CreateGameObject("Pathfinding Manager");
+		{
+			pathfindingManager::Sptr behaviour = PathfindingManager->Add<pathfindingManager>();
+		}
+
+		//GameObject::Sptr monkey1 = scene->CreateGameObject("Monkey 1");
+		//{
+		//	// Set position in the scene
+		//	monkey1->SetPostion(glm::vec3(1.5f, 0.0f, 1.0f));
+
+		//	// Add some behaviour that relies on the physics body
+		//	monkey1->Add<JumpBehaviour>();
+
+		//	// Create and attach a renderer for the monkey
+		//	RenderComponent::Sptr renderer = monkey1->Add<RenderComponent>();
+		//	renderer->SetMesh(monkeyMesh);
+		//	renderer->SetMaterial(monkeyMaterial);
+
+		//	// Add a dynamic rigid body to this monkey
+		//	RigidBody::Sptr physics = monkey1->Add<RigidBody>(RigidBodyType::Dynamic);
+		//	physics->AddCollider(ConvexMeshCollider::Create());
+		//}
+
+		//GameObject::Sptr monkey2 = scene->CreateGameObject("Complex Object");
+		//{
+		//	// Set and rotation position in the scene
+		//	monkey2->SetPostion(glm::vec3(-1.5f, 0.0f, 1.0f));
+		//	monkey2->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
+
+		//	// Add a render component
+		//	RenderComponent::Sptr renderer = monkey2->Add<RenderComponent>();
+		//	renderer->SetMesh(monkeyMesh);
+		//	renderer->SetMaterial(boxMaterial);
+
+		//	// This is an example of attaching a component and setting some parameters
+		//	RotatingBehaviour::Sptr behaviour = monkey2->Add<RotatingBehaviour>();
+		//	behaviour->RotationSpeed = glm::vec3(0.0f, 0.0f, -90.0f);
+		//}
 
 		// Kinematic rigid bodies are those controlled by some outside controller
 		// and ONLY collide with dynamic objects
-		RigidBody::Sptr physics = monkey2->Add<RigidBody>(RigidBodyType::Kinematic);
-		physics->AddCollider(ConvexMeshCollider::Create());
+		//RigidBody::Sptr physics = monkey2->Add<RigidBody>(RigidBodyType::Kinematic);
+		//physics->AddCollider(ConvexMeshCollider::Create());
 
 		// Create a trigger volume for testing how we can detect collisions with objects!
-		GameObject::Sptr trigger = scene->CreateGameObject("Trigger"); 
+		GameObject::Sptr trigger = scene->CreateGameObject("Trigger");
 		{
 			TriggerVolume::Sptr volume = trigger->Add<TriggerVolume>();
 			BoxCollider::Sptr collider = BoxCollider::Create(glm::vec3(3.0f, 3.0f, 1.0f));
@@ -466,8 +549,8 @@ int main() {
 	// We'll use this to allow editing the save/load path
 	// via ImGui, note the reserve to allocate extra space
 	// for input!
-	std::string scenePath = "scene.json"; 
-	scenePath.reserve(256); 
+	std::string scenePath = "scene.json";
+	scenePath.reserve(256);
 
 	bool isRotating = true;
 	float rotateSpeed = 90.0f;
@@ -587,18 +670,18 @@ int main() {
 		if (isDebugWindowOpen) {
 			scene->DrawAllGameObjectGUIs();
 		}
-		
+
 		// The current material that is bound for rendering
 		Material::Sptr currentMat = nullptr;
 		Shader::Sptr shader = nullptr;
 
 		TextureCube::Sptr environment = scene->GetSkyboxTexture();
-		if (environment) environment->Bind(0); 
+		if (environment) environment->Bind(0);
 
 		// Render all our objects
 		ComponentManager::Each<RenderComponent>([&](const RenderComponent::Sptr& renderable) {
 			// Early bail if mesh not set
-			if (renderable->GetMesh() == nullptr) { 
+			if (renderable->GetMesh() == nullptr) {
 				return;
 			}
 
@@ -607,7 +690,8 @@ int main() {
 			if (renderable->GetMaterial() == nullptr) {
 				if (scene->DefaultMaterial != nullptr) {
 					renderable->SetMaterial(scene->DefaultMaterial);
-				} else {
+				}
+				else {
 					return;
 				}
 			}
@@ -633,7 +717,7 @@ int main() {
 
 			// Draw the object
 			renderable->GetMesh()->Draw();
-		});
+			});
 
 		// Use our cubemap to draw our skybox
 		scene->DrawSkybox();

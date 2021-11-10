@@ -6,7 +6,7 @@
 
 void SceneSwapSystem::Awake()
 {
-	
+
 }
 
 void SceneSwapSystem::RenderImGui() {
@@ -26,17 +26,17 @@ SceneSwapSystem::SceneSwapSystem() :
 
 SceneSwapSystem::~SceneSwapSystem() = default;
 
-SceneSwapSystem::Sptr SceneSwapSystem::FromJson(const nlohmann::json& blob) {
+SceneSwapSystem::Sptr SceneSwapSystem::FromJson(const nlohmann::json & blob) {
 	//SceneSwapSystem::Sptr result = std::make_shared<SceneSwapSystem>();
 	//result->_scene = blob["scene"];
 	return 0;//result;
 }
 
 void SceneSwapSystem::Update(float deltaTime) {
-	
+
 }
 
-void SceneSwapSystem::swapScene(std::string& path) {
+void SceneSwapSystem::swapScene(std::string & path) {
 	_scene = nullptr;
 
 	std::string newFilename = std::filesystem::path(path).stem().string() + "-manifest.json";

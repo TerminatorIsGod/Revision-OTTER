@@ -22,7 +22,7 @@ public:
 
 	void setScene(Gameplay::Scene::Sptr scene);
 
-	static Gameplay::Scene::Sptr getScene();
+	Gameplay::Scene::Sptr getScene();
 
 public:
 	virtual void RenderImGui() override;

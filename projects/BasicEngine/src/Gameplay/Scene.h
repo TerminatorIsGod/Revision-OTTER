@@ -44,11 +44,12 @@ namespace Gameplay {
 		// Instead of a "base shader", we can specify a default material
 		std::shared_ptr<Material>  DefaultMaterial;
 
-		GLFWwindow*                Window; // another place that can use improvement
+		GLFWwindow* Window; // another place that can use improvement
 
 		// Whether the application is in "play mode", lets us leverage editors!
 		bool                       IsPlaying;
 
+		std::vector<GameObject::Sptr> navNodes;
 
 		Scene();
 		~Scene();
@@ -189,17 +190,17 @@ namespace Gameplay {
 
 	protected:
 		// Bullet physics stuff world
-		btDynamicsWorld*          _physicsWorld;
+		btDynamicsWorld* _physicsWorld;
 		// Our bullet physics configuration
-		btCollisionConfiguration* _collisionConfig; 
+		btCollisionConfiguration* _collisionConfig;
 		// Handles dispatching collisions between objects
-		btCollisionDispatcher*    _collisionDispatcher;
+		btCollisionDispatcher* _collisionDispatcher;
 		// Provides rough broadphase (AABB) checks to improve performance
-		btBroadphaseInterface*    _broadphaseInterface;
+		btBroadphaseInterface* _broadphaseInterface;
 		// Resolves contraints (ex: hinge constraints, angle axis, etc...)
-		btConstraintSolver*       _constraintSolver;
+		btConstraintSolver* _constraintSolver;
 		// this is what allows us to get our pairs from the trigger volumes
-		btGhostPairCallback*      _ghostCallback;
+		btGhostPairCallback* _ghostCallback;
 
 		BulletDebugDraw* _bulletDebugDraw;
 

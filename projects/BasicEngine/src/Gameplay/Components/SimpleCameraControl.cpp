@@ -11,7 +11,7 @@
 SimpleCameraControl::SimpleCameraControl() :
 	IComponent(),
 	_mouseSensitivity({ 0.5f, 0.3f }),
-	_moveSpeeds(glm::vec3(1.0f)),
+	_moveSpeeds(glm::vec3(1600.0f)),
 	_shiftMultipler(2.0f),
 	_currentRot(glm::vec2(0.0f)),
 	_isMousePressed(false)
@@ -39,7 +39,7 @@ void SimpleCameraControl::Update(float deltaTime)
 		_allowMouse = true;
 		std::cout << "Chaning mouse tyhing\n";
 	}
-	else if (!glfwGetKey(_window, GLFW_KEY_M)){
+	else if (!glfwGetKey(_window, GLFW_KEY_M)) {
 		_allowMouse = false;
 	}
 
@@ -73,24 +73,24 @@ void SimpleCameraControl::Update(float deltaTime)
 
 		glm::vec3 input = glm::vec3(0.0f);
 		if (glfwGetKey(_window, GLFW_KEY_W)) {
-			input.z -= _moveSpeeds.x;
+			input.z = -_moveSpeeds.x;
 		}
 		if (glfwGetKey(_window, GLFW_KEY_S)) {
-			input.z += _moveSpeeds.x;
+			input.z = _moveSpeeds.x;
 		}
 		if (glfwGetKey(_window, GLFW_KEY_A)) {
-			input.x -= _moveSpeeds.y;
+			input.x = -_moveSpeeds.y;
 		}
 		if (glfwGetKey(_window, GLFW_KEY_D)) {
-			input.x += _moveSpeeds.y;
+			input.x = _moveSpeeds.y;
 		}
 		if (glfwGetKey(_window, GLFW_KEY_LEFT_CONTROL)) {
-			input.y -= _moveSpeeds.z;
+			input.y = -_moveSpeeds.z;
 		}
 		if (glfwGetKey(_window, GLFW_KEY_SPACE)) {
-			input.y += _moveSpeeds.z;
+			input.y = _moveSpeeds.z;
 		}
-		
+
 		if (glfwGetKey(_window, GLFW_KEY_LEFT_SHIFT)) {
 			input *= _shiftMultipler;
 		}
@@ -98,20 +98,20 @@ void SimpleCameraControl::Update(float deltaTime)
 		input *= deltaTime;
 
 		glm::vec3 worldMovement = currentRot * glm::vec4(input, 1.0f);
-		
+
 		auto _body = GetComponent<Gameplay::Physics::RigidBody>();
-		
+
 		if (_body == nullptr) {
 			GetGameObject()->SetPostion(GetGameObject()->GetPosition() + worldMovement);
 			return;
 		}
 
-		_body->SetAngularFactor(glm::vec3(0,0,0));
+		_body->SetAngularFactor(glm::vec3(0, 0, 0));
 
 		glm::vec3 physicsMovement = worldMovement;
 		physicsMovement.z = 0;
 
-		_body->ApplyImpulse(glm::vec3(physicsMovement));
+		_body->SetLinearVelocity(glm::vec3(physicsMovement));
 	}
 	else {
 		glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -122,7 +122,7 @@ void SimpleCameraControl::RenderImGui()
 {
 	LABEL_LEFT(ImGui::DragFloat2, "Mouse Sensitivity", &_mouseSensitivity.x, 0.01f);
 	LABEL_LEFT(ImGui::DragFloat3, "Move Speed       ", &_moveSpeeds.x, 0.01f, 0.01f);
-	LABEL_LEFT(ImGui::DragFloat , "Shift Multiplier ", &_shiftMultipler, 0.01f, 1.0f);
+	LABEL_LEFT(ImGui::DragFloat, "Shift Multiplier ", &_shiftMultipler, 0.01f, 1.0f);
 }
 
 nlohmann::json SimpleCameraControl::ToJson() const {
@@ -133,10 +133,10 @@ nlohmann::json SimpleCameraControl::ToJson() const {
 	};
 }
 
-SimpleCameraControl::Sptr SimpleCameraControl::FromJson(const nlohmann::json& blob) {
+SimpleCameraControl::Sptr SimpleCameraControl::FromJson(const nlohmann::json & blob) {
 	SimpleCameraControl::Sptr result = std::make_shared<SimpleCameraControl>();
 	result->_mouseSensitivity = ParseJsonVec2(blob["mouse_sensitivity"]);
-	result->_moveSpeeds       = ParseJsonVec3(blob["move_speed"]);
-	result->_shiftMultipler   = JsonGet(blob, "shift_mult", 2.0f);
+	result->_moveSpeeds = ParseJsonVec3(blob["move_speed"]);
+	result->_shiftMultipler = JsonGet(blob, "shift_mult", 2.0f);
 	return result;
 }
