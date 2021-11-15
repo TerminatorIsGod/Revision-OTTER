@@ -115,6 +115,9 @@ glm::ivec2 windowSize = glm::ivec2(800, 800);
 // The title of our GLFW window
 std::string windowTitle = "INFR-1350U";
 
+bool isGamePaused = true;
+bool isGameStarted = false;
+
 // using namespace should generally be avoided, and if used, make sure it's ONLY in cpp files
 using namespace Gameplay;
 using namespace Gameplay::Physics;
@@ -557,8 +560,30 @@ int main() {
 
 	nlohmann::json editorSceneState;
 
+	bool isEscapePressed = false;
+
 	///// Game loop /////
 	while (!glfwWindowShouldClose(window)) {
+
+		//Check to see if pause game
+		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+			if (!isEscapePressed && isGameStarted) {
+				isGamePaused = !isGamePaused;
+			}
+			isEscapePressed = true;
+		}
+		else {
+			isEscapePressed = false;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+			if (!isGameStarted) {
+				isGameStarted = true;
+				isGamePaused = false;
+			}
+		}
+
+
 		glfwPollEvents();
 		ImGuiHelper::StartFrame();
 
@@ -647,7 +672,8 @@ int main() {
 		dt *= playbackSpeed;
 
 		// Perform updates for all components
-		scene->Update(dt);
+		if(!isGamePaused) //doesn't update components if its paused
+			scene->Update(dt);
 
 		// Grab shorthands to the camera and shader from the scene
 		Camera::Sptr camera = scene->MainCamera;
@@ -657,7 +683,8 @@ int main() {
 		DebugDrawer::Get().SetViewProjection(viewProj);
 
 		// Update our worlds physics!
-		scene->DoPhysics(dt);
+		if(!isGamePaused) //doesn't update physics if its paused
+			scene->DoPhysics(dt);
 
 		// Draw object GUIs
 		if (isDebugWindowOpen) {
