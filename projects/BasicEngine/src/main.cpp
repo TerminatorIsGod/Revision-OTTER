@@ -57,6 +57,8 @@
 
 #include "Gameplay/Components/NavNode.h"
 #include "Gameplay/Components/pathfindingManager.h"
+#include "Gameplay/Components/SoundEmmiter.h"
+
 
 // Physics
 #include "Gameplay/Physics/RigidBody.h"
@@ -286,6 +288,8 @@ int main() {
 	ComponentManager::RegisterType<SimpleCameraControl>();
 	ComponentManager::RegisterType<NavNode>();
 	ComponentManager::RegisterType<pathfindingManager>();
+	ComponentManager::RegisterType<SoundEmmiter>();
+
 
 	ComponentManager::RegisterType<InventorySystem>();
 	ComponentManager::RegisterType<SceneSwapSystem>();
@@ -323,7 +327,11 @@ int main() {
 		//Meshes
 		MeshResource::Sptr monkeyMesh = ResourceManager::CreateAsset<MeshResource>("Monkey.obj");
 		MeshResource::Sptr mapMesh = ResourceManager::CreateAsset<MeshResource>("map.obj");
+		MeshResource::Sptr mapCollidersMesh = ResourceManager::CreateAsset<MeshResource>("mapColliders.obj");
+
 		MeshResource::Sptr navNodeMesh = ResourceManager::CreateAsset<MeshResource>("Puck.obj");
+		MeshResource::Sptr soundRingMesh = ResourceManager::CreateAsset<MeshResource>("soundRing.obj");
+
 
 		//Textures
 		Texture2D::Sptr    boxTexture = ResourceManager::CreateAsset<Texture2D>("textures/box-diffuse.png");
@@ -389,8 +397,9 @@ int main() {
 		scene->Lights[0].Color = glm::vec3(1.0f, 1.0f, 1.0f);
 		scene->Lights[0].Range = 100.0f;
 
-		scene->Lights[1].Position = glm::vec3(1.0f, 0.0f, 3.0f);
-		scene->Lights[1].Color = glm::vec3(0.2f, 0.8f, 0.1f);
+		scene->Lights[1].Position = glm::vec3(0.0f, 90.0f, 6.0f);
+		scene->Lights[1].Color = glm::vec3(1.0f, 1.0f, 1.0f);
+		scene->Lights[1].Range = 100.0f;
 
 		scene->Lights[2].Position = glm::vec3(0.0f, 0.0f, 3.0f);
 		scene->Lights[2].Color = glm::vec3(1.0f, 0.2f, 0.1f);
@@ -401,7 +410,8 @@ int main() {
 		planeMesh->GenerateMesh();
 
 		// Set up the scene's camera
-		GameObject::Sptr camera = scene->CreateGameObject("Main Camera"); //At some point the camera should be seperate from player, and parented to it.
+		//At some point the camera should be seperate from player, and parented to it. OR, just make it so the collider doesn't rotate with the transform
+		GameObject::Sptr camera = scene->CreateGameObject("Main Camera");
 		{
 			camera->SetPostion(glm::vec3(5.0f, -5.0f, 5.0f));
 			camera->LookAt(glm::vec3(0.0f));
@@ -415,10 +425,16 @@ int main() {
 			//add physics body
 			RigidBody::Sptr physics = camera->Add<RigidBody>(RigidBodyType::Dynamic);
 			//physics->AddCollider(CapsuleCollider::Create(3.0f, 6.0f));
-			physics->AddCollider(SphereCollider::Create(6.0f));
+			physics->AddCollider(SphereCollider::Create(6.0f)); //Switch to capsule collider ASAP
 
 
 			InventorySystem::Sptr inven = camera->Add<InventorySystem>();
+
+			SoundEmmiter::Sptr emmiter = camera->Add<SoundEmmiter>();
+			emmiter->soundRingMesh = soundRingMesh;
+			emmiter->soundRingMat = pinkMaterial;
+
+
 		}
 
 		// Set up all our sample objects
@@ -472,10 +488,26 @@ int main() {
 			//physics->AddCollider(PlaneCollider::Create());
 		}
 
+		//GameObject::Sptr mapColliders = scene->CreateGameObject("Map");
+		//{
+		//	// Scale up the plane
+		//	mapColliders->SetScale(glm::vec3(4.0f, 4.0f, 4.0f));
+		//	mapColliders->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
+
+		//	// Create and attach a RenderComponent to the object to draw our mesh
+		//	RenderComponent::Sptr renderer = mapColliders->Add<RenderComponent>();
+		//	renderer->SetMesh(mapCollidersMesh);
+		//	renderer->SetMaterial(whiteMaterial);
+
+		//	//Attach a plane collider that extends infinitely along the X/Y axis
+		//	RigidBody::Sptr physics = mapColliders->Add<RigidBody>(/*static by default*/);
+		//	physics->AddCollider(ConvexMeshCollider::Create());
+		//}
+
 		//Generate Nodes
-		for (int x = -2; x < 5; x++)
+		for (int x = -2; x < 8; x++)
 		{
-			for (int y = -2; y < 5; y++)
+			for (int y = -2; y < 8; y++)
 			{
 				createNavNode(glm::vec3(x * 5, y * 5, 1.0f), navNodeMesh, pinkMaterial);
 			}
@@ -487,45 +519,6 @@ int main() {
 		{
 			pathfindingManager::Sptr behaviour = PathfindingManager->Add<pathfindingManager>();
 		}
-
-		//GameObject::Sptr monkey1 = scene->CreateGameObject("Monkey 1");
-		//{
-		//	// Set position in the scene
-		//	monkey1->SetPostion(glm::vec3(1.5f, 0.0f, 1.0f));
-
-		//	// Add some behaviour that relies on the physics body
-		//	monkey1->Add<JumpBehaviour>();
-
-		//	// Create and attach a renderer for the monkey
-		//	RenderComponent::Sptr renderer = monkey1->Add<RenderComponent>();
-		//	renderer->SetMesh(monkeyMesh);
-		//	renderer->SetMaterial(monkeyMaterial);
-
-		//	// Add a dynamic rigid body to this monkey
-		//	RigidBody::Sptr physics = monkey1->Add<RigidBody>(RigidBodyType::Dynamic);
-		//	physics->AddCollider(ConvexMeshCollider::Create());
-		//}
-
-		//GameObject::Sptr monkey2 = scene->CreateGameObject("Complex Object");
-		//{
-		//	// Set and rotation position in the scene
-		//	monkey2->SetPostion(glm::vec3(-1.5f, 0.0f, 1.0f));
-		//	monkey2->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
-
-		//	// Add a render component
-		//	RenderComponent::Sptr renderer = monkey2->Add<RenderComponent>();
-		//	renderer->SetMesh(monkeyMesh);
-		//	renderer->SetMaterial(boxMaterial);
-
-		//	// This is an example of attaching a component and setting some parameters
-		//	RotatingBehaviour::Sptr behaviour = monkey2->Add<RotatingBehaviour>();
-		//	behaviour->RotationSpeed = glm::vec3(0.0f, 0.0f, -90.0f);
-		//}
-
-		// Kinematic rigid bodies are those controlled by some outside controller
-		// and ONLY collide with dynamic objects
-		//RigidBody::Sptr physics = monkey2->Add<RigidBody>(RigidBodyType::Kinematic);
-		//physics->AddCollider(ConvexMeshCollider::Create());
 
 		// Create a trigger volume for testing how we can detect collisions with objects!
 		GameObject::Sptr trigger = scene->CreateGameObject("Trigger");
