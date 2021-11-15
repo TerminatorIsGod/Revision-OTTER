@@ -127,7 +127,7 @@ void SimpleCameraControl::Movement(float deltaTime)
 		_body->SetAngularFactor(glm::vec3(0, 0, 0));
 
 		glm::vec3 physicsMovement = worldMovement;
-		physicsMovement.z = 0;
+		physicsMovement.z = _body->GetLinearVelocity().z;//0;
 
 		_body->SetLinearVelocity(glm::vec3(physicsMovement));
 	}
