@@ -31,7 +31,6 @@ void SimpleCameraControl::Update(float deltaTime)
 	Movement(deltaTime);
 	SwitchState(deltaTime);
 	OxygenSystem(deltaTime);
-
 }
 
 void SimpleCameraControl::Movement(float deltaTime)

@@ -13,6 +13,7 @@ void pathfindingManager::Awake() {
 
 	navNodes = GetGameObject()->GetScene()->navNodes;
 	scene = GetGameObject()->GetScene();
+	_window = scene->Window;
 	UpdateNbors();
 }
 
@@ -30,21 +31,24 @@ pathfindingManager::~pathfindingManager()
 	startNode = nullptr;
 	endNode = nullptr;
 }
-////Pathfinding Stress-test
-//void pathfindingManager::Update(float deltaTime) 
-//{
-//	std::vector<GameObject::Sptr> yo = requestPath(glm::vec3(0, 0, 0), scene->MainCamera->GetGameObject()->GetPosition());
-//
-//	for (int i = 0; i < navNodes.size(); i++)
-//	{
-//		navNodes[i]->SetScale(glm::vec3(1.0f));
-//	}
-//
-//	for (int i = 0; i < yo.size(); i++)
-//	{
-//		yo[i]->SetScale(glm::vec3(2.0f));
-//	}
-//}
+//Pathfinding Stress-test
+void pathfindingManager::Update(float deltaTime)
+{
+	if (glfwGetKey(_window, GLFW_KEY_P))
+	{
+		std::vector<GameObject::Sptr> yo = requestPath(glm::vec3(-30, 0, 3), scene->MainCamera->GetGameObject()->GetPosition());
+
+		for (int i = 0; i < navNodes.size(); i++)
+		{
+			navNodes[i]->SetScale(glm::vec3(1.0f));
+		}
+
+		for (int i = 0; i < yo.size(); i++)
+		{
+			yo[i]->SetScale(glm::vec3(2.0f, 2.0f, 5.0f));
+		}
+	}
+}
 
 
 void pathfindingManager::RenderImGui() {
@@ -95,9 +99,12 @@ void pathfindingManager::UpdateNbors()
 			glm::vec3 dir = navNodes[x]->GetPosition() - navNodes[i]->GetPosition();
 			float dirLength = glm::sqrt((dir.x * dir.x) + (dir.y * dir.y));
 
-			if (dirLength <= nborRange)
+			if (dirLength <= nborRange && dirLength > 0)
 			{
 				btCollisionWorld::ClosestRayResultCallback hit(ToBt(navNodes[i]->GetPosition()), ToBt(navNodes[x]->GetPosition()));
+				//std::cout << "\n " << navNodes[i]->Name << " to " << navNodes[x]->Name;
+				//std::cout << "\n " << dirLength;
+
 				scene->GetPhysicsWorld()->rayTest(ToBt(navNodes[i]->GetPosition()), ToBt(navNodes[x]->GetPosition()), hit);
 
 				//Theres no layer mask like in unity, so enemies being in the way could intefere with raycasts!

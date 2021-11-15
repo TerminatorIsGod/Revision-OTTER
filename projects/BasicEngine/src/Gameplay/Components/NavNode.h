@@ -1,6 +1,7 @@
 #pragma once
 #include "IComponent.h"
 #include "Gameplay/GameObject.h"
+#include "Gameplay/Scene.h"
 
 using namespace Gameplay;
 
@@ -12,6 +13,7 @@ public:
 	typedef std::shared_ptr<NavNode> Sptr;
 
 	NavNode() = default;
+
 	~NavNode()
 	{
 		neighbors.clear();
@@ -29,6 +31,7 @@ public:
 		end,
 		path
 	};
+	Scene::Sptr scene;
 
 	type NodeType = blank;
 	void Reset();

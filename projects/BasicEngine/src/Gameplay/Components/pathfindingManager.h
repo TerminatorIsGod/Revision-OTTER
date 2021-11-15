@@ -1,6 +1,7 @@
 #pragma once
 #include "IComponent.h"
 #include "Gameplay/GameObject.h"
+struct GLFWwindow;
 
 using namespace Gameplay;
 
@@ -20,8 +21,10 @@ public:
 	GameObject::Sptr startNode, endNode;
 
 	glm::vec3 speed = glm::vec3(0.0f);
-	float nborRange = 10.0f;
+	float nborRange = 15.0f;
 	Scene* scene;
+	GLFWwindow* _window;
+
 	int cIndex = 0;
 	bool calculatingPath = false;
 
@@ -44,7 +47,7 @@ public:
 
 	//General Functions
 	virtual void Awake() override;
-	//virtual void Update(float deltaTime) override;
+	virtual void Update(float deltaTime) override;
 
 
 	virtual void RenderImGui() override;

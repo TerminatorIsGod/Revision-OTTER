@@ -25,7 +25,7 @@ public:
 	float lerpSpeed;
 
 	Scene* scene;
-	MeshResource::Sptr soundRingMesh;
+	MeshResource::Sptr soundRingMesh = ResourceManager::CreateAsset<MeshResource>("soundRing.obj");
 	Material::Sptr soundRingMat;
 
 	bool isDecaying = true;

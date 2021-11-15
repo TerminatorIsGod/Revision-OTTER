@@ -7,6 +7,21 @@ void SoundEmmiter::Awake()
 {
 	lerpSpeed = attackSpeed;
 
+	Shader::Sptr basicShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
+		{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
+		{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
+	});
+
+	Texture2D::Sptr    pinkTex = ResourceManager::CreateAsset<Texture2D>("textures/pink.jpg");
+
+	Material::Sptr pinkMaterial = ResourceManager::CreateAsset<Material>();
+	{
+		pinkMaterial->Name = "Pink";
+		pinkMaterial->MatShader = basicShader;
+		pinkMaterial->Texture = pinkTex;
+		pinkMaterial->Shininess = 1.0f;
+	}
+
 	scene = GetGameObject()->GetScene();
 	soundRing = scene->CreateGameObject("Sound Ring");
 	{
@@ -16,7 +31,7 @@ void SoundEmmiter::Awake()
 		//Create and attach a render component
 		RenderComponent::Sptr renderer = soundRing->Add<RenderComponent>();
 		renderer->SetMesh(soundRingMesh);
-		renderer->SetMaterial(soundRingMat);
+		renderer->SetMaterial(pinkMaterial);
 	}
 
 	scene->soundEmmiters.push_back(soundRing);

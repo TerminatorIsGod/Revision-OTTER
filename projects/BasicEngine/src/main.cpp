@@ -226,10 +226,10 @@ bool DrawLightImGui(const Scene::Sptr& scene, const char* title, int ix) {
 	ImGui::PopID();
 	return result;
 }
-
+int nodeCount = 0;
 void createNavNode(glm::vec3 pos, MeshResource::Sptr mesh, Material::Sptr material) {
-
-	GameObject::Sptr navNode = scene->CreateGameObject("Node " + std::to_string(scene->navNodes.size() + 1));
+	nodeCount++;
+	GameObject::Sptr navNode = scene->CreateGameObject("Node " + std::to_string(nodeCount));
 	{
 		// Set position in the scene
 		navNode->SetPostion(pos);
@@ -241,7 +241,6 @@ void createNavNode(glm::vec3 pos, MeshResource::Sptr mesh, Material::Sptr materi
 
 		NavNode::Sptr behaviour = navNode->Add<NavNode>();
 
-		scene->navNodes.push_back(navNode);
 	}
 }
 
@@ -300,11 +299,11 @@ int main() {
 	glCullFace(GL_BACK);
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
-	bool loadScene = false;
+	bool loadScene = true;
 	// For now we can use a toggle to generate our scene vs load from file
 	if (loadScene) {
 		ResourceManager::LoadManifest("manifest.json");
-		scene = Scene::Load("scene.json");
+		scene = Scene::Load("demoscene.json");
 
 		// Call scene awake to start up all of our components
 		scene->Window = window;
@@ -330,7 +329,6 @@ int main() {
 		MeshResource::Sptr mapCollidersMesh = ResourceManager::CreateAsset<MeshResource>("mapColliders.obj");
 
 		MeshResource::Sptr navNodeMesh = ResourceManager::CreateAsset<MeshResource>("Puck.obj");
-		MeshResource::Sptr soundRingMesh = ResourceManager::CreateAsset<MeshResource>("soundRing.obj");
 
 
 		//Textures
@@ -431,7 +429,6 @@ int main() {
 			InventorySystem::Sptr inven = camera->Add<InventorySystem>();
 
 			SoundEmmiter::Sptr emmiter = camera->Add<SoundEmmiter>();
-			emmiter->soundRingMesh = soundRingMesh;
 			emmiter->soundRingMat = pinkMaterial;
 
 
@@ -672,7 +669,7 @@ int main() {
 		dt *= playbackSpeed;
 
 		// Perform updates for all components
-		if(!isGamePaused) //doesn't update components if its paused
+		if (!isGamePaused) //doesn't update components if its paused
 			scene->Update(dt);
 
 		// Grab shorthands to the camera and shader from the scene
@@ -683,7 +680,7 @@ int main() {
 		DebugDrawer::Get().SetViewProjection(viewProj);
 
 		// Update our worlds physics!
-		if(!isGamePaused) //doesn't update physics if its paused
+		if (!isGamePaused) //doesn't update physics if its paused
 			scene->DoPhysics(dt);
 
 		// Draw object GUIs
