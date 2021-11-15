@@ -16,6 +16,20 @@ void pathfindingManager::Awake() {
 	UpdateNbors();
 }
 
+pathfindingManager::~pathfindingManager()
+{
+	for (int i = 0; i < navNodes.size(); i++)
+	{
+		navNodes[i]->Get<NavNode>()->neighbors.clear();
+	}
+
+	navNodes.clear();
+	openSet.clear();
+	closedSet.clear();
+	pathSet.clear();
+	startNode = nullptr;
+	endNode = nullptr;
+}
 ////Pathfinding Stress-test
 //void pathfindingManager::Update(float deltaTime) 
 //{
@@ -57,6 +71,7 @@ float SquareMagnitude(glm::vec3 dir)
 	float dirLength = (dir.x * dir.x) + (dir.y * dir.y);
 	return dirLength;
 }
+
 
 void pathfindingManager::resetGrid()
 {

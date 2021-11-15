@@ -1,6 +1,7 @@
 #pragma once
 #include "IComponent.h"
 #include "Gameplay/Physics/RigidBody.h"
+#include "Gameplay/Components/SoundEmmiter.h"
 
 struct GLFWwindow;
 
@@ -24,6 +25,17 @@ public:
 	virtual nlohmann::json ToJson() const override;
 	static SimpleCameraControl::Sptr FromJson(const nlohmann::json& blob);
 
+	void Movement(float deltaTime);
+	void OxygenSystem(float deltaTime);
+	void SwitchState(float deltaTime);
+
+	void IdleState(float deltaTime);
+	void SneakState(float deltaTime);
+	void WalkState(float deltaTime);
+	void RunState(float deltaTime);
+
+	void SetSpeed(float newSpeed);
+
 protected:
 	float _shiftMultipler;
 	glm::vec2 _mouseSensitivity;
@@ -35,4 +47,34 @@ protected:
 
 	bool _isMousePressed = false;
 	GLFWwindow* _window;
+
+	//Player State Stuff
+	enum PlayerState
+	{
+		Idle,
+		Sneak,
+		Walk,
+		Run
+	};
+
+	PlayerState playerState = Idle;
+
+	float sneakSpeed = 4.0f;
+	float walkSpeed = 6.0f;
+	float runSpeed = 8.0f;
+
+	float idleTimerDefault = 2.0f;
+	float idleTimer = idleTimerDefault;
+	bool inhale = false;
+
+	//Oxygen Stuff
+	float chokeVol = 12.0f;
+	float replenishVol = 10.0f;
+	float oxygenMeterMax = 60.0f;
+	float oxygenMeter = oxygenMeterMax;
+	float oxygenDecaySpeed = 1.0f;
+	float oxygenReplenishSpeed = 2.0f;
+	float breathHoldDecaySpeed = 2.0f;
+
+	SoundEmmiter::Sptr soundEmmiter;
 };

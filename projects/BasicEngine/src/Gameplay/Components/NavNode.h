@@ -12,11 +12,14 @@ public:
 	typedef std::shared_ptr<NavNode> Sptr;
 
 	NavNode() = default;
-
+	~NavNode()
+	{
+		neighbors.clear();
+	}
 	//Properties
 	std::vector <GameObject::Sptr> neighbors;
 	GameObject::Sptr parent = NULL; //Check if parent index > 0 to see if a node actually has a parent or not
-	float hCost, gCost, fCost;
+	float hCost = 0, gCost = 0, fCost = 0;
 	enum type
 	{
 		blank,

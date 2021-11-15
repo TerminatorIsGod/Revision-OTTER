@@ -37,6 +37,7 @@ void SceneSwapSystem::Update(float deltaTime) {
 }
 
 void SceneSwapSystem::swapScene(std::string & path) {
+	//_scene->navNodes.clear();
 	_scene = nullptr;
 
 	std::string newFilename = std::filesystem::path(path).stem().string() + "-manifest.json";
@@ -45,6 +46,7 @@ void SceneSwapSystem::swapScene(std::string & path) {
 }
 
 void SceneSwapSystem::setScene(Gameplay::Scene::Sptr scene) {
+	//_scene->navNodes.clear();
 	_scene = scene;
 }
 

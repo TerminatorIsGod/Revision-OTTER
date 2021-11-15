@@ -12,6 +12,7 @@ public:
 
 	typedef std::shared_ptr<pathfindingManager> Sptr;
 	pathfindingManager() = default;
+	~pathfindingManager();
 
 	//Properties
 	std::vector<GameObject::Sptr> navNodes;

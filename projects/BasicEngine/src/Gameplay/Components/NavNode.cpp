@@ -1,6 +1,5 @@
 
 #include "Gameplay/Components/NavNode.h"
-
 #include "Utils/ImGuiHelper.h"
 #include "Utils/JsonGlmHelpers.h"
 
