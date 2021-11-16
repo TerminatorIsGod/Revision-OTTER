@@ -44,7 +44,8 @@ protected:
 	glm::vec2 _currentRot;
 
 	bool _allowMouse = false;
-
+	bool isJPressed = false;
+	bool freecam = false;
 	bool _isMousePressed = false;
 	GLFWwindow* _window;
 

@@ -102,7 +102,6 @@ void SimpleCameraControl::Movement(float deltaTime)
 			playerState = Run;
 		else if (glfwGetKey(_window, GLFW_KEY_LEFT_CONTROL))
 			playerState = Sneak;
-		}
 		else
 			playerState = Walk;
 
