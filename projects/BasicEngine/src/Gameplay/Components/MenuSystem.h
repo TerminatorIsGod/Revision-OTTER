@@ -34,7 +34,7 @@ namespace Gameplay {
 		virtual nlohmann::json ToJson() const override;
 		static MenuSystem::Sptr FromJson(const nlohmann::json& blob);
 
-		Scene::Sptr _mainScene;
+		Scene* _mainScene;
 		Camera::Sptr _menucamera;
 		Gameplay::Material::Sptr _materialMain;
 		Gameplay::Material::Sptr _materialPause;

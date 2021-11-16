@@ -10,6 +10,34 @@ namespace Gameplay {
 			{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
 		});
 
+		Texture2D::Sptr    mainmenuTex = ResourceManager::CreateAsset<Texture2D>("textures/19201080.png");
+		Texture2D::Sptr    pausemenuTex = ResourceManager::CreateAsset<Texture2D>("textures/19201080.png");
+
+		Gameplay::Material::Sptr mainmenuMaterial = ResourceManager::CreateAsset<Gameplay::Material>();
+		{
+			mainmenuMaterial->Name = "MainMenu";
+			mainmenuMaterial->MatShader = basicShader;
+			mainmenuMaterial->Texture = mainmenuTex;
+			mainmenuMaterial->Shininess = 0.1f;
+		}
+
+		Gameplay::Material::Sptr pausemenuMaterial = ResourceManager::CreateAsset<Gameplay::Material>();
+		{
+			pausemenuMaterial->Name = "PauseMenu";
+			pausemenuMaterial->MatShader = basicShader;
+			pausemenuMaterial->Texture = pausemenuTex;
+			pausemenuMaterial->Shininess = 0.1f;
+		}
+
+		_mainScene = GetGameObject()->GetScene();
+
+		if (GetGameObject()->Name == "MenuPlane") {
+			createCamera();
+			GetGameObject()->Get<RenderComponent>()->SetMaterial(mainmenuMaterial);
+		}
+		else {
+			GetGameObject()->Get<RenderComponent>()->SetMaterial(pausemenuMaterial);
+		}
 
 	}
 
@@ -74,7 +102,7 @@ namespace Gameplay {
 	}
 
 	void MenuSystem::mainScene(Scene::Sptr scene) {
-		_mainScene = scene;
+		//_mainScene = scene;
 	}
 
 }

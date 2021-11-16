@@ -99,11 +99,8 @@ void SimpleCameraControl::Movement(float deltaTime)
 
 
 		if (glfwGetKey(_window, GLFW_KEY_LEFT_SHIFT))
-		{
 			playerState = Run;
-		}
 		else if (glfwGetKey(_window, GLFW_KEY_LEFT_CONTROL))
-		{
 			playerState = Sneak;
 		}
 		else
