@@ -97,7 +97,6 @@ void SimpleCameraControl::Movement(float deltaTime)
 			input.x = _moveSpeeds.y;
 		}
 
-<<<<<<< Updated upstream
 
 		if (glfwGetKey(_window, GLFW_KEY_LEFT_SHIFT))
 		{
@@ -106,6 +105,7 @@ void SimpleCameraControl::Movement(float deltaTime)
 		else if (glfwGetKey(_window, GLFW_KEY_LEFT_CONTROL))
 		{
 			playerState = Sneak;
+		}
 		else
 			playerState = Walk;
 
@@ -133,18 +133,6 @@ void SimpleCameraControl::Movement(float deltaTime)
 		else
 			isJPressed = false;
 
-
-
-		float velocityMagnitude = glm::sqrt((_body->GetLinearVelocity().x * _body->GetLinearVelocity().x) + (_body->GetLinearVelocity().y * _body->GetLinearVelocity().y));
-		if (velocityMagnitude < 0.5f)
-		{
-			playerState = Idle;
-		}
-		else
-		{
-			soundEmmiter->lerpSpeed = soundEmmiter->attackSpeed;
-		}
-
 		input *= deltaTime;
 
 		glm::vec3 worldMovement = currentRot * glm::vec4(input, 1.0f);
@@ -158,15 +146,11 @@ void SimpleCameraControl::Movement(float deltaTime)
 		_body->SetAngularFactor(glm::vec3(0, 0, 0));
 
 		glm::vec3 physicsMovement = worldMovement;
-<<<<<<< Updated upstream
 
 		if (!freecam)
 		{
 			physicsMovement.z = 0.0f;//0;
 		}
-=======
-		physicsMovement.z = _body->GetLinearVelocity().z;//0;
->>>>>>> Stashed changes
 
 		_body->SetLinearVelocity(glm::vec3(physicsMovement));
 	}
