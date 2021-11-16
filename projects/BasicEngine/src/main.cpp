@@ -310,73 +310,6 @@ int main() {
 		ResourceManager::LoadManifest("manifest.json");
 		scene = Scene::Load("demoscene.json");
 
-		Shader::Sptr basicShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
-			{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
-			{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
-		});
-
-		MeshResource::Sptr leaflingMesh = ResourceManager::CreateAsset<MeshResource>("Leafling_Ver3_-_Rigged.obj");
-		Texture2D::Sptr    leaflingTex = ResourceManager::CreateAsset<Texture2D>("textures/Leafling-texture.png");
-
-		MeshResource::Sptr planeMesh = ResourceManager::CreateAsset<MeshResource>();
-		planeMesh->AddParam(MeshBuilderParam::CreatePlane(ZERO, UNIT_Z, UNIT_X, glm::vec2(1.0f)));
-		planeMesh->GenerateMesh();
-
-		Material::Sptr leaflingMaterial = ResourceManager::CreateAsset<Material>();
-		{
-			leaflingMaterial->Name = "Leafling";
-			leaflingMaterial->MatShader = basicShader;
-			leaflingMaterial->Texture = leaflingTex;
-			leaflingMaterial->Shininess = 1.0f;
-		}
-
-		GameObject::Sptr leafling = scene->CreateGameObject("Leafling");
-		{
-			// Set position in the scene
-			leafling->SetPostion(glm::vec3(0.0f, 29.0f, -6.0f));
-			// Scale down the plane
-			leafling->SetRotation(glm::vec3(90, 0, 180));
-
-			leafling->SetScale(glm::vec3(10.0f));
-
-			// Create and attach a render component
-			RenderComponent::Sptr renderer = leafling->Add<RenderComponent>();
-			renderer->SetMesh(leaflingMesh);
-			renderer->SetMaterial(leaflingMaterial);
-
-			// This object is a renderable only, it doesn't have any behaviours or
-			// physics bodies attached!
-		}
-
-		// Set up all our sample objects
-		GameObject::Sptr menu = scene->CreateGameObject("MenuPlane");
-		{
-			menu->SetPostion(glm::vec3(0.5f, 0.0f, -50.0f));
-			menu->SetRotation(glm::vec3(-180.0f, 90.0f, 0.0f));
-
-			RenderComponent::Sptr renderer = menu->Add<RenderComponent>();
-			renderer->SetMesh(planeMesh);
-			//renderer->SetMaterial(mainmenuMaterial);
-
-			MenuSystem::Sptr menusys = menu->Add<MenuSystem>();
-			//menusys->mainScene(scene);
-			//menusys->createCamera();
-		}
-
-		GameObject::Sptr menuPause = scene->CreateGameObject("MenuPausePlane");
-		{
-			menuPause->SetPostion(glm::vec3(0.5f, 0.0f, -100.0f));
-			menuPause->SetRotation(glm::vec3(-180.0f, 90.0f, 0.0f));
-
-			RenderComponent::Sptr renderer = menuPause->Add<RenderComponent>();
-			renderer->SetMesh(planeMesh);
-			//renderer->SetMaterial(pausemenuMaterial);
-
-			MenuSystem::Sptr menusys = menuPause->Add<MenuSystem>();
-			//menusys->mainScene(scene);
-			//menusys->createCamera();
-		}
-
 		// Call scene awake to start up all of our components
 		scene->Window = window;
 		scene->Awake();
@@ -430,7 +363,7 @@ int main() {
 
 		// Create our materials
 		// This will be our box material, with no environment reflections
-		
+
 
 		Material::Sptr boxMaterial = ResourceManager::CreateAsset<Material>();
 		{
@@ -514,9 +447,8 @@ int main() {
 			InventorySystem::Sptr inven = camera->Add<InventorySystem>();
 
 			SoundEmmiter::Sptr emmiter = camera->Add<SoundEmmiter>();
-			emmiter->soundRingMat = pinkMaterial;
 		}
-		
+
 		// Set up all our sample objects
 		GameObject::Sptr menu = scene->CreateGameObject("MenuPlane");
 		{
@@ -698,7 +630,7 @@ int main() {
 
 		if (scene->FindObjectByName("MenuPlane") != nullptr) {
 
-			if(!isGamePaused && isGameStarted)
+			if (!isGamePaused && isGameStarted)
 				camera = scene->MainCamera;
 			else {
 				if (scene->FindObjectByName("MenuPlane") != nullptr) {
@@ -715,21 +647,21 @@ int main() {
 				else {
 					camera = scene->MainCamera;
 				}
-				
+
 			}
 
 		}
 		else {
 			camera = scene->MainCamera;
 		}
-		
+
 
 
 		//Check to see if pause game
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 			if (!isEscapePressed && isGameStarted) {
 				isGamePaused = !isGamePaused;
-					
+
 			}
 			isEscapePressed = true;
 		}

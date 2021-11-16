@@ -7,34 +7,14 @@ void SoundEmmiter::Awake()
 {
 	lerpSpeed = attackSpeed;
 
-	Shader::Sptr basicShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
-		{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
-		{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
-	});
-
-	Texture2D::Sptr    pinkTex = ResourceManager::CreateAsset<Texture2D>("textures/pink.jpg");
-
-	Material::Sptr pinkMaterial = ResourceManager::CreateAsset<Material>();
-	{
-		pinkMaterial->Name = "Pink";
-		pinkMaterial->MatShader = basicShader;
-		pinkMaterial->Texture = pinkTex;
-		pinkMaterial->Shininess = 1.0f;
-	}
-
 	scene = GetGameObject()->GetScene();
-	soundRing = scene->CreateGameObject("Sound Ring");
-	{
-		// Set position in the scene
-		soundRing->SetPostion(GetGameObject()->GetPosition());
 
-		//Create and attach a render component
-		RenderComponent::Sptr renderer = soundRing->Add<RenderComponent>();
-		renderer->SetMesh(soundRingMesh);
-		renderer->SetMaterial(pinkMaterial);
-	}
+	scene->Lights.push_back(Light());
+	scene->SetupShaderAndLights();
+	soundLight = &scene->Lights[scene->Lights.size() - 1];
+	soundLight->Color = glm::vec3(0.03f, 0.0f, 0.0f);
 
-	scene->soundEmmiters.push_back(soundRing);
+	scene->soundEmmiters.push_back(soundLight);
 }
 
 void SoundEmmiter::Update(float deltaTime)
@@ -51,8 +31,9 @@ void SoundEmmiter::Update(float deltaTime)
 		Attack(deltaTime);
 	}
 
-	soundRing->SetScale(glm::vec3(volume));
-	soundRing->SetPostion(GetGameObject()->GetPosition() + soundRingOffset);
+	soundLight->Range = -volume * 16.0f;
+	soundLight->Position = GetGameObject()->GetPosition();
+	scene->SetupShaderAndLights();
 }
 
 void SoundEmmiter::RenderImGui() {

@@ -51,7 +51,7 @@ namespace Gameplay {
 
 		std::vector<GameObject::Sptr> navNodes;
 
-		std::vector<GameObject::Sptr> soundEmmiters;
+		std::vector<Light*> soundEmmiters;
 
 
 		Scene();

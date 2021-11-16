@@ -25,8 +25,6 @@ public:
 	float lerpSpeed;
 
 	Scene* scene;
-	MeshResource::Sptr soundRingMesh = ResourceManager::CreateAsset<MeshResource>("soundRing.obj");
-	Material::Sptr soundRingMat;
 
 	bool isDecaying = true;
 	bool muteAtZero = false;
@@ -51,7 +49,7 @@ public:
 	MAKE_TYPENAME(SoundEmmiter);
 
 protected:
-	GameObject::Sptr soundRing;
+	Light* soundLight;
 	glm::vec3 soundRingOffset = glm::vec3(0, 0, -5.0f);
 
 };
