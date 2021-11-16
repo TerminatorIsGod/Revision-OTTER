@@ -304,7 +304,7 @@ int main() {
 	glCullFace(GL_BACK);
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
-	bool loadScene = false;
+	bool loadScene = true;
 	// For now we can use a toggle to generate our scene vs load from file
 	if (loadScene) {
 		ResourceManager::LoadManifest("manifest.json");
@@ -398,7 +398,7 @@ int main() {
 
 		// Create our materials
 		// This will be our box material, with no environment reflections
-		
+
 
 		Texture2D::Sptr    mainmenuTex = ResourceManager::CreateAsset<Texture2D>("textures/19201080.png");
 		Texture2D::Sptr    pausemenuTex = ResourceManager::CreateAsset<Texture2D>("textures/19201080.png");
@@ -503,7 +503,7 @@ int main() {
 			SoundEmmiter::Sptr emmiter = camera->Add<SoundEmmiter>();
 			emmiter->soundRingMat = pinkMaterial;
 		}
-		
+
 		// Set up all our sample objects
 		GameObject::Sptr menu = scene->CreateGameObject("MenuPlane");
 		{
@@ -694,21 +694,21 @@ int main() {
 				else {
 					camera = scene->MainCamera;
 				}
-				
+
 			}
 
 		}
 		else {
 			camera = scene->MainCamera;
 		}
-		
+
 
 
 		//Check to see if pause game
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 			if (!isEscapePressed && isGameStarted) {
 				isGamePaused = !isGamePaused;
-					
+
 			}
 			isEscapePressed = true;
 		}

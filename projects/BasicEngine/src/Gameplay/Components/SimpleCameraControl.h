@@ -42,9 +42,9 @@ protected:
 	glm::vec3 _moveSpeeds;
 	glm::dvec2 _prevMousePos;
 	glm::vec2 _currentRot;
-
+	bool freecam = false;
 	bool _allowMouse = false;
-
+	bool isJPressed = false;
 	bool _isMousePressed = false;
 	GLFWwindow* _window;
 

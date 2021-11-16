@@ -97,12 +97,33 @@ void SimpleCameraControl::Movement(float deltaTime)
 			input.x = _moveSpeeds.y;
 		}
 
+
 		if (glfwGetKey(_window, GLFW_KEY_LEFT_SHIFT))
+		{
 			playerState = Run;
+		}
 		else if (glfwGetKey(_window, GLFW_KEY_LEFT_CONTROL))
+		{
 			playerState = Sneak;
+		}
 		else
 			playerState = Walk;
+
+		if (glfwGetKey(_window, GLFW_KEY_J))
+		{
+			if (!isJPressed)
+			{
+				isJPressed = true;
+				if (freecam)
+					freecam = false;
+				else
+					freecam = true;
+			}
+		}
+		else
+			isJPressed = false;
+
+
 
 		float velocityMagnitude = glm::sqrt((_body->GetLinearVelocity().x * _body->GetLinearVelocity().x) + (_body->GetLinearVelocity().y * _body->GetLinearVelocity().y));
 		if (velocityMagnitude < 0.5f)
@@ -127,7 +148,11 @@ void SimpleCameraControl::Movement(float deltaTime)
 		_body->SetAngularFactor(glm::vec3(0, 0, 0));
 
 		glm::vec3 physicsMovement = worldMovement;
-		physicsMovement.z = _body->GetLinearVelocity().z;//0;
+
+		if (!freecam)
+		{
+			physicsMovement.z = 0.0f;//0;
+		}
 
 		_body->SetLinearVelocity(glm::vec3(physicsMovement));
 	}
