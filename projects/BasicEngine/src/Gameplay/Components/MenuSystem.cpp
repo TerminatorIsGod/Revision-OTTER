@@ -29,7 +29,13 @@ namespace Gameplay {
 			pausemenuMaterial->Shininess = 0.1f;
 		}
 
+		MeshResource::Sptr planeMesh = ResourceManager::CreateAsset<MeshResource>();
+		planeMesh->AddParam(MeshBuilderParam::CreatePlane(glm::vec4(0.0f), glm::vec4(0.0f, 0.0f, 1.0f, 0.0f), glm::vec4(1.0f, 0.0f, 0.0f, 0.0f), glm::vec2(1.0f)));
+		planeMesh->GenerateMesh();
+
 		_mainScene = GetGameObject()->GetScene();
+
+		GetGameObject()->Get<RenderComponent>()->SetMesh(planeMesh);
 
 		if (GetGameObject()->Name == "MenuPlane") {
 			createCamera();

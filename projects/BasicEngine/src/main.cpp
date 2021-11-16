@@ -348,7 +348,7 @@ int main() {
 			// physics bodies attached!
 		}
 
-		// Set up all our sample objects
+		/*// Set up all our sample objects
 		GameObject::Sptr menu = scene->CreateGameObject("MenuPlane");
 		{
 			menu->SetPostion(glm::vec3(0.5f, 0.0f, -50.0f));
@@ -375,7 +375,7 @@ int main() {
 			MenuSystem::Sptr menusys = menuPause->Add<MenuSystem>();
 			//menusys->mainScene(scene);
 			//menusys->createCamera();
-		}
+		}*/
 
 		// Call scene awake to start up all of our components
 		scene->Window = window;
