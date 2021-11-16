@@ -97,6 +97,7 @@ void SimpleCameraControl::Movement(float deltaTime)
 			input.x = _moveSpeeds.y;
 		}
 
+<<<<<<< Updated upstream
 
 		if (glfwGetKey(_window, GLFW_KEY_LEFT_SHIFT))
 		{
@@ -106,6 +107,12 @@ void SimpleCameraControl::Movement(float deltaTime)
 		{
 			playerState = Sneak;
 		}
+=======
+		if (glfwGetKey(_window, GLFW_KEY_LEFT_SHIFT))
+			playerState = Run;
+		else if (glfwGetKey(_window, GLFW_KEY_LEFT_CONTROL))
+			playerState = Sneak;
+>>>>>>> Stashed changes
 		else
 			playerState = Walk;
 
@@ -148,11 +155,15 @@ void SimpleCameraControl::Movement(float deltaTime)
 		_body->SetAngularFactor(glm::vec3(0, 0, 0));
 
 		glm::vec3 physicsMovement = worldMovement;
+<<<<<<< Updated upstream
 
 		if (!freecam)
 		{
 			physicsMovement.z = 0.0f;//0;
 		}
+=======
+		physicsMovement.z = _body->GetLinearVelocity().z;//0;
+>>>>>>> Stashed changes
 
 		_body->SetLinearVelocity(glm::vec3(physicsMovement));
 	}
