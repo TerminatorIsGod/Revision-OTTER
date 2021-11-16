@@ -97,14 +97,9 @@ void SimpleCameraControl::Movement(float deltaTime)
 			input.x = _moveSpeeds.y;
 		}
 
-<<<<<<< Updated upstream
-
 		if (glfwGetKey(_window, GLFW_KEY_LEFT_SHIFT))
-		{
 			playerState = Run;
-		}
 		else if (glfwGetKey(_window, GLFW_KEY_LEFT_CONTROL))
-		{
 			playerState = Sneak;
 		else
 			playerState = Walk;
@@ -160,7 +155,6 @@ void SimpleCameraControl::Movement(float deltaTime)
 		glm::vec3 physicsMovement = worldMovement;
 <<<<<<< Updated upstream
 
-		if (!freecam)
 		{
 			physicsMovement.z = 0.0f;//0;
 		}

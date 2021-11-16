@@ -116,11 +116,6 @@ void pathfindingManager::UpdateNbors()
 		}
 		//std::cout << "\n " << navNodes[i]->Get<NavNode>()->neighbors.size();
 	}
-
-	//	for (int i = 0; i < navNodes.size(); i++)
-	//	{
-	//		navNodes[i]->SetScale(glm::vec3(navNodes[i]->Get<NavNode>()->neighbors.size()));
-	//	}
 }
 
 bool pathfindingManager::StartAndEndCheck()
