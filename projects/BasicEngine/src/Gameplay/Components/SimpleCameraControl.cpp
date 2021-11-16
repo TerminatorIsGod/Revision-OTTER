@@ -106,15 +106,18 @@ void SimpleCameraControl::Movement(float deltaTime)
 		else if (glfwGetKey(_window, GLFW_KEY_LEFT_CONTROL))
 		{
 			playerState = Sneak;
-		}
-=======
-		if (glfwGetKey(_window, GLFW_KEY_LEFT_SHIFT))
-			playerState = Run;
-		else if (glfwGetKey(_window, GLFW_KEY_LEFT_CONTROL))
-			playerState = Sneak;
->>>>>>> Stashed changes
 		else
 			playerState = Walk;
+
+		float velocityMagnitude = glm::sqrt((_body->GetLinearVelocity().x * _body->GetLinearVelocity().x) + (_body->GetLinearVelocity().y * _body->GetLinearVelocity().y));
+		if (velocityMagnitude < 0.5f)
+		{
+			playerState = Idle;
+		}
+		else
+		{
+			soundEmmiter->lerpSpeed = soundEmmiter->attackSpeed;
+		}
 
 		if (glfwGetKey(_window, GLFW_KEY_J))
 		{
