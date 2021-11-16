@@ -70,7 +70,10 @@
 #include "Gameplay/Physics/TriggerVolume.h"
 #include "Graphics/DebugDraw.h"
 #include "Gameplay/Components/TriggerVolumeEnterBehaviour.h"
+
+
 #include "Gameplay/Components/SimpleCameraControl.h"
+#include <Gameplay/Components/MenuSystem.h>
 
 
 
@@ -289,6 +292,8 @@ int main() {
 	ComponentManager::RegisterType<pathfindingManager>();
 	ComponentManager::RegisterType<SoundEmmiter>();
 
+	ComponentManager::RegisterType<MenuSystem>();
+
 
 	ComponentManager::RegisterType<InventorySystem>();
 	ComponentManager::RegisterType<SceneSwapSystem>();
@@ -299,7 +304,7 @@ int main() {
 	glCullFace(GL_BACK);
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
-	bool loadScene = true;
+	bool loadScene = false;
 	// For now we can use a toggle to generate our scene vs load from file
 	if (loadScene) {
 		ResourceManager::LoadManifest("manifest.json");
@@ -393,6 +398,27 @@ int main() {
 
 		// Create our materials
 		// This will be our box material, with no environment reflections
+		
+
+		Texture2D::Sptr    mainmenuTex = ResourceManager::CreateAsset<Texture2D>("textures/19201080.png");
+		Texture2D::Sptr    pausemenuTex = ResourceManager::CreateAsset<Texture2D>("textures/19201080.png");
+
+		Gameplay::Material::Sptr mainmenuMaterial = ResourceManager::CreateAsset<Gameplay::Material>();
+		{
+			mainmenuMaterial->Name = "MainMenu";
+			mainmenuMaterial->MatShader = basicShader;
+			mainmenuMaterial->Texture = mainmenuTex;
+			mainmenuMaterial->Shininess = 0.1f;
+		}
+
+		Gameplay::Material::Sptr pausemenuMaterial = ResourceManager::CreateAsset<Gameplay::Material>();
+		{
+			pausemenuMaterial->Name = "PauseMenu";
+			pausemenuMaterial->MatShader = basicShader;
+			pausemenuMaterial->Texture = pausemenuTex;
+			pausemenuMaterial->Shininess = 0.1f;
+		}
+
 		Material::Sptr boxMaterial = ResourceManager::CreateAsset<Material>();
 		{
 			boxMaterial->Name = "Box";
@@ -476,6 +502,35 @@ int main() {
 
 			SoundEmmiter::Sptr emmiter = camera->Add<SoundEmmiter>();
 			emmiter->soundRingMat = pinkMaterial;
+		}
+		
+		// Set up all our sample objects
+		GameObject::Sptr menu = scene->CreateGameObject("MenuPlane");
+		{
+			menu->SetPostion(glm::vec3(0.5f, 0.0f, -50.0f));
+			menu->SetRotation(glm::vec3(-180.0f, 90.0f, 0.0f));
+
+			RenderComponent::Sptr renderer = menu->Add<RenderComponent>();
+			renderer->SetMesh(planeMesh);
+			renderer->SetMaterial(mainmenuMaterial);
+
+			MenuSystem::Sptr menusys = menu->Add<MenuSystem>();
+			menusys->mainScene(scene);
+			menusys->createCamera();
+		}
+
+		GameObject::Sptr menuPause = scene->CreateGameObject("MenuPausePlane");
+		{
+			menuPause->SetPostion(glm::vec3(0.5f, 0.0f, -100.0f));
+			menuPause->SetRotation(glm::vec3(-180.0f, 90.0f, 0.0f));
+
+			RenderComponent::Sptr renderer = menuPause->Add<RenderComponent>();
+			renderer->SetMesh(planeMesh);
+			renderer->SetMaterial(pausemenuMaterial);
+
+			//MenuSystem::Sptr menusys = menu->Add<MenuSystem>();
+			//menusys->mainScene(scene);
+			//menusys->createCamera();
 		}
 
 		// Set up all our sample objects
@@ -603,14 +658,57 @@ int main() {
 	nlohmann::json editorSceneState;
 
 	bool isEscapePressed = false;
+	GameObject::Sptr menuPlane;
+	MenuSystem::Sptr menuSys;
+	Camera::Sptr camera;
 
 	///// Game loop /////
 	while (!glfwWindowShouldClose(window)) {
+
+
+
+		if (scene->FindObjectByName("MenuPlane") != nullptr) {
+			menuPlane = scene->FindObjectByName("MenuPlane");
+			menuSys = menuPlane->Get<MenuSystem>();
+		}
+
+		//A bunch of checks to make sure it doesn't crash in the case the menus are missing
+
+		if (scene->FindObjectByName("MenuPlane") != nullptr) {
+
+			if (!isGamePaused && isGameStarted)
+				camera = scene->MainCamera;
+			else {
+				if (scene->FindObjectByName("MenuPlane") != nullptr) {
+					camera = menuSys->getMenuCamera();
+
+					if (!isGameStarted) {
+						camera->GetGameObject()->SetPostion(glm::vec3(0.0f, 0.0f, -50.0f));
+						//set camera pos & rot
+					}
+					else {
+						camera->GetGameObject()->SetPostion(glm::vec3(0.0f, 0.0f, -100.0f));
+						//set camera pos & rot
+					}
+				}
+				else {
+					camera = scene->MainCamera;
+				}
+				
+			}
+
+		}
+		else {
+			camera = scene->MainCamera;
+		}
+		
+
 
 		//Check to see if pause game
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 			if (!isEscapePressed && isGameStarted) {
 				isGamePaused = !isGamePaused;
+					
 			}
 			isEscapePressed = true;
 		}
@@ -716,9 +814,6 @@ int main() {
 		// Perform updates for all components
 		if (!isGamePaused) //doesn't update components if its paused
 			scene->Update(dt);
-
-		// Grab shorthands to the camera and shader from the scene
-		Camera::Sptr camera = scene->MainCamera;
 
 		// Cache the camera's viewprojection
 		glm::mat4 viewProj = camera->GetViewProjection();
