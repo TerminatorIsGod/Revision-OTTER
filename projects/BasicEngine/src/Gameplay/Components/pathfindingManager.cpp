@@ -36,7 +36,7 @@ void pathfindingManager::Update(float deltaTime)
 {
 	if (glfwGetKey(_window, GLFW_KEY_P))
 	{
-		std::vector<GameObject::Sptr> yo = requestPath(glm::vec3(-30, 0, 3), scene->MainCamera->GetGameObject()->GetPosition());
+		std::vector<GameObject::Sptr> yo = requestPath(glm::vec3(0, 50.0f, 100), scene->MainCamera->GetGameObject()->GetPosition());
 
 		for (int i = 0; i < navNodes.size(); i++)
 		{

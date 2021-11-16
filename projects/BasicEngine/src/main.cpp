@@ -305,6 +305,41 @@ int main() {
 		ResourceManager::LoadManifest("manifest.json");
 		scene = Scene::Load("demoscene.json");
 
+		Shader::Sptr basicShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
+			{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
+			{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
+		});
+
+		MeshResource::Sptr leaflingMesh = ResourceManager::CreateAsset<MeshResource>("Leafling_Ver3_-_Rigged.obj");
+		Texture2D::Sptr    leaflingTex = ResourceManager::CreateAsset<Texture2D>("textures/Leafling-texture.png");
+
+		Material::Sptr leaflingMaterial = ResourceManager::CreateAsset<Material>();
+		{
+			leaflingMaterial->Name = "Leafling";
+			leaflingMaterial->MatShader = basicShader;
+			leaflingMaterial->Texture = leaflingTex;
+			leaflingMaterial->Shininess = 1.0f;
+		}
+
+		GameObject::Sptr leafling = scene->CreateGameObject("Leafling");
+		{
+			// Set position in the scene
+			leafling->SetPostion(glm::vec3(0.0f, 29.0f, -6.0f));
+			// Scale down the plane
+			leafling->SetRotation(glm::vec3(90, 0, 180));
+
+			leafling->SetScale(glm::vec3(10.0f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = leafling->Add<RenderComponent>();
+			renderer->SetMesh(leaflingMesh);
+			renderer->SetMaterial(leaflingMaterial);
+
+			// This object is a renderable only, it doesn't have any behaviours or
+			// physics bodies attached!
+		}
+
+
 		// Call scene awake to start up all of our components
 		scene->Window = window;
 		scene->Awake();
@@ -327,6 +362,7 @@ int main() {
 		MeshResource::Sptr monkeyMesh = ResourceManager::CreateAsset<MeshResource>("Monkey.obj");
 		MeshResource::Sptr mapMesh = ResourceManager::CreateAsset<MeshResource>("map.obj");
 		MeshResource::Sptr mapCollidersMesh = ResourceManager::CreateAsset<MeshResource>("mapColliders.obj");
+		MeshResource::Sptr leaflingMesh = ResourceManager::CreateAsset<MeshResource>("Leafling_Ver3_-_Rigged.obj");
 
 		MeshResource::Sptr navNodeMesh = ResourceManager::CreateAsset<MeshResource>("Puck.obj");
 
@@ -336,6 +372,8 @@ int main() {
 		Texture2D::Sptr    monkeyTex = ResourceManager::CreateAsset<Texture2D>("textures/monkey-uvMap.png");
 		Texture2D::Sptr    pinkTex = ResourceManager::CreateAsset<Texture2D>("textures/pink.jpg");
 		Texture2D::Sptr    whiteTex = ResourceManager::CreateAsset<Texture2D>("textures/white.jpg");
+		Texture2D::Sptr    leaflingTex = ResourceManager::CreateAsset<Texture2D>("textures/Leafling-texture.png");
+
 
 		// Here we'll load in the cubemap, as well as a special shader to handle drawing the skybox
 		TextureCube::Sptr testCubemap = ResourceManager::CreateAsset<TextureCube>("cubemaps/ocean/ocean.jpg");
@@ -389,6 +427,14 @@ int main() {
 			whiteMaterial->Shininess = 1.0f;
 		}
 
+		Material::Sptr leaflingMaterial = ResourceManager::CreateAsset<Material>();
+		{
+			leaflingMaterial->Name = "Leafling";
+			leaflingMaterial->MatShader = basicShader;
+			leaflingMaterial->Texture = leaflingTex;
+			leaflingMaterial->Shininess = 1.0f;
+		}
+
 		// Create some lights for our scene
 		scene->Lights.resize(3);
 		scene->Lights[0].Position = glm::vec3(0.0f, 30.0f, 3.0f);
@@ -411,7 +457,7 @@ int main() {
 		//At some point the camera should be seperate from player, and parented to it. OR, just make it so the collider doesn't rotate with the transform
 		GameObject::Sptr camera = scene->CreateGameObject("Main Camera");
 		{
-			camera->SetPostion(glm::vec3(5.0f, -5.0f, 5.0f));
+			camera->SetPostion(glm::vec3(5.0f, -5.0f, 7.0f));
 			camera->LookAt(glm::vec3(0.0f));
 
 			camera->Add<SimpleCameraControl>();
@@ -430,8 +476,6 @@ int main() {
 
 			SoundEmmiter::Sptr emmiter = camera->Add<SoundEmmiter>();
 			emmiter->soundRingMat = pinkMaterial;
-
-
 		}
 
 		// Set up all our sample objects
@@ -450,7 +494,7 @@ int main() {
 
 			// Attach a plane collider that extends infinitely along the X/Y axis
 			RigidBody::Sptr physics = plane->Add<RigidBody>(/*static by default*/);
-			physics->AddCollider(BoxCollider::Create(glm::vec3(50.0f, 50.0f, 1.0f)))->SetPosition({ 0,0,-1 });
+			physics->AddCollider(BoxCollider::Create(glm::vec3(50.0f, 100.0f, 1.0f)))->SetPosition({ 0,0,-1 });
 		}
 
 		GameObject::Sptr square = scene->CreateGameObject("Square");
@@ -468,6 +512,7 @@ int main() {
 			// This object is a renderable only, it doesn't have any behaviours or
 			// physics bodies attached!
 		}
+
 
 		// Set up all our sample objects
 		GameObject::Sptr map = scene->CreateGameObject("Map");
