@@ -304,7 +304,7 @@ int main() {
 	glCullFace(GL_BACK);
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
-	bool loadScene = true;
+	bool loadScene = false;
 	// For now we can use a toggle to generate our scene vs load from file
 	if (loadScene) {
 		ResourceManager::LoadManifest("manifest.json");
@@ -703,6 +703,9 @@ int main() {
 			// Draws a button to control whether or not the game is currently playing
 			static char buttonLabel[64];
 			sprintf_s(buttonLabel, "%s###playmode", scene->IsPlaying ? "Exit Play Mode" : "Enter Play Mode");
+
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
 			if (ImGui::Button(buttonLabel)) {
 				// Save scene so it can be restored when exiting play mode
 				if (!scene->IsPlaying) {

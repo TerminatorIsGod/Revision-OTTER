@@ -17,9 +17,8 @@ public:
 	virtual void Update(float deltaTime) override;
 
 	int getKeysAmount();
-	void setKeysAmount(int keysAmount);
-	void addKey();
-	bool useKey();
+	void setKey(int key, bool value);
+	bool getKey(int key);
 
 public:
 	virtual void RenderImGui() override;
@@ -27,7 +26,8 @@ public:
 	virtual nlohmann::json ToJson() const override;
 	static InventorySystem::Sptr FromJson(const nlohmann::json& blob);
 
+	std::vector<bool> _keys = { false, false, false };
 protected:
 
-	int _keys;
+	
 };

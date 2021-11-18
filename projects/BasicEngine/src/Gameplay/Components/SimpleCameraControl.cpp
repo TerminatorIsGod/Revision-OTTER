@@ -30,6 +30,11 @@ void SimpleCameraControl::Awake() {
 
 void SimpleCameraControl::Update(float deltaTime)
 {
+	if (_isMousePressed)
+		glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	else
+		glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
 	Movement(deltaTime);
 	SwitchState(deltaTime);
 	OxygenSystem(deltaTime);
@@ -63,6 +68,7 @@ void SimpleCameraControl::Movement(float deltaTime)
 		_isMousePressed = !_isMousePressed;
 		_allowMouse = true;
 		std::cout << "Chaning mouse tyhing\n";
+
 	}
 	else if (!glfwGetKey(_window, GLFW_KEY_M)) {
 		_allowMouse = false;
@@ -85,7 +91,7 @@ void SimpleCameraControl::Movement(float deltaTime)
 		float yoffset = centery - currentMousePos.y;
 
 		glfwSetCursorPos(_window, centerx, centery);
-		glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		
 
 		_currentRot.x += static_cast<float>(xoffset) * _mouseSensitivity.x;  //_currentRot.x += static_cast<float>(currentMousePos.x - _prevMousePos.x) * _mouseSensitivity.x;
 		_currentRot.y += static_cast<float>(yoffset) * _mouseSensitivity.y;
@@ -152,6 +158,7 @@ void SimpleCameraControl::Movement(float deltaTime)
 			return;
 		}
 
+
 		_body->SetAngularFactor(glm::vec3(0, 0, 0));
 
 		glm::vec3 physicsMovement = worldMovement;
@@ -164,7 +171,7 @@ void SimpleCameraControl::Movement(float deltaTime)
 		_body->SetLinearVelocity(glm::vec3(physicsMovement));
 	}
 	else {
-		glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		
 	}
 
 }
