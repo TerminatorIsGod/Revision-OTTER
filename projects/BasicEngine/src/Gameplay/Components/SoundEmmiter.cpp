@@ -12,8 +12,7 @@ void SoundEmmiter::Awake()
 	scene->Lights.push_back(Light());
 	scene->SetupShaderAndLights();
 	soundLight = &scene->Lights[scene->Lights.size() - 1];
-	soundLight->Color = glm::vec3(0.03f, 0.0f, 0.0f);
-
+	soundLight->Color = colour;
 	scene->soundEmmiters.push_back(soundLight);
 }
 
@@ -33,6 +32,7 @@ void SoundEmmiter::Update(float deltaTime)
 
 	soundLight->Range = -volume * 16.0f;
 	soundLight->Position = GetGameObject()->GetPosition();
+	//soundLight->Color = colour;
 	scene->SetupShaderAndLights();
 }
 

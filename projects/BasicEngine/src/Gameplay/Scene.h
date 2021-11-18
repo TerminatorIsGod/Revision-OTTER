@@ -154,6 +154,7 @@ namespace Gameplay {
 		/// </summary>
 		void SetupShaderAndLights();
 
+
 		/// <summary>
 		/// Draws ImGui stuff for all gameobjects in the scene
 		/// </summary>

@@ -7,6 +7,7 @@
 #include "Gameplay/Scene.h"
 #include "Utils/JsonGlmHelpers.h"
 #include "Utils/ImGuiHelper.h"
+#include "Utils\GlmBulletConversions.h"
 
 SimpleCameraControl::SimpleCameraControl() :
 	IComponent(),
@@ -20,7 +21,8 @@ SimpleCameraControl::SimpleCameraControl() :
 SimpleCameraControl::~SimpleCameraControl() = default;
 
 void SimpleCameraControl::Awake() {
-	_window = GetGameObject()->GetScene()->Window;
+	_scene = GetGameObject()->GetScene();
+	_window = _scene->Window;
 
 	soundEmmiter = GetComponent<SoundEmmiter>();
 	soundEmmiter->isDecaying = false;
@@ -31,6 +33,17 @@ void SimpleCameraControl::Update(float deltaTime)
 	Movement(deltaTime);
 	SwitchState(deltaTime);
 	OxygenSystem(deltaTime);
+
+	if (glfwGetKey(_window, GLFW_KEY_E))
+	{
+		if (!isEPressed)
+		{
+			isEPressed = true;
+			Interact(deltaTime);
+		}
+	}
+	else
+		isEPressed = false;
 }
 
 void SimpleCameraControl::Movement(float deltaTime)
@@ -78,7 +91,7 @@ void SimpleCameraControl::Movement(float deltaTime)
 		_currentRot.y += static_cast<float>(yoffset) * _mouseSensitivity.y;
 		glm::quat rotX = glm::angleAxis(glm::radians(_currentRot.x), glm::vec3(0, 0, 1));
 		glm::quat rotY = glm::angleAxis(glm::radians(_currentRot.y), glm::vec3(1, 0, 0));
-		glm::quat currentRot = rotX * rotY;
+		currentRot = rotX * rotY;
 		GetGameObject()->SetRotation(currentRot);
 
 		_prevMousePos = currentMousePos;
@@ -200,6 +213,9 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 			oxygenMeter = 0.0f;
 		}
 	}
+
+	//I tested out having the oxygen level affect the sound ring colour, I don't think it's noticible enough to replace the UI.
+	//soundEmmiter->colour = soundEmmiter->defaultColour * (oxygenMeter / oxygenMeterMax);
 }
 
 
@@ -220,6 +236,17 @@ void SimpleCameraControl::SwitchState(float deltaTime)
 		RunState(deltaTime);
 		break;
 	}
+}
+
+void SimpleCameraControl::Interact(float deltaTime)
+{
+	glm::vec3 viewDir = currentRot * glm::vec4(-1.0f, 0.0f, 0.0f, 1.0f);
+	btCollisionWorld::ClosestRayResultCallback hit(ToBt(GetGameObject()->GetPosition()), ToBt(GetGameObject()->GetPosition() + (viewDir * 5.0f)));
+	_scene->GetPhysicsWorld()->rayTest(ToBt(GetGameObject()->GetPosition()), ToBt(GetGameObject()->GetPosition() + (viewDir * 5.0f)), hit);
+
+	if (!hit.hasHit())
+		return;
+	//hit.m_collisionObject-
 }
 
 void SimpleCameraControl::IdleState(float deltaTime)

@@ -28,6 +28,8 @@ public:
 	void Movement(float deltaTime);
 	void OxygenSystem(float deltaTime);
 	void SwitchState(float deltaTime);
+	void Interact(float deltaTime);
+
 
 	void IdleState(float deltaTime);
 	void SneakState(float deltaTime);
@@ -42,13 +44,15 @@ protected:
 	glm::vec3 _moveSpeeds;
 	glm::dvec2 _prevMousePos;
 	glm::vec2 _currentRot;
+	glm::quat currentRot;
 
 	bool _allowMouse = false;
 	bool isJPressed = false;
+	bool isEPressed = false;
 	bool freecam = false;
 	bool _isMousePressed = false;
 	GLFWwindow* _window;
-
+	Scene* _scene;
 	//Player State Stuff
 	enum PlayerState
 	{

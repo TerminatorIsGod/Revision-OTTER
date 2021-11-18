@@ -20,6 +20,7 @@ public:
 	//Properties
 	float volume = 0;
 	float targetVolume = 0;
+	float distractionVolume = 10;
 	float decaySpeed = 1;
 	float attackSpeed = 4;
 	float lerpSpeed;
@@ -28,7 +29,8 @@ public:
 
 	bool isDecaying = true;
 	bool muteAtZero = false;
-
+	glm::vec3 defaultColour = glm::vec3(0.03f, 0.03f, 0.03f);
+	glm::vec3 colour = defaultColour;
 
 	//Functions
 	void Decay(float deltaTime);

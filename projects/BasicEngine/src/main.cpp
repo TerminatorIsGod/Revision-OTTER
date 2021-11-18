@@ -328,6 +328,11 @@ int main() {
 			{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
 		});
 
+		Shader::Sptr toonShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
+			{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
+			{ ShaderPartType::Fragment, "shaders/toon_shading.glsl" }
+		});
+
 		//Meshes
 		MeshResource::Sptr monkeyMesh = ResourceManager::CreateAsset<MeshResource>("Monkey.obj");
 		MeshResource::Sptr mapMesh = ResourceManager::CreateAsset<MeshResource>("map.obj");
@@ -405,6 +410,14 @@ int main() {
 			leaflingMaterial->MatShader = basicShader;
 			leaflingMaterial->Texture = leaflingTex;
 			leaflingMaterial->Shininess = 1.0f;
+		}
+
+		Material::Sptr toonMaterial = ResourceManager::CreateAsset<Material>();
+		{
+			toonMaterial->Name = "Toon";
+			toonMaterial->MatShader = toonShader;
+			toonMaterial->Texture = whiteTex;
+			toonMaterial->Shininess = 1.0f;
 		}
 
 		// Create some lights for our scene
@@ -738,9 +751,11 @@ int main() {
 
 		// Draw some ImGui stuff for the lights
 		if (isDebugWindowOpen) {
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			for (int ix = 0; ix < scene->Lights.size(); ix++) {
 				char buff[256];
 				sprintf_s(buff, "Light %d##%d", ix, ix);
+
 				// DrawLightImGui will return true if the light was deleted
 				if (DrawLightImGui(scene, buff, ix)) {
 					// Remove light from scene, restore all lighting data
