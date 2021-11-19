@@ -26,7 +26,10 @@ public:
 	virtual nlohmann::json ToJson() const override;
 	static InventorySystem::Sptr FromJson(const nlohmann::json& blob);
 
-	std::vector<bool> _keys = { false, false, false };
+	bool key1 = false;
+	bool key2 = false;
+	bool key3 = false;
+	std::vector<bool> _keys = { key1, key2, key3 };
 protected:
 
 	

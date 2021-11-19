@@ -74,6 +74,7 @@
 
 #include "Gameplay/Components/SimpleCameraControl.h"
 #include <Gameplay/Components/MenuSystem.h>
+#include <Gameplay/Components/InteractSystem.h>
 
 
 
@@ -293,6 +294,8 @@ int main() {
 	ComponentManager::RegisterType<SoundEmmiter>();
 
 	ComponentManager::RegisterType<MenuSystem>();
+	ComponentManager::RegisterType<InventorySystem>();
+	ComponentManager::RegisterType<InteractSystem>();
 
 
 	ComponentManager::RegisterType<InventorySystem>();
