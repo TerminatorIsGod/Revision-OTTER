@@ -32,6 +32,7 @@ void SimpleCameraControl::Awake() {
 
 void SimpleCameraControl::Update(float deltaTime)
 {
+
 	Movement(deltaTime);
 	SwitchState(deltaTime);
 	OxygenSystem(deltaTime);

@@ -443,56 +443,56 @@ int main() {
 
 		// Set up the scene's camera
 		//At some point the camera should be seperate from player, and parented to it. OR, just make it so the collider doesn't rotate with the transform
-		GameObject::Sptr camera = scene->CreateGameObject("Main Camera");
-		{
-			camera->SetPostion(glm::vec3(5.0f, -5.0f, 7.0f));
-			camera->LookAt(glm::vec3(0.0f));
+		//GameObject::Sptr camera = scene->CreateGameObject("Main Camera");
+		//{
+		//	camera->SetPostion(glm::vec3(5.0f, -5.0f, 7.0f));
+		//	camera->LookAt(glm::vec3(0.0f));
 
-			camera->Add<SimpleCameraControl>();
+		//	camera->Add<SimpleCameraControl>();
 
-			Camera::Sptr cam = camera->Add<Camera>();
-			// Make sure that the camera is set as the scene's main camera!
-			scene->MainCamera = cam;
+		//	Camera::Sptr cam = camera->Add<Camera>();
+		//	// Make sure that the camera is set as the scene's main camera!
+		//	scene->MainCamera = cam;
 
-			//add physics body
-			RigidBody::Sptr physics = camera->Add<RigidBody>(RigidBodyType::Dynamic);
-			//physics->AddCollider(CapsuleCollider::Create(3.0f, 6.0f));
-			physics->AddCollider(SphereCollider::Create(6.0f)); //Switch to capsule collider ASAP
+		//	//add physics body
+		//	RigidBody::Sptr physics = camera->Add<RigidBody>(RigidBodyType::Dynamic);
+		//	//physics->AddCollider(CapsuleCollider::Create(3.0f, 6.0f));
+		//	physics->AddCollider(SphereCollider::Create(6.0f)); //Switch to capsule collider ASAP
 
 
-			InventorySystem::Sptr inven = camera->Add<InventorySystem>();
+		//	InventorySystem::Sptr inven = camera->Add<InventorySystem>();
 
-			SoundEmmiter::Sptr emmiter = camera->Add<SoundEmmiter>();
-		}
+		//	SoundEmmiter::Sptr emmiter = camera->Add<SoundEmmiter>();
+		//}
 
-		// Set up all our sample objects
-		GameObject::Sptr menu = scene->CreateGameObject("MenuPlane");
-		{
-			menu->SetPostion(glm::vec3(0.5f, 0.0f, -50.0f));
-			menu->SetRotation(glm::vec3(-180.0f, 90.0f, 0.0f));
+		//// Set up all our sample objects
+		//GameObject::Sptr menu = scene->CreateGameObject("MenuPlane");
+		//{
+		//	menu->SetPostion(glm::vec3(0.5f, 0.0f, -50.0f));
+		//	menu->SetRotation(glm::vec3(-180.0f, 90.0f, 0.0f));
 
-			RenderComponent::Sptr renderer = menu->Add<RenderComponent>();
-			renderer->SetMesh(planeMesh);
-			//renderer->SetMaterial(mainmenuMaterial);
+		//	RenderComponent::Sptr renderer = menu->Add<RenderComponent>();
+		//	renderer->SetMesh(planeMesh);
+		//	//renderer->SetMaterial(mainmenuMaterial);
 
-			MenuSystem::Sptr menusys = menu->Add<MenuSystem>();
-			//menusys->mainScene(scene);
-			//menusys->createCamera();
-		}
+		//	MenuSystem::Sptr menusys = menu->Add<MenuSystem>();
+		//	//menusys->mainScene(scene);
+		//	//menusys->createCamera();
+		//}
 
-		GameObject::Sptr menuPause = scene->CreateGameObject("MenuPausePlane");
-		{
-			menuPause->SetPostion(glm::vec3(0.5f, 0.0f, -100.0f));
-			menuPause->SetRotation(glm::vec3(-180.0f, 90.0f, 0.0f));
+		//GameObject::Sptr menuPause = scene->CreateGameObject("MenuPausePlane");
+		//{
+		//	menuPause->SetPostion(glm::vec3(0.5f, 0.0f, -100.0f));
+		//	menuPause->SetRotation(glm::vec3(-180.0f, 90.0f, 0.0f));
 
-			RenderComponent::Sptr renderer = menuPause->Add<RenderComponent>();
-			renderer->SetMesh(planeMesh);
-			//renderer->SetMaterial(pausemenuMaterial);
+		//	RenderComponent::Sptr renderer = menuPause->Add<RenderComponent>();
+		//	renderer->SetMesh(planeMesh);
+		//	//renderer->SetMaterial(pausemenuMaterial);
 
-			MenuSystem::Sptr menusys = menuPause->Add<MenuSystem>();
-			//menusys->mainScene(scene);
-			//menusys->createCamera();
-		}
+		//	MenuSystem::Sptr menusys = menuPause->Add<MenuSystem>();
+		//	//menusys->mainScene(scene);
+		//	//menusys->createCamera();
+		//}
 
 		/*GameObject::Sptr camera = scene->CreateGameObject("Menu Camera");
 		{
@@ -502,25 +502,6 @@ int main() {
 
 			Camera::Sptr cam = camera->Add<Camera>();
 		}*/
-
-		// Set up all our sample objects
-		GameObject::Sptr plane = scene->CreateGameObject("Plane");
-		{
-			//plane->SetScale()
-			// Make a big tiled mesh
-			MeshResource::Sptr tiledMesh = ResourceManager::CreateAsset<MeshResource>();
-			tiledMesh->AddParam(MeshBuilderParam::CreatePlane(ZERO, UNIT_Z, UNIT_X, glm::vec2(100.0f), glm::vec2(20.0f)));
-			tiledMesh->GenerateMesh();
-
-			// Create and attach a RenderComponent to the object to draw our mesh
-			//RenderComponent::Sptr renderer = plane->Add<RenderComponent>();
-			//renderer->SetMesh(tiledMesh);
-			//renderer->SetMaterial(boxMaterial);
-
-			// Attach a plane collider that extends infinitely along the X/Y axis
-			RigidBody::Sptr physics = plane->Add<RigidBody>(/*static by default*/);
-			physics->AddCollider(BoxCollider::Create(glm::vec3(50.0f, 100.0f, 1.0f)))->SetPosition({ 0,0,-1 });
-		}
 
 		GameObject::Sptr square = scene->CreateGameObject("Square");
 		{
