@@ -74,6 +74,7 @@
 
 #include "Gameplay/Components/SimpleCameraControl.h"
 #include <Gameplay/Components/MenuSystem.h>
+#include <Gameplay/Components/InteractSystem.h>
 
 
 
@@ -293,6 +294,8 @@ int main() {
 	ComponentManager::RegisterType<SoundEmmiter>();
 
 	ComponentManager::RegisterType<MenuSystem>();
+	ComponentManager::RegisterType<InventorySystem>();
+	ComponentManager::RegisterType<InteractSystem>();
 
 
 	ComponentManager::RegisterType<InventorySystem>();
@@ -440,36 +443,56 @@ int main() {
 
 		// Set up the scene's camera
 		//At some point the camera should be seperate from player, and parented to it. OR, just make it so the collider doesn't rotate with the transform
+		//GameObject::Sptr camera = scene->CreateGameObject("Main Camera");
+		//{
+		//	camera->SetPostion(glm::vec3(5.0f, -5.0f, 7.0f));
+		//	camera->LookAt(glm::vec3(0.0f));
+
+		//	camera->Add<SimpleCameraControl>();
+
+		//	Camera::Sptr cam = camera->Add<Camera>();
+		//	// Make sure that the camera is set as the scene's main camera!
+		//	scene->MainCamera = cam;
+
+		//	//add physics body
+		//	RigidBody::Sptr physics = camera->Add<RigidBody>(RigidBodyType::Dynamic);
+		//	//physics->AddCollider(CapsuleCollider::Create(3.0f, 6.0f));
+		//	physics->AddCollider(SphereCollider::Create(6.0f)); //Switch to capsule collider ASAP
 
 
-		// Set up all our sample objects
-		GameObject::Sptr menu = scene->CreateGameObject("MenuPlane");
-		{
-			menu->SetPostion(glm::vec3(0.5f, 0.0f, -50.0f));
-			menu->SetRotation(glm::vec3(-180.0f, 90.0f, 0.0f));
+		//	InventorySystem::Sptr inven = camera->Add<InventorySystem>();
 
-			RenderComponent::Sptr renderer = menu->Add<RenderComponent>();
-			renderer->SetMesh(planeMesh);
-			//renderer->SetMaterial(mainmenuMaterial);
+		//	SoundEmmiter::Sptr emmiter = camera->Add<SoundEmmiter>();
+		//}
 
-			MenuSystem::Sptr menusys = menu->Add<MenuSystem>();
-			//menusys->mainScene(scene);
-			//menusys->createCamera();
-		}
+		//// Set up all our sample objects
+		//GameObject::Sptr menu = scene->CreateGameObject("MenuPlane");
+		//{
+		//	menu->SetPostion(glm::vec3(0.5f, 0.0f, -50.0f));
+		//	menu->SetRotation(glm::vec3(-180.0f, 90.0f, 0.0f));
 
-		GameObject::Sptr menuPause = scene->CreateGameObject("MenuPausePlane");
-		{
-			menuPause->SetPostion(glm::vec3(0.5f, 0.0f, -100.0f));
-			menuPause->SetRotation(glm::vec3(-180.0f, 90.0f, 0.0f));
+		//	RenderComponent::Sptr renderer = menu->Add<RenderComponent>();
+		//	renderer->SetMesh(planeMesh);
+		//	//renderer->SetMaterial(mainmenuMaterial);
 
-			RenderComponent::Sptr renderer = menuPause->Add<RenderComponent>();
-			renderer->SetMesh(planeMesh);
-			//renderer->SetMaterial(pausemenuMaterial);
+		//	MenuSystem::Sptr menusys = menu->Add<MenuSystem>();
+		//	//menusys->mainScene(scene);
+		//	//menusys->createCamera();
+		//}
 
-			MenuSystem::Sptr menusys = menuPause->Add<MenuSystem>();
-			//menusys->mainScene(scene);
-			//menusys->createCamera();
-		}
+		//GameObject::Sptr menuPause = scene->CreateGameObject("MenuPausePlane");
+		//{
+		//	menuPause->SetPostion(glm::vec3(0.5f, 0.0f, -100.0f));
+		//	menuPause->SetRotation(glm::vec3(-180.0f, 90.0f, 0.0f));
+
+		//	RenderComponent::Sptr renderer = menuPause->Add<RenderComponent>();
+		//	renderer->SetMesh(planeMesh);
+		//	//renderer->SetMaterial(pausemenuMaterial);
+
+		//	MenuSystem::Sptr menusys = menuPause->Add<MenuSystem>();
+		//	//menusys->mainScene(scene);
+		//	//menusys->createCamera();
+		//}
 
 		/*GameObject::Sptr camera = scene->CreateGameObject("Menu Camera");
 		{

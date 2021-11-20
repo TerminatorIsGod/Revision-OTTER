@@ -13,6 +13,10 @@ void InventorySystem::RenderImGui() {
 	//for (int i = 0; i < _keys.size(); i++) {
 	//	LABEL_LEFT(ImGui::Checkbox, "Key " + i, &_keys[i]);
 	//}
+
+	LABEL_LEFT(ImGui::Checkbox, "Key 1", &key1);
+	LABEL_LEFT(ImGui::Checkbox, "Key 2", &key2);
+	LABEL_LEFT(ImGui::Checkbox, "Key 3", &key3);
 }
 
 nlohmann::json InventorySystem::ToJson() const {

@@ -44,9 +44,20 @@ namespace Gameplay::Physics {
 				continue;
 			}
 
+			//collider->_isDirty |= LABEL_LEFT(ImGui::InputText,  "Name",     buf, 30);
+
+			static char nameBuff[256];
+			memcpy(nameBuff, collider->_name.c_str(), collider->_name.size());
+			nameBuff[collider->_name.size()] = '\0';
+			if (ImGui::InputText("", nameBuff, 256)) {
+				collider->_name = nameBuff;
+			}
+
 			collider->_isDirty |= LABEL_LEFT(ImGui::DragFloat3, "Position", &collider->_position.x, 0.01f);
 			collider->_isDirty |= LABEL_LEFT(ImGui::DragFloat3, "Rotation", &collider->_rotation.x, 1.0f);
 			collider->_isDirty |= LABEL_LEFT(ImGui::DragFloat3, "Scale   ", &collider->_scale.x, 0.01f);
+			//collider->_name = buf;
+
 			// Draw collider's editor
 			collider->DrawImGui();
 
@@ -78,6 +89,7 @@ namespace Gameplay::Physics {
 			blob["position"] = GlmToJson(collider->_position);
 			blob["rotation"] = GlmToJson(collider->_rotation);
 			blob["scale"] = GlmToJson(collider->_scale);
+			blob["name"] = collider->_name;
 			collider->ToJson(blob);
 			output["colliders"].push_back(blob);
 		}
@@ -103,6 +115,7 @@ namespace Gameplay::Physics {
 					collider->_position = ParseJsonVec3(blob["position"]);
 					collider->_rotation = ParseJsonVec3(blob["rotation"]);
 					collider->_scale = ParseJsonVec3(blob["scale"]);
+					collider->_name = blob["name"];
 					// Allow the derived loading
 					collider->FromJson(blob);
 					// Mark dirty and store

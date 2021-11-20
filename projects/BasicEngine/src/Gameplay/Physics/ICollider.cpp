@@ -24,6 +24,7 @@ namespace Gameplay::Physics {
 		_position(glm::vec3(0.0f)),
 		_rotation(glm::vec3(0.0f)),
 		_scale(glm::vec3(1.0f)),
+		_name("Default Name"),
 		_guid(Guid::New())
 	{ }
 

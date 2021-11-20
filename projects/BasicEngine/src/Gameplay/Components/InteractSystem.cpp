@@ -3,6 +3,7 @@
 #include "Gameplay/GameObject.h"
 #include "Gameplay/Scene.h"
 #include "Utils/ImGuiHelper.h"
+#include <Gameplay/Components/InventorySystem.h>
 
 void InteractSystem::Awake()
 {
@@ -38,7 +39,17 @@ InteractSystem::Sptr InteractSystem::FromJson(const nlohmann::json& blob) {
 
 void InteractSystem::Update(float deltaTime) {
 	if (glfwGetKey(_window, GLFW_KEY_E)) {
-		interact();
+
+		if (_requiresKey) {
+
+			if (_player->Get<InventorySystem>()->getKey(_requiredKey))
+				interact();
+
+		}
+		else
+			interact();
+
+		
 	}
 }
 
