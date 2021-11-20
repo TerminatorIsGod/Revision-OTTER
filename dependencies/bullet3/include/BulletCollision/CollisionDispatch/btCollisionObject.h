@@ -72,7 +72,6 @@ protected:
 	///The m_collisionShape might be temporarily replaced by a child collision shape during collision detection purposes
 	///If it is NULL, the m_collisionShape is not temporarily replaced.
 	btCollisionShape* m_rootCollisionShape;
-	//GameObject* m_gameObject;
 
 	int m_collisionFlags;
 
@@ -138,7 +137,7 @@ public:
 		CF_HAS_CONTACT_STIFFNESS_DAMPING = 128,
 		CF_HAS_CUSTOM_DEBUG_RENDERING_COLOR = 256,
 		CF_HAS_FRICTION_ANCHOR = 512,
-		CF_HAS_COLLISION_SOUND_TRIGGER = 1024
+		CF_HAS_COLLISION_SOUND_TRIGGER = 1024,
 	};
 
 	enum CollisionObjectTypes

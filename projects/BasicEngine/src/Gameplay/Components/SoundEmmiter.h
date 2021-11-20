@@ -20,7 +20,7 @@ public:
 	//Properties
 	float volume = 0;
 	float targetVolume = 0;
-	float distractionVolume = 10;
+	float distractionVolume = 100;
 	float decaySpeed = 1;
 	float attackSpeed = 4;
 	float lerpSpeed;

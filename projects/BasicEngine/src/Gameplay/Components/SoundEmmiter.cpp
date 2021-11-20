@@ -10,10 +10,12 @@ void SoundEmmiter::Awake()
 	scene = GetGameObject()->GetScene();
 
 	scene->Lights.push_back(Light());
-	scene->SetupShaderAndLights();
 	soundLight = &scene->Lights[scene->Lights.size() - 1];
+	scene->soundEmmiters.push_back(GetGameObject());
+
+	colour = defaultColour;
 	soundLight->Color = colour;
-	scene->soundEmmiters.push_back(soundLight);
+
 }
 
 void SoundEmmiter::Update(float deltaTime)
@@ -32,8 +34,11 @@ void SoundEmmiter::Update(float deltaTime)
 
 	soundLight->Range = -volume * 16.0f;
 	soundLight->Position = GetGameObject()->GetPosition();
+	//std::cout << "\nLight:" << " | " << soundLight->Position.y;
+
 	//soundLight->Color = colour;
 	scene->SetupShaderAndLights();
+
 }
 
 void SoundEmmiter::RenderImGui() {

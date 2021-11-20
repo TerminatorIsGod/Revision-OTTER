@@ -175,7 +175,7 @@ void SimpleCameraControl::Movement(float deltaTime)
 
 void SimpleCameraControl::OxygenSystem(float deltaTime)
 {
-	std::cout << "\nO2: " << oxygenMeter;
+	//std::cout << "\nO2: " << oxygenMeter;
 	//Fill Oxygen
 	if (glfwGetKey(_window, GLFW_KEY_F) && !glfwGetKey(_window, GLFW_KEY_C))
 	{
@@ -244,13 +244,28 @@ void SimpleCameraControl::SwitchState(float deltaTime)
 
 void SimpleCameraControl::Interact(float deltaTime)
 {
-	glm::vec3 viewDir = currentRot * glm::vec4(-1.0f, 0.0f, 0.0f, 1.0f);
+	glm::vec3 viewDir = currentRot * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f);
 	btCollisionWorld::ClosestRayResultCallback hit(ToBt(GetGameObject()->GetPosition()), ToBt(GetGameObject()->GetPosition() + (viewDir * 5.0f)));
 	_scene->GetPhysicsWorld()->rayTest(ToBt(GetGameObject()->GetPosition()), ToBt(GetGameObject()->GetPosition() + (viewDir * 5.0f)), hit);
 
 	if (!hit.hasHit())
 		return;
-	//hit.m_collisionObject-
+
+
+	glm::vec3 objectPos = ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
+	//std::cout << "\nCollider Pos: " << objectPos.y;
+
+	if (objectPos == glm::vec3(0))
+		return;
+
+	for (int i = 0; i < _scene->soundEmmiters.size(); i++)
+	{
+		if (objectPos == _scene->soundEmmiters[i]->GetPosition())
+			_scene->soundEmmiters[i]->Get<SoundEmmiter>()->volume = _scene->soundEmmiters[i]->Get<SoundEmmiter>()->distractionVolume;
+
+		//std::cout << "\nObject Pos: " << _scene->soundEmmiters[i]->GetPosition().y;
+	}
+
 }
 
 void SimpleCameraControl::IdleState(float deltaTime)
