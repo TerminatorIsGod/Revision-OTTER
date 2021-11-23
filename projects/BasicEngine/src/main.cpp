@@ -421,6 +421,11 @@ int main() {
 		MeshResource::Sptr shelfMedium = ResourceManager::CreateAsset<MeshResource>("map/assets/Shelf_Medium.obj");
 		MeshResource::Sptr shelfSmall = ResourceManager::CreateAsset<MeshResource>("map/assets/Shelf_Small.obj");
 
+		MeshResource::Sptr crate1_5 = ResourceManager::CreateAsset<MeshResource>("map/assets/Crate_1.5ft.obj");
+		MeshResource::Sptr crate2 = ResourceManager::CreateAsset<MeshResource>("map/assets/Crate_2ft.obj");
+		MeshResource::Sptr crate2_5 = ResourceManager::CreateAsset<MeshResource>("map/assets/Crate_2.5ft.obj");
+		MeshResource::Sptr crate3 = ResourceManager::CreateAsset<MeshResource>("map/assets/Crate_3ft.obj");
+		MeshResource::Sptr crate3_5 = ResourceManager::CreateAsset<MeshResource>("map/assets/Crate_3.5ft.obj");
 
 
 
@@ -701,14 +706,21 @@ int main() {
 
 		for (int i = 0; i < 10; i++)
 		{
-			createMapAsset(shelfLarge, tealMaterial, "Large Shelf: " + std::to_string(i));
-			createMapAsset(shelfMedium, tealMaterial, "Medium Shelf: " + std::to_string(i));
-			createMapAsset(shelfSmall, tealMaterial, "Small Shelf: " + std::to_string(i));
+			createMapAsset(shelfLarge, tealMaterial, "Large Shelf: (" + std::to_string(i) + ")");
+			createMapAsset(shelfMedium, tealMaterial, "Medium Shelf: (" + std::to_string(i) + ")");
+			createMapAsset(shelfSmall, tealMaterial, "Small Shelf: (" + std::to_string(i) + ")");
 		}
 		createMapAsset(key1, tealMaterial, "Key 1");
 		createMapAsset(key2, tealMaterial, "Key 2");
 
-
+		for (int i = 0; i < 4; i++)
+		{
+			createMapAsset(crate1_5, tealMaterial, "Crate 1.5ft: (" + std::to_string(i) + ")");
+			createMapAsset(crate2, tealMaterial, "Crate 2ft: (" + std::to_string(i) + ")");
+			createMapAsset(crate2_5, tealMaterial, "Crate 2.5ft: (" + std::to_string(i) + ")");
+			createMapAsset(crate3, tealMaterial, "Crate 3ft: (" + std::to_string(i) + ")");
+			createMapAsset(crate3_5, tealMaterial, "Crate 3.5ft: (" + std::to_string(i) + ")");
+		}
 
 		GameObject::Sptr Leafling = scene->CreateGameObject("Leafling");
 		{
@@ -731,20 +743,20 @@ int main() {
 
 
 		//Generate Nodes
-		for (int x = -2; x < 8; x++)
-		{
-			for (int y = -2; y < 8; y++)
-			{
-				createNavNode(glm::vec3(x * 5, y * 5, 1.0f), navNodeMesh, pinkMaterial);
-			}
-		}
+		//for (int x = -2; x < 8; x++)
+		//{
+		//	for (int y = -2; y < 8; y++)
+		//	{
+		//		createNavNode(glm::vec3(x * 5, y * 5, 1.0f), navNodeMesh, pinkMaterial);
+		//	}
+		//}
 
 
-		//Create pathfindingManager, and send it the list of nodes
-		GameObject::Sptr PathfindingManager = scene->CreateGameObject("Pathfinding Manager");
-		{
-			pathfindingManager::Sptr behaviour = PathfindingManager->Add<pathfindingManager>();
-		}
+		////Create pathfindingManager, and send it the list of nodes
+		//GameObject::Sptr PathfindingManager = scene->CreateGameObject("Pathfinding Manager");
+		//{
+		//	pathfindingManager::Sptr behaviour = PathfindingManager->Add<pathfindingManager>();
+		//}
 
 		// Create a trigger volume for testing how we can detect collisions with objects!
 		GameObject::Sptr trigger = scene->CreateGameObject("Trigger");
