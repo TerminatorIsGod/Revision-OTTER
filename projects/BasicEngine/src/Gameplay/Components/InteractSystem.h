@@ -32,6 +32,7 @@ public:
 	float _interactDistance = 0;
 
 	bool _requiresKey = false;
+	bool _iskey = false;
 	int _requiredKey = 0;
 
 	GLFWwindow* _window;

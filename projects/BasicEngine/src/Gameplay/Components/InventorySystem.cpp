@@ -21,20 +21,26 @@ void InventorySystem::RenderImGui() {
 
 nlohmann::json InventorySystem::ToJson() const {
 	return {
-	//	{ "keys", _keys }
+		{ "key1", key1 },
+		{ "key2", key2 },
+		{ "key3", key3 }
 	};
 }
 
 InventorySystem::InventorySystem() :
-	IComponent()//,
-	//_keys(0)
+	IComponent(),
+	key1(0),
+	key2(0),
+	key3(0)
 { }
 
 InventorySystem::~InventorySystem() = default;
 
 InventorySystem::Sptr InventorySystem::FromJson(const nlohmann::json& blob) {
 	InventorySystem::Sptr result = std::make_shared<InventorySystem>();
-	//result->_keys = blob["keys"];
+	result->key1 = blob["key1"];
+	result->key2 = blob["key2"];
+	result->key3 = blob["key3"];
 	return result;
 }
 
