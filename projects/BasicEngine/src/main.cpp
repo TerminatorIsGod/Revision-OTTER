@@ -76,6 +76,7 @@
 #include "Gameplay/Components/SimpleCameraControl.h"
 #include <Gameplay/Components/MenuSystem.h>
 #include <Gameplay/Components/InteractSystem.h>
+#include <Gameplay/Components/LerpSystem.h>
 
 
 
@@ -323,6 +324,7 @@ int main() {
 	ComponentManager::RegisterType<MenuSystem>();
 	ComponentManager::RegisterType<InventorySystem>();
 	ComponentManager::RegisterType<InteractSystem>();
+	ComponentManager::RegisterType<LerpSystem>();
 
 
 	ComponentManager::RegisterType<InventorySystem>();
