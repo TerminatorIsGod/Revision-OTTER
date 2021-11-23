@@ -67,4 +67,7 @@ void SoundEmmiter::Decay(float deltaTime)
 void SoundEmmiter::Attack(float deltaTime)
 {
 	volume = glm::mix(volume, targetVolume, lerpSpeed * deltaTime);
+
+	if (muteAtZero && targetVolume - volume < 1.0f)
+		isDecaying = true;
 }

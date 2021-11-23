@@ -58,6 +58,7 @@
 #include "Gameplay/Components/NavNode.h"
 #include "Gameplay/Components/pathfindingManager.h"
 #include "Gameplay/Components/SoundEmmiter.h"
+#include "Gameplay/Components/Enemy.h"
 
 
 // Physics
@@ -292,6 +293,7 @@ int main() {
 	ComponentManager::RegisterType<NavNode>();
 	ComponentManager::RegisterType<pathfindingManager>();
 	ComponentManager::RegisterType<SoundEmmiter>();
+	ComponentManager::RegisterType<Enemy>();
 
 	ComponentManager::RegisterType<MenuSystem>();
 	ComponentManager::RegisterType<InventorySystem>();
@@ -310,8 +312,74 @@ int main() {
 	bool loadScene = true;
 	// For now we can use a toggle to generate our scene vs load from file
 	if (loadScene) {
+
+
 		ResourceManager::LoadManifest("manifest.json");
 		scene = Scene::Load("demoscene.json");
+
+		//Texture2D::Sptr    monkeyTex = ResourceManager::CreateAsset<Texture2D>("textures/monkey-uvMap.png");
+		//Shader::Sptr reflectiveShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
+		//	{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
+		//	{ ShaderPartType::Fragment, "shaders/frag_environment_reflective.glsl" }
+		//});
+		//MeshResource::Sptr monkeyMesh = ResourceManager::CreateAsset<MeshResource>("Monkey.obj");
+		//Material::Sptr monkeyMaterial = ResourceManager::CreateAsset<Material>();
+		//{
+		//	monkeyMaterial->Name = "Monkey";
+		//	monkeyMaterial->MatShader = reflectiveShader;
+		//	monkeyMaterial->Texture = monkeyTex;
+		//	monkeyMaterial->Shininess = 1.0f;
+		//}
+
+		//GameObject::Sptr distractionValve2 = scene->CreateGameObject("Distraction Valve");
+		//{
+		//	distractionValve2->SetPostion(glm::vec3(0, 0, -5.0f));
+		//	// Scale up the plane			
+		//	// Create and attach a RenderComponent to the object to draw our mesh
+		//	RenderComponent::Sptr renderer = distractionValve2->Add<RenderComponent>();
+		//	renderer->SetMesh(monkeyMesh);
+		//	renderer->SetMaterial(monkeyMaterial);
+
+
+		//	RigidBody::Sptr physics = distractionValve2->Add<RigidBody>(RigidBodyType::Kinematic);
+		//	physics->AddCollider(SphereCollider::Create(2.0f));
+
+		//	SoundEmmiter::Sptr emmiter = distractionValve2->Add<SoundEmmiter>();
+		//	emmiter->muteAtZero = true;
+		//	emmiter->distractionVolume = 300;
+		//	emmiter->defaultColour = glm::vec3(0.086f, 0.070f, 0.02f);
+		//}
+		Texture2D::Sptr    whiteTex = ResourceManager::CreateAsset<Texture2D>("textures/white.jpg");
+
+		Shader::Sptr basicShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
+			{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
+			{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
+		});
+		MeshResource::Sptr mapMesh2 = ResourceManager::CreateAsset<MeshResource>("map2.obj");
+
+		Material::Sptr whiteMaterial = ResourceManager::CreateAsset<Material>();
+		{
+			whiteMaterial->Name = "White";
+			whiteMaterial->MatShader = basicShader;
+			whiteMaterial->Texture = whiteTex;
+			whiteMaterial->Shininess = 1.0f;
+		}
+
+		GameObject::Sptr map = scene->CreateGameObject("Map");
+		{
+			// Scale up the plane
+			map->SetScale(glm::vec3(4.0f, 4.0f, 4.0f));
+			map->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
+			// Create and attach a RenderComponent to the object to draw our mesh
+			RenderComponent::Sptr renderer = map->Add<RenderComponent>();
+			renderer->SetMesh(mapMesh2);
+			renderer->SetMaterial(whiteMaterial);
+
+			// Attach a plane collider that extends infinitely along the X/Y axis
+			//RigidBody::Sptr physics = plane->Add<RigidBody>(/*static by default*/);
+			//physics->AddCollider(PlaneCollider::Create());
+		}
+
 
 		// Call scene awake to start up all of our components
 		scene->Window = window;
@@ -339,6 +407,8 @@ int main() {
 		//Meshes
 		MeshResource::Sptr monkeyMesh = ResourceManager::CreateAsset<MeshResource>("Monkey.obj");
 		MeshResource::Sptr mapMesh = ResourceManager::CreateAsset<MeshResource>("map.obj");
+		MeshResource::Sptr mapMesh2 = ResourceManager::CreateAsset<MeshResource>("map2.obj");
+
 		MeshResource::Sptr mapCollidersMesh = ResourceManager::CreateAsset<MeshResource>("mapColliders.obj");
 		MeshResource::Sptr leaflingMesh = ResourceManager::CreateAsset<MeshResource>("Leafling_Ver3_-_Rigged.obj");
 
@@ -427,11 +497,11 @@ int main() {
 		scene->Lights.resize(3);
 		scene->Lights[0].Position = glm::vec3(0.0f, 30.0f, 3.0f);
 		scene->Lights[0].Color = glm::vec3(1.0f, 1.0f, 1.0f);
-		scene->Lights[0].Range = 100.0f;
+		scene->Lights[0].Range = 5.0f;
 
 		scene->Lights[1].Position = glm::vec3(0.0f, 90.0f, 6.0f);
 		scene->Lights[1].Color = glm::vec3(1.0f, 1.0f, 1.0f);
-		scene->Lights[1].Range = 100.0f;
+		scene->Lights[1].Range = 5.0f;
 
 		scene->Lights[2].Position = glm::vec3(0.0f, 0.0f, 3.0f);
 		scene->Lights[2].Color = glm::vec3(1.0f, 0.2f, 0.1f);
@@ -568,7 +638,7 @@ int main() {
 
 			//add physics body
 			RigidBody::Sptr physics = camera->Add<RigidBody>(RigidBodyType::Dynamic);
-			//physics->AddCollider(CapsuleCollider::Create(3.0f, 6.0f));
+
 			physics->AddCollider(SphereCollider::Create(2.0f)); //Switch to capsule collider ASAP
 
 
@@ -585,7 +655,7 @@ int main() {
 			map->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
 			// Create and attach a RenderComponent to the object to draw our mesh
 			RenderComponent::Sptr renderer = map->Add<RenderComponent>();
-			renderer->SetMesh(mapMesh);
+			renderer->SetMesh(mapMesh2);
 			renderer->SetMaterial(whiteMaterial);
 
 			// Attach a plane collider that extends infinitely along the X/Y axis
@@ -593,21 +663,25 @@ int main() {
 			//physics->AddCollider(PlaneCollider::Create());
 		}
 
-		//GameObject::Sptr mapColliders = scene->CreateGameObject("Map");
-		//{
-		//	// Scale up the plane
-		//	mapColliders->SetScale(glm::vec3(4.0f, 4.0f, 4.0f));
-		//	mapColliders->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
+		GameObject::Sptr Leafling = scene->CreateGameObject("Leafling");
+		{
+			Leafling->SetPostion(glm::vec3(-5.0f, -5.0f, 0.0f));
+			Leafling->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
+			Leafling->SetScale(glm::vec3(4.0f));
 
-		//	// Create and attach a RenderComponent to the object to draw our mesh
-		//	RenderComponent::Sptr renderer = mapColliders->Add<RenderComponent>();
-		//	renderer->SetMesh(mapCollidersMesh);
-		//	renderer->SetMaterial(whiteMaterial);
+			//add physics body
+			RigidBody::Sptr physics = Leafling->Add<RigidBody>(RigidBodyType::Dynamic);
+			ICollider::Sptr collider = physics->AddCollider(SphereCollider::Create(2.0f));
+			collider->SetPosition(glm::vec3(0, 3.0f, -1.0f));
 
-		//	//Attach a plane collider that extends infinitely along the X/Y axis
-		//	RigidBody::Sptr physics = mapColliders->Add<RigidBody>(/*static by default*/);
-		//	physics->AddCollider(ConvexMeshCollider::Create());
-		//}
+			RenderComponent::Sptr renderer = Leafling->Add<RenderComponent>();
+			renderer->SetMesh(leaflingMesh);
+			renderer->SetMaterial(leaflingMaterial);
+
+			Enemy::Sptr enemyBehaviour = Leafling->Add<Enemy>();
+			enemyBehaviour->player = camera;
+		}
+
 
 		//Generate Nodes
 		for (int x = -2; x < 8; x++)
@@ -792,7 +866,7 @@ int main() {
 
 		// Draw some ImGui stuff for the lights
 		if (isDebugWindowOpen) {
-			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
 			for (int ix = 0; ix < scene->Lights.size(); ix++) {
 				char buff[256];
 				sprintf_s(buff, "Light %d##%d", ix, ix);

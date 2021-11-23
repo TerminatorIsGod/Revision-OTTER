@@ -26,7 +26,6 @@ void SimpleCameraControl::Awake() {
 
 	soundEmmiter = GetComponent<SoundEmmiter>();
 	soundEmmiter->isDecaying = false;
-
 	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
@@ -262,8 +261,11 @@ void SimpleCameraControl::Interact(float deltaTime)
 	for (int i = 0; i < _scene->soundEmmiters.size(); i++)
 	{
 		if (objectPos == _scene->soundEmmiters[i]->GetPosition())
-			_scene->soundEmmiters[i]->Get<SoundEmmiter>()->volume = _scene->soundEmmiters[i]->Get<SoundEmmiter>()->distractionVolume;
-
+		{
+			_scene->soundEmmiters[i]->Get<SoundEmmiter>()->targetVolume = _scene->soundEmmiters[i]->Get<SoundEmmiter>()->distractionVolume;
+			_scene->soundEmmiters[i]->Get<SoundEmmiter>()->isDecaying = false;
+			_scene->soundEmmiters[i]->Get<SoundEmmiter>()->lerpSpeed = 4.0f;
+		}
 		//std::cout << "\nObject Pos: " << _scene->soundEmmiters[i]->GetPosition().y;
 	}
 
