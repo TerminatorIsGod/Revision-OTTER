@@ -248,6 +248,31 @@ void createNavNode(glm::vec3 pos, MeshResource::Sptr mesh, Material::Sptr materi
 
 	}
 }
+void createMapSection(MeshResource::Sptr mesh, Material::Sptr material) {
+	GameObject::Sptr map = scene->CreateGameObject("Map");
+	{
+		// Scale up the plane
+		map->SetScale(glm::vec3(4.0f, 4.0f, 4.0f));
+		map->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
+		// Create and attach a RenderComponent to the object to draw our mesh
+		RenderComponent::Sptr renderer = map->Add<RenderComponent>();
+		renderer->SetMesh(mesh);
+		renderer->SetMaterial(material);
+	}
+}
+
+void createMapAsset(MeshResource::Sptr mesh, Material::Sptr material, std::string name) {
+	GameObject::Sptr map = scene->CreateGameObject(name);
+	{
+		// Scale up the plane
+		map->SetScale(glm::vec3(4.0f, 4.0f, 4.0f));
+		map->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
+		// Create and attach a RenderComponent to the object to draw our mesh
+		RenderComponent::Sptr renderer = map->Add<RenderComponent>();
+		renderer->SetMesh(mesh);
+		renderer->SetMaterial(material);
+	}
+}
 
 
 
@@ -309,10 +334,9 @@ int main() {
 	glCullFace(GL_BACK);
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
-	bool loadScene = true;
+	bool loadScene = false;
 	// For now we can use a toggle to generate our scene vs load from file
 	if (loadScene) {
-
 
 		ResourceManager::LoadManifest("manifest.json");
 		scene = Scene::Load("demoscene.json");
@@ -349,36 +373,6 @@ int main() {
 		//	emmiter->distractionVolume = 300;
 		//	emmiter->defaultColour = glm::vec3(0.086f, 0.070f, 0.02f);
 		//}
-		Texture2D::Sptr    whiteTex = ResourceManager::CreateAsset<Texture2D>("textures/white.jpg");
-
-		Shader::Sptr basicShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
-			{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
-			{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
-		});
-		MeshResource::Sptr mapMesh2 = ResourceManager::CreateAsset<MeshResource>("map2.obj");
-
-		Material::Sptr whiteMaterial = ResourceManager::CreateAsset<Material>();
-		{
-			whiteMaterial->Name = "White";
-			whiteMaterial->MatShader = basicShader;
-			whiteMaterial->Texture = whiteTex;
-			whiteMaterial->Shininess = 1.0f;
-		}
-
-		GameObject::Sptr map = scene->CreateGameObject("Map");
-		{
-			// Scale up the plane
-			map->SetScale(glm::vec3(4.0f, 4.0f, 4.0f));
-			map->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
-			// Create and attach a RenderComponent to the object to draw our mesh
-			RenderComponent::Sptr renderer = map->Add<RenderComponent>();
-			renderer->SetMesh(mapMesh2);
-			renderer->SetMaterial(whiteMaterial);
-
-			// Attach a plane collider that extends infinitely along the X/Y axis
-			//RigidBody::Sptr physics = plane->Add<RigidBody>(/*static by default*/);
-			//physics->AddCollider(PlaneCollider::Create());
-		}
 
 
 		// Call scene awake to start up all of our components
@@ -409,6 +403,27 @@ int main() {
 		MeshResource::Sptr mapMesh = ResourceManager::CreateAsset<MeshResource>("map.obj");
 		MeshResource::Sptr mapMesh2 = ResourceManager::CreateAsset<MeshResource>("map2.obj");
 
+		//Map Meshes
+		MeshResource::Sptr map_laddersRailings = ResourceManager::CreateAsset<MeshResource>("map/Ladders_and_Railings.obj");
+		MeshResource::Sptr map_ceiling = ResourceManager::CreateAsset<MeshResource>("map/Level_1_Ceiling.obj");
+		MeshResource::Sptr map_floor = ResourceManager::CreateAsset<MeshResource>("map/Level_1_Floors.obj");
+		MeshResource::Sptr map_pipes = ResourceManager::CreateAsset<MeshResource>("map/Level_1_Pipes.obj");
+		MeshResource::Sptr map_lightObjects = ResourceManager::CreateAsset<MeshResource>("map/Light_Objects.obj");
+		MeshResource::Sptr map_doorsFrames = ResourceManager::CreateAsset<MeshResource>("map/Locked_Doors_and_Frames.obj");
+		MeshResource::Sptr map_miscObjects = ResourceManager::CreateAsset<MeshResource>("map/Misc_Objects_1.obj");
+		MeshResource::Sptr map_shippingContainers = ResourceManager::CreateAsset<MeshResource>("map/Shipping_Containers.obj");
+		MeshResource::Sptr map_walls = ResourceManager::CreateAsset<MeshResource>("map/Level_1_Walls.obj");
+
+		//Map Assets
+		MeshResource::Sptr key1 = ResourceManager::CreateAsset<MeshResource>("map/assets/Key_1.obj");
+		MeshResource::Sptr key2 = ResourceManager::CreateAsset<MeshResource>("map/assets/Key_2.obj");
+		MeshResource::Sptr shelfLarge = ResourceManager::CreateAsset<MeshResource>("map/assets/Shelf_Large.obj");
+		MeshResource::Sptr shelfMedium = ResourceManager::CreateAsset<MeshResource>("map/assets/Shelf_Medium.obj");
+		MeshResource::Sptr shelfSmall = ResourceManager::CreateAsset<MeshResource>("map/assets/Shelf_Small.obj");
+
+
+
+
 		MeshResource::Sptr mapCollidersMesh = ResourceManager::CreateAsset<MeshResource>("mapColliders.obj");
 		MeshResource::Sptr leaflingMesh = ResourceManager::CreateAsset<MeshResource>("Leafling_Ver3_-_Rigged.obj");
 
@@ -420,6 +435,7 @@ int main() {
 		Texture2D::Sptr    monkeyTex = ResourceManager::CreateAsset<Texture2D>("textures/monkey-uvMap.png");
 		Texture2D::Sptr    pinkTex = ResourceManager::CreateAsset<Texture2D>("textures/pink.jpg");
 		Texture2D::Sptr    whiteTex = ResourceManager::CreateAsset<Texture2D>("textures/white.jpg");
+		Texture2D::Sptr    tealTex = ResourceManager::CreateAsset<Texture2D>("textures/teal.jpg");
 		Texture2D::Sptr    leaflingTex = ResourceManager::CreateAsset<Texture2D>("textures/Leafling-texture.png");
 
 
@@ -475,6 +491,14 @@ int main() {
 			whiteMaterial->MatShader = basicShader;
 			whiteMaterial->Texture = whiteTex;
 			whiteMaterial->Shininess = 1.0f;
+		}
+
+		Material::Sptr tealMaterial = ResourceManager::CreateAsset<Material>();
+		{
+			tealMaterial->Name = "Teal";
+			tealMaterial->MatShader = basicShader;
+			tealMaterial->Texture = tealTex;
+			tealMaterial->Shininess = 1.0f;
 		}
 
 		Material::Sptr leaflingMaterial = ResourceManager::CreateAsset<Material>();
@@ -593,13 +617,14 @@ int main() {
 		{
 			// Scale up the plane			
 			// Create and attach a RenderComponent to the object to draw our mesh
+			distractionValve->SetPostion(glm::vec3(0, 0, 40.0f));
 			RenderComponent::Sptr renderer = distractionValve->Add<RenderComponent>();
 			renderer->SetMesh(monkeyMesh);
 			renderer->SetMaterial(monkeyMaterial);
 
 
 			RigidBody::Sptr physics = distractionValve->Add<RigidBody>(RigidBodyType::Kinematic);
-			physics->AddCollider(SphereCollider::Create(5.0f));
+			physics->AddCollider(SphereCollider::Create(1.0f));
 
 			SoundEmmiter::Sptr emmiter = distractionValve->Add<SoundEmmiter>();
 			emmiter->muteAtZero = true;
@@ -648,20 +673,42 @@ int main() {
 		}
 
 		// Set up all our sample objects
-		GameObject::Sptr map = scene->CreateGameObject("Map");
-		{
-			// Scale up the plane
-			map->SetScale(glm::vec3(4.0f, 4.0f, 4.0f));
-			map->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
-			// Create and attach a RenderComponent to the object to draw our mesh
-			RenderComponent::Sptr renderer = map->Add<RenderComponent>();
-			renderer->SetMesh(mapMesh2);
-			renderer->SetMaterial(whiteMaterial);
+		//GameObject::Sptr map = scene->CreateGameObject("Map");
+		//{
+		//	// Scale up the plane
+		//	map->SetScale(glm::vec3(4.0f, 4.0f, 4.0f));
+		//	map->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
+		//	// Create and attach a RenderComponent to the object to draw our mesh
+		//	RenderComponent::Sptr renderer = map->Add<RenderComponent>();
+		//	renderer->SetMesh(mapMesh2);
+		//	renderer->SetMaterial(whiteMaterial);
 
-			// Attach a plane collider that extends infinitely along the X/Y axis
-			//RigidBody::Sptr physics = plane->Add<RigidBody>(/*static by default*/);
-			//physics->AddCollider(PlaneCollider::Create());
+		//	// Attach a plane collider that extends infinitely along the X/Y axis
+		//	//RigidBody::Sptr physics = plane->Add<RigidBody>(/*static by default*/);
+		//	//physics->AddCollider(PlaneCollider::Create());
+		//}
+
+
+		createMapSection(map_laddersRailings, whiteMaterial);
+		createMapSection(map_ceiling, whiteMaterial);
+		createMapSection(map_floor, whiteMaterial);
+		createMapSection(map_pipes, whiteMaterial);
+		createMapSection(map_lightObjects, whiteMaterial);
+		createMapSection(map_doorsFrames, whiteMaterial);
+		createMapSection(map_miscObjects, whiteMaterial);
+		createMapSection(map_shippingContainers, whiteMaterial);
+		createMapSection(map_walls, whiteMaterial);
+
+		for (int i = 0; i < 10; i++)
+		{
+			createMapAsset(shelfLarge, tealMaterial, "Large Shelf: " + std::to_string(i));
+			createMapAsset(shelfMedium, tealMaterial, "Medium Shelf: " + std::to_string(i));
+			createMapAsset(shelfSmall, tealMaterial, "Small Shelf: " + std::to_string(i));
 		}
+		createMapAsset(key1, tealMaterial, "Key 1");
+		createMapAsset(key2, tealMaterial, "Key 2");
+
+
 
 		GameObject::Sptr Leafling = scene->CreateGameObject("Leafling");
 		{
