@@ -343,40 +343,39 @@ int main() {
 		ResourceManager::LoadManifest("manifest.json");
 		scene = Scene::Load("demoscene.json");
 
-		Shader::Sptr basicShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
-			{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
-			{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
-		});
+		//Shader::Sptr basicShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
+		//	{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
+		//	{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
+		//});
 
-		Texture2D::Sptr    leaflingTex = ResourceManager::CreateAsset<Texture2D>("textures/Leafling-texture.png");
+		//Texture2D::Sptr    leaflingTex = ResourceManager::CreateAsset<Texture2D>("textures/Leafling-texture.png");
 
-		MeshResource::Sptr leaflingMesh = ResourceManager::CreateAsset<MeshResource>("Leafling_Ver3_-_Rigged.obj");
-		Material::Sptr leaflingMaterial = ResourceManager::CreateAsset<Material>();
-		{
-			leaflingMaterial->Name = "Leafling";
-			leaflingMaterial->MatShader = basicShader;
-			leaflingMaterial->Texture = leaflingTex;
-			leaflingMaterial->Shininess = 1.0f;
-		}
-		GameObject::Sptr Leafling = scene->CreateGameObject("Leafling");
-		{
-			Leafling->SetPostion(glm::vec3(-5.0f, -5.0f, 0.0f));
-			Leafling->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
-			Leafling->SetScale(glm::vec3(4.0f));
+		//MeshResource::Sptr leaflingMesh = ResourceManager::CreateAsset<MeshResource>("Leafling_Ver3_-_Rigged.obj");
+		//Material::Sptr leaflingMaterial = ResourceManager::CreateAsset<Material>();
+		//{
+		//	leaflingMaterial->Name = "Leafling";
+		//	leaflingMaterial->MatShader = basicShader;
+		//	leaflingMaterial->Texture = leaflingTex;
+		//	leaflingMaterial->Shininess = 1.0f;
+		//}
+		//GameObject::Sptr Leafling = scene->CreateGameObject("Leafling");
+		//{
+		//	Leafling->SetPostion(glm::vec3(-5.0f, -5.0f, 0.0f));
+		//	Leafling->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
+		//	Leafling->SetScale(glm::vec3(4.0f));
 
-			//add physics body
-			RigidBody::Sptr physics = Leafling->Add<RigidBody>(RigidBodyType::Dynamic);
-			ICollider::Sptr collider = physics->AddCollider(SphereCollider::Create(2.0f));
-			collider->SetPosition(glm::vec3(0, 3.0f, -1.0f));
+		//	//add physics body
+		//	RigidBody::Sptr physics = Leafling->Add<RigidBody>(RigidBodyType::Dynamic);
+		//	ICollider::Sptr collider = physics->AddCollider(SphereCollider::Create(2.0f));
+		//	collider->SetPosition(glm::vec3(0, 3.0f, -1.0f));
 
-			RenderComponent::Sptr renderer = Leafling->Add<RenderComponent>();
-			renderer->SetMesh(leaflingMesh);
-			renderer->SetMaterial(leaflingMaterial);
+		//	RenderComponent::Sptr renderer = Leafling->Add<RenderComponent>();
+		//	renderer->SetMesh(leaflingMesh);
+		//	renderer->SetMaterial(leaflingMaterial);
 
-			Enemy::Sptr enemyBehaviour = Leafling->Add<Enemy>();
-			//enemyBehaviour->player = camera;
-		}
-
+		//	Enemy::Sptr enemyBehaviour = Leafling->Add<Enemy>();
+		//	//enemyBehaviour->player = camera;
+		//}
 
 		// Call scene awake to start up all of our components
 		scene->Window = window;
