@@ -21,7 +21,7 @@ public:
 
 	std::vector<GameObject::Sptr> lastHeardSounds;
 	std::vector<glm::vec3> lastHeardPositions;
-	GameObject::Sptr player;
+	GameObject* player;
 	Scene* scene;
 	GLFWwindow* window;
 	Gameplay::Physics::RigidBody::Sptr body;
@@ -40,6 +40,7 @@ public:
 	glm::vec3 desiredVelocity;
 	glm::vec3 targetRotation;
 	float avoidanceRange = 5.0f;
+	float avoidanceStrength = 2000.0f;
 
 	//Listening Light
 	float listeningRadius = 2.0f;
@@ -66,7 +67,7 @@ public:
 	void Move(float deltaTime);
 	void Steering(float deltaTime);
 	void AvoidanceReflect(glm::vec3 dir, float deltaTime);
-	void Avoidance(glm::vec3 dir);
+	void Avoidance(glm::vec3 dir, float deltaTime);
 	void IsPlayerDead();
 
 	//General Functions

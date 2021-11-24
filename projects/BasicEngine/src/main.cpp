@@ -334,45 +334,46 @@ int main() {
 	glCullFace(GL_BACK);
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
-	bool loadScene = false;
+	bool loadScene = true;
 	// For now we can use a toggle to generate our scene vs load from file
 	if (loadScene) {
 
 		ResourceManager::LoadManifest("manifest.json");
 		scene = Scene::Load("demoscene.json");
 
-		//Texture2D::Sptr    monkeyTex = ResourceManager::CreateAsset<Texture2D>("textures/monkey-uvMap.png");
-		//Shader::Sptr reflectiveShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
-		//	{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
-		//	{ ShaderPartType::Fragment, "shaders/frag_environment_reflective.glsl" }
-		//});
-		//MeshResource::Sptr monkeyMesh = ResourceManager::CreateAsset<MeshResource>("Monkey.obj");
-		//Material::Sptr monkeyMaterial = ResourceManager::CreateAsset<Material>();
-		//{
-		//	monkeyMaterial->Name = "Monkey";
-		//	monkeyMaterial->MatShader = reflectiveShader;
-		//	monkeyMaterial->Texture = monkeyTex;
-		//	monkeyMaterial->Shininess = 1.0f;
-		//}
+		Shader::Sptr basicShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
+			{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
+			{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
+		});
 
-		//GameObject::Sptr distractionValve2 = scene->CreateGameObject("Distraction Valve");
-		//{
-		//	distractionValve2->SetPostion(glm::vec3(0, 0, -5.0f));
-		//	// Scale up the plane			
-		//	// Create and attach a RenderComponent to the object to draw our mesh
-		//	RenderComponent::Sptr renderer = distractionValve2->Add<RenderComponent>();
-		//	renderer->SetMesh(monkeyMesh);
-		//	renderer->SetMaterial(monkeyMaterial);
+		Texture2D::Sptr    leaflingTex = ResourceManager::CreateAsset<Texture2D>("textures/Leafling-texture.png");
 
+		MeshResource::Sptr leaflingMesh = ResourceManager::CreateAsset<MeshResource>("Leafling_Ver3_-_Rigged.obj");
+		Material::Sptr leaflingMaterial = ResourceManager::CreateAsset<Material>();
+		{
+			leaflingMaterial->Name = "Leafling";
+			leaflingMaterial->MatShader = basicShader;
+			leaflingMaterial->Texture = leaflingTex;
+			leaflingMaterial->Shininess = 1.0f;
+		}
+		GameObject::Sptr Leafling = scene->CreateGameObject("Leafling");
+		{
+			Leafling->SetPostion(glm::vec3(-5.0f, -5.0f, 0.0f));
+			Leafling->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
+			Leafling->SetScale(glm::vec3(4.0f));
 
-		//	RigidBody::Sptr physics = distractionValve2->Add<RigidBody>(RigidBodyType::Kinematic);
-		//	physics->AddCollider(SphereCollider::Create(2.0f));
+			//add physics body
+			RigidBody::Sptr physics = Leafling->Add<RigidBody>(RigidBodyType::Dynamic);
+			ICollider::Sptr collider = physics->AddCollider(SphereCollider::Create(2.0f));
+			collider->SetPosition(glm::vec3(0, 3.0f, -1.0f));
 
-		//	SoundEmmiter::Sptr emmiter = distractionValve2->Add<SoundEmmiter>();
-		//	emmiter->muteAtZero = true;
-		//	emmiter->distractionVolume = 300;
-		//	emmiter->defaultColour = glm::vec3(0.086f, 0.070f, 0.02f);
-		//}
+			RenderComponent::Sptr renderer = Leafling->Add<RenderComponent>();
+			renderer->SetMesh(leaflingMesh);
+			renderer->SetMaterial(leaflingMaterial);
+
+			Enemy::Sptr enemyBehaviour = Leafling->Add<Enemy>();
+			//enemyBehaviour->player = camera;
+		}
 
 
 		// Call scene awake to start up all of our components
@@ -738,7 +739,7 @@ int main() {
 			renderer->SetMaterial(leaflingMaterial);
 
 			Enemy::Sptr enemyBehaviour = Leafling->Add<Enemy>();
-			enemyBehaviour->player = camera;
+			//enemyBehaviour->player = camera;
 		}
 
 

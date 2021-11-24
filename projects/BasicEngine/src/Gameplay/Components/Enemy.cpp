@@ -18,12 +18,12 @@ void Enemy::Awake()
 	window = scene->Window;
 	body = GetComponent<Gameplay::Physics::RigidBody>();
 	body->SetAngularFactor(glm::vec3(0, 0, 0));
-
+	body->SetLinearVelocity(glm::vec3(0));
 	//scene->Lights.push_back(Light());
 	//soundLight = &scene->Lights[scene->Lights.size() - 1];
 	//soundLight->Range = -listeningRadius * 16.0f;;
 	//soundLight->Color = blue;
-
+	player = scene->MainCamera->GetGameObject();
 }
 
 void Enemy::Update(float deltaTime)
@@ -69,14 +69,17 @@ void Enemy::MoveListeningLight()
 
 void Enemy::Move(float deltaTime)
 {
-	if (glfwGetKey(window, GLFW_KEY_Q))
-		Steering(deltaTime);
+	Steering(deltaTime);
 
-	AvoidanceReflect(glm::normalize(body->GetLinearVelocity()), deltaTime);
+	AvoidanceReflect(body->GetLinearVelocity(), deltaTime);
+	Avoidance(glm::vec3(-body->GetLinearVelocity().y, body->GetLinearVelocity().x, 0.0f), deltaTime);
+	Avoidance(glm::vec3(body->GetLinearVelocity().y, -body->GetLinearVelocity().x, 0.0f), deltaTime);
+
 	//Avoidance();
 	//Avoidance();
 	//Avoidance();
-	//Avoidance();
+	GetGameObject()->LookAt(GetGameObject()->GetPosition() + body->GetLinearVelocity() * -1.0f);
+
 }
 
 void Enemy::Steering(float deltaTime)
@@ -101,47 +104,68 @@ void Enemy::Steering(float deltaTime)
 	newVel += targetRotation * 100.0f * deltaTime;
 
 	if (Magnitude(newVel) > maxVelocity)
-		newVel = (newVel / Magnitude(newVel)) * maxVelocity;
+		newVel = glm::normalize(newVel) * maxVelocity;
 
 	body->SetLinearVelocity(glm::vec3(newVel.x, newVel.y, 0.0f));
 
-	GetGameObject()->LookAt(GetGameObject()->GetPosition() + body->GetLinearVelocity() * -1.0f);
 }
 
 void Enemy::AvoidanceReflect(glm::vec3 dir, float deltaTime)
 {
-	//if (Magnitude(dir) <= 10)
-	//	return;
-	////Perform Raycast
-	//const glm::vec3 startPoint = GetGameObject()->GetPosition();
-	//const glm::vec3 endPoint = GetGameObject()->GetPosition() + (dir * avoidanceRange);
+	//Check if greater than zero before normalizing since that would divide by 0
+	if (Magnitude(dir) <= 0.0f)
+		return;
 
-	//btCollisionWorld::ClosestRayResultCallback hit(ToBt(startPoint), ToBt(endPoint));
-	//scene->GetPhysicsWorld()->rayTest(ToBt(startPoint), ToBt(endPoint), hit);
+	dir = glm::normalize(dir);
 
-	//
-	//	if (!hit.hasHit())
-	//		return;
-	//
-	//	//Make sure enemy doesn't avoid player or sound emmiters
-	//	glm::vec3 objectPos = ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
-	//
-	//	for (int i = 0; i < scene->soundEmmiters.size(); i++)
-	//	{
-	//		if (objectPos == scene->soundEmmiters[i]->GetPosition())
-	//			return;
-	//	}
-	//
-	//	//Add avoidance force
-	//	glm::vec3 newDir = glm::reflect(glm::normalize(dir), ToGlm(hit.m_hitNormalWorld));
-	//	newDir = (newDir * avoidanceRange) - GetGameObject()->GetPosition();
-	//
-	//	body->SetLinearVelocity(glm::normalize(newDir) * 10.0f * deltaTime);
+	//Perform Raycast
+	const glm::vec3 startPoint = GetGameObject()->GetPosition();
+	const glm::vec3 endPoint = GetGameObject()->GetPosition() + (dir * avoidanceRange);
+
+	btCollisionWorld::ClosestRayResultCallback hit(ToBt(startPoint), ToBt(endPoint));
+	scene->GetPhysicsWorld()->rayTest(ToBt(startPoint), ToBt(endPoint), hit);
+
+	if (!hit.hasHit())
+		return;
+
+	//Make sure enemy doesn't avoid player or sound emmiters
+	glm::vec3 objectPos = ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
+
+	for (int i = 0; i < scene->soundEmmiters.size(); i++)
+	{
+		if (objectPos == scene->soundEmmiters[i]->GetPosition())
+			return;
+	}
+
+	//Add avoidance force
+	glm::vec3 newDir = glm::reflect(dir, ToGlm(hit.m_hitNormalWorld));
+	newDir = (newDir * avoidanceRange) - GetGameObject()->GetPosition();
+
+	body->ApplyForce(glm::normalize(newDir) * avoidanceStrength * deltaTime);
 }
 
-void Enemy::Avoidance(glm::vec3 dir)
+void Enemy::Avoidance(glm::vec3 dir, float deltaTime)
 {
+	if (Magnitude(dir) <= 0.0f)
+		return;
 
+	dir = glm::normalize(dir);
+
+	//Perform Raycast
+	const glm::vec3 startPoint = GetGameObject()->GetPosition();
+	const glm::vec3 endPoint = GetGameObject()->GetPosition() + (dir * avoidanceRange);
+
+	btCollisionWorld::ClosestRayResultCallback hit(ToBt(startPoint), ToBt(endPoint));
+	scene->GetPhysicsWorld()->rayTest(ToBt(startPoint), ToBt(endPoint), hit);
+
+	if (!hit.hasHit())
+		return;
+
+	//Add avoidance force
+	glm::vec3 newDir = glm::normalize(body->GetLinearVelocity()) - dir;
+	newDir = glm::vec3(newDir.x, newDir.y, 0.0f);
+
+	body->ApplyForce(glm::normalize(newDir) * avoidanceStrength * deltaTime);
 }
 
 void Enemy::IsPlayerDead()
