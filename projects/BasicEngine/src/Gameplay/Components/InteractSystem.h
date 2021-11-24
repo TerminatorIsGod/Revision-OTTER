@@ -2,6 +2,7 @@
 #include "IComponent.h"
 #include "Gameplay/Physics/RigidBody.h"
 #include "Gameplay/GameObject.h"
+#include "Gameplay/Components/LerpSystem.h"
 
 struct GLFWwindow;
 
@@ -26,14 +27,20 @@ public:
 	MAKE_TYPENAME(InteractSystem);
 	virtual nlohmann::json ToJson() const override;
 	static InteractSystem::Sptr FromJson(const nlohmann::json& blob);
-
 	Gameplay::GameObject::Sptr _player;
+	
+	LerpSystem::Sptr _lerpS;
+
 	float _distance = 0;
 	float _interactDistance = 0;
 
 	bool _requiresKey = false;
 	bool _iskey = false;
 	int _requiredKey = 0;
+
+	bool isOpen = false;
+
+	bool isKeyPressed = false;
 
 	GLFWwindow* _window;
 

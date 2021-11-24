@@ -8,6 +8,8 @@
 void InteractSystem::Awake()
 {
 	_window = GetGameObject()->GetScene()->Window;
+	_player = GetGameObject()->GetScene()->FindObjectByName("Main Camera");
+	_lerpS = GetGameObject()->Get<LerpSystem>();
 }
 
 void InteractSystem::RenderImGui() {
@@ -50,26 +52,39 @@ InteractSystem::Sptr InteractSystem::FromJson(const nlohmann::json& blob) {
 }
 
 void InteractSystem::Update(float deltaTime) {
-	if (glfwGetKey(_window, GLFW_KEY_E)) {
-
+	if (glfwGetKey(_window, GLFW_KEY_E) == GLFW_PRESS && isKeyPressed == false) {
+		isKeyPressed = true;
 		if (_requiresKey) {
 
-			if (_player->Get<InventorySystem>()->getKey(_requiredKey))
+			if (_player->Get<InventorySystem>()->getKey(_requiredKey)) {
 				interact();
+				isOpen = !isOpen;
+			}
 
 		}
-		else
+		else {
 			interact();
-
-		
+			isOpen = !isOpen;
+		}
+					
 	}
+	else {
+		isKeyPressed = false;
+	}
+
 }
 
 void InteractSystem::interact() {
 
 	_distance = _player->GetPosition().length() - GetGameObject()->GetPosition().length();
 
+
 	if (_distance < _interactDistance) {
+
+		if (_lerpS) {
+			_lerpS->lerpReverse = isOpen;
+			_lerpS->beginLerp = true;
+		}
 		
 		std::cout << GetGameObject()->Name << " OBJECT INTERACTED";
 	}

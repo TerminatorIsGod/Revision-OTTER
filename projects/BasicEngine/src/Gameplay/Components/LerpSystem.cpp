@@ -70,19 +70,34 @@ LerpSystem::Sptr LerpSystem::FromJson(const nlohmann::json& blob) {
 
 void LerpSystem::Update(float deltaTime) {
 	if (beginLerp) {
-		t += deltaTime;
-
-		if (t > tLength) {
-			beginLerp = false;
-			t = 0;
-		}
 
 		if (lerpReverse) {
-			GetGameObject()->SetRotation(glm::slerp(endRot, startRot, t/tLength));
+			t -= deltaTime;
+
+			if (t < 0) {
+				beginLerp = false;
+				//t = 0;
+			}
 		}
 		else {
-			GetGameObject()->SetRotation(glm::slerp(startRot, endRot, t/tLength));
+			t += deltaTime;
+
+			if (t > tLength) {
+				beginLerp = false;
+				//t = 0;
+			}
 		}
+			
+		//t += deltaTime;
+
+		GetGameObject()->SetRotation(glm::slerp(startRot, endRot, t / tLength));
+
+		//if (lerpReverse) {
+		//	GetGameObject()->SetRotation(glm::slerp(endRot, startRot, t/tLength));
+		//}
+		//else {
+		//	GetGameObject()->SetRotation(glm::slerp(startRot, endRot, t/tLength));
+		//}
 
 	}
 }
