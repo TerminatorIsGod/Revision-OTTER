@@ -644,7 +644,7 @@ int main() {
 
 			SoundEmmiter::Sptr emmiter = camera->Add<SoundEmmiter>();
 		}
-
+		
 		// Set up all our sample objects
 		//GameObject::Sptr map = scene->CreateGameObject("Map");
 		//{
@@ -742,7 +742,7 @@ int main() {
 		scene->Awake();
 
 		// Save the asset manifest for all the resources we just loaded
-		ResourceManager::SaveManifest("scene-manifest.json");
+		ResourceManager::SaveManifest("manifest.json");
 		// Save the scene to a JSON file
 		scene->Save("scene.json");
 	}
