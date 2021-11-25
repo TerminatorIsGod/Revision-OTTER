@@ -3,6 +3,7 @@
 #include "Utils/JsonGlmHelpers.h"
 #include "Utils\GlmBulletConversions.h"
 #include <GLFW/glfw3.h>
+#include "Gameplay/Enemy/PatrollingState.h"
 
 #pragma region "Default Functions"
 
@@ -11,7 +12,11 @@ float Magnitude(glm::vec3 dir)
 	float dirLength = (dir.x * dir.x) + (dir.y * dir.y) + (dir.z * dir.z);
 	return glm::sqrt(dirLength);
 }
-
+Enemy::Enemy()
+{
+	//Patrol State by default
+	currentState = &PatrollingState::getInstance();
+}
 void Enemy::Awake()
 {
 	scene = GetGameObject()->GetScene();
@@ -19,20 +24,22 @@ void Enemy::Awake()
 	body = GetComponent<Gameplay::Physics::RigidBody>();
 	body->SetAngularFactor(glm::vec3(0, 0, 0));
 	body->SetLinearVelocity(glm::vec3(0));
+	//body->SetLinearDamping(0.2f);
+
 	//scene->Lights.push_back(Light());
 	//soundLight = &scene->Lights[scene->Lights.size() - 1];
 	//soundLight->Range = -listeningRadius * 16.0f;;
 	//soundLight->Color = blue;
 	player = scene->MainCamera->GetGameObject();
+	SetState(PatrollingState::getInstance());
 }
 
 void Enemy::Update(float deltaTime)
 {
 	//MoveListeningLight();
-	//currentState.Listen();
-	//currentState.Pathfind();
-	//currentState.Move(); //In Agro state, make it so the enemy doesn't slow down when its near target
-	Move(deltaTime);
+	currentState->Listen(this, deltaTime);
+	currentState->Pathfind(this, deltaTime);
+	currentState->Move(this, deltaTime); //In Agro state, make it so the enemy doesn't slow down when its near target
 
 
 	if (lastHeardSounds.size() > 2)
@@ -40,7 +47,6 @@ void Enemy::Update(float deltaTime)
 		lastHeardSounds.pop_back();
 		lastHeardPositions.pop_back();
 	}
-
 
 }
 
@@ -67,19 +73,28 @@ void Enemy::MoveListeningLight()
 	soundLight->Position = GetGameObject()->GetPosition();
 }
 
+void Enemy::SetState(EnemyState& newState)
+{
+	currentState->End(this);
+	currentState = &newState;
+	currentState->Start(this);
+}
+
 void Enemy::Move(float deltaTime)
 {
 	Steering(deltaTime);
 
 	AvoidanceReflect(body->GetLinearVelocity(), deltaTime);
+
+	glm::vec3 leftDir = glm::vec3(-body->GetLinearVelocity().y + body->GetLinearVelocity().x, body->GetLinearVelocity().x + body->GetLinearVelocity().y, 0.0f) / 2.0f;
+	glm::vec3 rightDir = glm::vec3(body->GetLinearVelocity().y + body->GetLinearVelocity().x, -body->GetLinearVelocity().x + body->GetLinearVelocity().y, 0.0f) / 2.0f;
+
+	//Avoidance(leftDir, deltaTime);
+	//Avoidance(rightDir, deltaTime);
 	Avoidance(glm::vec3(-body->GetLinearVelocity().y, body->GetLinearVelocity().x, 0.0f), deltaTime);
 	Avoidance(glm::vec3(body->GetLinearVelocity().y, -body->GetLinearVelocity().x, 0.0f), deltaTime);
 
-	//Avoidance();
-	//Avoidance();
-	//Avoidance();
 	GetGameObject()->LookAt(GetGameObject()->GetPosition() + body->GetLinearVelocity() * -1.0f);
-
 }
 
 void Enemy::Steering(float deltaTime)
@@ -160,6 +175,7 @@ void Enemy::Avoidance(glm::vec3 dir, float deltaTime)
 
 	if (!hit.hasHit())
 		return;
+
 
 	//Add avoidance force
 	glm::vec3 newDir = glm::normalize(body->GetLinearVelocity()) - dir;

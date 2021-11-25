@@ -4,7 +4,9 @@
 #include "Gameplay/Components/pathfindingManager.h"
 #include "Gameplay/Physics/RigidBody.h"
 #include "Gameplay/Scene.h"
+#include "Gameplay/Enemy/EnemyState.h"
 
+class EnemyState; //This forward declaration is here to avoid a circular include
 
 struct GLFWwindow;
 
@@ -14,7 +16,7 @@ class Enemy : public IComponent {
 public:
 
 	typedef std::shared_ptr<Enemy> Sptr;
-	Enemy() = default;
+	Enemy();
 	//~Enemy();
 
 #pragma region "Properties & Variables"
@@ -59,16 +61,21 @@ public:
 	glm::vec3 blue = glm::vec3(0, 0, 0.2f);
 	glm::vec3 yellow = glm::vec3(0.2f, 0.2f, 0);
 
+	EnemyState* currentState;
 
 #pragma endregion "Properties & Variables"
 
 	//Functions
+	void SetState(EnemyState& newState);
+	inline EnemyState* getCurrentState() const { return currentState; }
+
 	void MoveListeningLight();
 	void Move(float deltaTime);
 	void Steering(float deltaTime);
 	void AvoidanceReflect(glm::vec3 dir, float deltaTime);
 	void Avoidance(glm::vec3 dir, float deltaTime);
 	void IsPlayerDead();
+
 
 	//General Functions
 	glm::vec3 speed = glm::vec3(0.0f);
