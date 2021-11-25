@@ -9,7 +9,7 @@
 #include <fstream>
 #include <sstream>
 #include <typeindex>
-#include <optional>
+#include <optional> 
 #include <string>
 
 // GLM math library
@@ -644,7 +644,7 @@ int main() {
 
 			SoundEmmiter::Sptr emmiter = camera->Add<SoundEmmiter>();
 		}
-		
+
 		// Set up all our sample objects
 		//GameObject::Sptr map = scene->CreateGameObject("Map");
 		//{
