@@ -9,7 +9,7 @@
 #include <fstream>
 #include <sstream>
 #include <typeindex>
-#include <optional>
+#include <optional> 
 #include <string>
 
 // GLM math library
@@ -76,6 +76,7 @@
 #include "Gameplay/Components/SimpleCameraControl.h"
 #include <Gameplay/Components/MenuSystem.h>
 #include <Gameplay/Components/InteractSystem.h>
+#include <Gameplay/Components/LerpSystem.h>
 
 
 
@@ -323,6 +324,7 @@ int main() {
 	ComponentManager::RegisterType<MenuSystem>();
 	ComponentManager::RegisterType<InventorySystem>();
 	ComponentManager::RegisterType<InteractSystem>();
+	ComponentManager::RegisterType<LerpSystem>();
 
 
 	ComponentManager::RegisterType<InventorySystem>();
@@ -334,45 +336,44 @@ int main() {
 	glCullFace(GL_BACK);
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
-	bool loadScene = false;
+	bool loadScene = true;
 	// For now we can use a toggle to generate our scene vs load from file
 	if (loadScene) {
 
 		ResourceManager::LoadManifest("manifest.json");
 		scene = Scene::Load("demoscene.json");
 
-		//Texture2D::Sptr    monkeyTex = ResourceManager::CreateAsset<Texture2D>("textures/monkey-uvMap.png");
-		//Shader::Sptr reflectiveShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
-		//	{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
-		//	{ ShaderPartType::Fragment, "shaders/frag_environment_reflective.glsl" }
-		//});
-		//MeshResource::Sptr monkeyMesh = ResourceManager::CreateAsset<MeshResource>("Monkey.obj");
-		//Material::Sptr monkeyMaterial = ResourceManager::CreateAsset<Material>();
-		//{
-		//	monkeyMaterial->Name = "Monkey";
-		//	monkeyMaterial->MatShader = reflectiveShader;
-		//	monkeyMaterial->Texture = monkeyTex;
-		//	monkeyMaterial->Shininess = 1.0f;
-		//}
 
-		//GameObject::Sptr distractionValve2 = scene->CreateGameObject("Distraction Valve");
-		//{
-		//	distractionValve2->SetPostion(glm::vec3(0, 0, -5.0f));
-		//	// Scale up the plane			
-		//	// Create and attach a RenderComponent to the object to draw our mesh
-		//	RenderComponent::Sptr renderer = distractionValve2->Add<RenderComponent>();
-		//	renderer->SetMesh(monkeyMesh);
-		//	renderer->SetMaterial(monkeyMaterial);
+		GameObject::Sptr distractionValve = scene->CreateGameObject("Distraction Valve");
+		{
+			distractionValve->SetPostion(glm::vec3(-2.1f, 0.0f, -7.3f));
+			// Scale up the plane			
+			// Create and attach a RenderComponent to the object to draw our mesh
 
+			RigidBody::Sptr physics = distractionValve->Add<RigidBody>(RigidBodyType::Kinematic);
+			physics->AddCollider(SphereCollider::Create(1.15f));
 
-		//	RigidBody::Sptr physics = distractionValve2->Add<RigidBody>(RigidBodyType::Kinematic);
-		//	physics->AddCollider(SphereCollider::Create(2.0f));
+			SoundEmmiter::Sptr emmiter = distractionValve->Add<SoundEmmiter>();
+			emmiter->muteAtZero = true;
+			emmiter->distractionVolume = 300;
+			emmiter->defaultColour = glm::vec3(0.086f, 0.070f, 0.02f);
 
-		//	SoundEmmiter::Sptr emmiter = distractionValve2->Add<SoundEmmiter>();
-		//	emmiter->muteAtZero = true;
-		//	emmiter->distractionVolume = 300;
-		//	emmiter->defaultColour = glm::vec3(0.086f, 0.070f, 0.02f);
-		//}
+		}
+		 
+		GameObject::Sptr distractionVending = scene->CreateGameObject("Distraction Valve");
+		{
+			distractionVending->SetPostion(glm::vec3(-13.3f, 71.5f, 6.0f));
+			// Scale up the plane			
+			// Create and attach a RenderComponent to the object to draw our mesh
+
+			RigidBody::Sptr physics = distractionVending->Add<RigidBody>(RigidBodyType::Kinematic);
+			physics->AddCollider(SphereCollider::Create(4.0f));
+
+			SoundEmmiter::Sptr emmiter = distractionVending->Add<SoundEmmiter>();
+			emmiter->muteAtZero = true;
+			emmiter->distractionVolume = 60;
+			emmiter->defaultColour = glm::vec3(0.086f, 0.070f, 0.02f);
+		}
 
 
 		// Call scene awake to start up all of our components
@@ -738,7 +739,7 @@ int main() {
 			renderer->SetMaterial(leaflingMaterial);
 
 			Enemy::Sptr enemyBehaviour = Leafling->Add<Enemy>();
-			enemyBehaviour->player = camera;
+			//enemyBehaviour->player = camera;
 		}
 
 
@@ -774,7 +775,7 @@ int main() {
 		scene->Awake();
 
 		// Save the asset manifest for all the resources we just loaded
-		ResourceManager::SaveManifest("scene-manifest.json");
+		ResourceManager::SaveManifest("manifest.json");
 		// Save the scene to a JSON file
 		scene->Save("scene.json");
 	}
@@ -806,6 +807,7 @@ int main() {
 	///// Game loop /////
 	while (!glfwWindowShouldClose(window)) {
 
+		scene->SetupShaderAndLights(); //Update Lights in scene
 
 		if (scene->FindObjectByName("MenuPlane") != nullptr) {
 			menuPlane = scene->FindObjectByName("MenuPlane");

@@ -51,7 +51,7 @@ public:
 	MAKE_TYPENAME(SoundEmmiter);
 
 protected:
-	Light* soundLight;
+	int soundLight;
 	glm::vec3 soundRingOffset = glm::vec3(0, 0, -5.0f);
 
 };

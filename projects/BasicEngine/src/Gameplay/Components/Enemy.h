@@ -4,7 +4,9 @@
 #include "Gameplay/Components/pathfindingManager.h"
 #include "Gameplay/Physics/RigidBody.h"
 #include "Gameplay/Scene.h"
+#include "Gameplay/Enemy/EnemyState.h"
 
+class EnemyState; //This forward declaration is here to avoid a circular include
 
 struct GLFWwindow;
 
@@ -14,14 +16,14 @@ class Enemy : public IComponent {
 public:
 
 	typedef std::shared_ptr<Enemy> Sptr;
-	Enemy() = default;
+	Enemy();
 	//~Enemy();
 
 #pragma region "Properties & Variables"
 
 	std::vector<GameObject::Sptr> lastHeardSounds;
 	std::vector<glm::vec3> lastHeardPositions;
-	GameObject::Sptr player;
+	GameObject* player;
 	Scene* scene;
 	GLFWwindow* window;
 	Gameplay::Physics::RigidBody::Sptr body;
@@ -39,11 +41,12 @@ public:
 	float maxRotationSpeed = 0.1f;
 	glm::vec3 desiredVelocity;
 	glm::vec3 targetRotation;
-	float avoidanceRange = 5.0f;
+	float avoidanceRange = 3.0f;
+	float avoidanceStrength = 2000.0f;
 
 	//Listening Light
-	float listeningRadius = 2.0f;
-	Light* soundLight;
+	float listeningRadius = 3.0f;
+	int soundLight;
 
 	//Pathfinding
 	bool pathRequested = false;
@@ -55,19 +58,24 @@ public:
 
 	//State Machine Stuff
 	glm::vec3 red = glm::vec3(0.2f, 0, 0);
-	glm::vec3 blue = glm::vec3(0, 0, 0.2f);
+	glm::vec3 blue = glm::vec3(0.01, 0.01, 0.2f);
 	glm::vec3 yellow = glm::vec3(0.2f, 0.2f, 0);
 
+	EnemyState* currentState;
 
 #pragma endregion "Properties & Variables"
 
 	//Functions
+	void SetState(EnemyState& newState);
+	inline EnemyState* getCurrentState() const { return currentState; }
+
 	void MoveListeningLight();
 	void Move(float deltaTime);
 	void Steering(float deltaTime);
 	void AvoidanceReflect(glm::vec3 dir, float deltaTime);
-	void Avoidance(glm::vec3 dir);
+	void Avoidance(glm::vec3 dir, float deltaTime);
 	void IsPlayerDead();
+
 
 	//General Functions
 	glm::vec3 speed = glm::vec3(0.0f);
