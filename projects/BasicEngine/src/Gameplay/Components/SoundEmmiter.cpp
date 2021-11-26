@@ -10,11 +10,13 @@ void SoundEmmiter::Awake()
 	scene = GetGameObject()->GetScene();
 
 	scene->Lights.push_back(Light());
-	soundLight = &scene->Lights[scene->Lights.size() - 1];
+	soundLight = scene->Lights.size() - 1;
+	scene->SetupShaderAndLights();
+
 	scene->soundEmmiters.push_back(GetGameObject());
 
 	colour = defaultColour;
-	soundLight->Color = colour;
+	scene->Lights[soundLight].Color = colour;
 
 }
 
@@ -32,12 +34,11 @@ void SoundEmmiter::Update(float deltaTime)
 		Attack(deltaTime);
 	}
 
-	soundLight->Range = -volume * 16.0f;
-	soundLight->Position = GetGameObject()->GetPosition();
+	scene->Lights[soundLight].Range = -volume * 16.0f;
+	scene->Lights[soundLight].Position = GetGameObject()->GetPosition();
 	//std::cout << "\nLight:" << " | " << soundLight->Position.y;
 
 	//soundLight->Color = colour;
-	scene->SetupShaderAndLights();
 
 }
 

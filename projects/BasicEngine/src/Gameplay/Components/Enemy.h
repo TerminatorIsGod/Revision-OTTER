@@ -45,8 +45,8 @@ public:
 	float avoidanceStrength = 2000.0f;
 
 	//Listening Light
-	float listeningRadius = 2.0f;
-	Light* soundLight;
+	float listeningRadius = 3.0f;
+	int soundLight;
 
 	//Pathfinding
 	bool pathRequested = false;
@@ -58,7 +58,7 @@ public:
 
 	//State Machine Stuff
 	glm::vec3 red = glm::vec3(0.2f, 0, 0);
-	glm::vec3 blue = glm::vec3(0, 0, 0.2f);
+	glm::vec3 blue = glm::vec3(0.01, 0.01, 0.2f);
 	glm::vec3 yellow = glm::vec3(0.2f, 0.2f, 0);
 
 	EnemyState* currentState;

@@ -26,17 +26,17 @@ void Enemy::Awake()
 	body->SetLinearVelocity(glm::vec3(0));
 	//body->SetLinearDamping(0.2f);
 
-	//scene->Lights.push_back(Light());
-	//soundLight = &scene->Lights[scene->Lights.size() - 1];
-	//soundLight->Range = -listeningRadius * 16.0f;;
-	//soundLight->Color = blue;
+	scene->Lights.push_back(Light());
+	soundLight = scene->Lights.size() - 1;
+	scene->Lights[soundLight].Range = -listeningRadius * 16.0f;;
+	scene->Lights[soundLight].Color = blue;
 	player = scene->MainCamera->GetGameObject();
 	SetState(PatrollingState::getInstance());
 }
 
 void Enemy::Update(float deltaTime)
 {
-	//MoveListeningLight();
+	MoveListeningLight();
 	currentState->Listen(this, deltaTime);
 	currentState->Pathfind(this, deltaTime);
 	currentState->Move(this, deltaTime); //In Agro state, make it so the enemy doesn't slow down when its near target
@@ -70,7 +70,7 @@ Enemy::Sptr Enemy::FromJson(const nlohmann::json& data) {
 
 void Enemy::MoveListeningLight()
 {
-	soundLight->Position = GetGameObject()->GetPosition();
+	scene->Lights[soundLight].Position = GetGameObject()->GetPosition();
 }
 
 void Enemy::SetState(EnemyState& newState)

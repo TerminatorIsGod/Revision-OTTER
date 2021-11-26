@@ -343,6 +343,39 @@ int main() {
 		ResourceManager::LoadManifest("manifest.json");
 		scene = Scene::Load("demoscene.json");
 
+
+		GameObject::Sptr distractionValve = scene->CreateGameObject("Distraction Valve");
+		{
+			distractionValve->SetPostion(glm::vec3(-2.1f, 0.0f, -7.3f));
+			// Scale up the plane			
+			// Create and attach a RenderComponent to the object to draw our mesh
+
+			RigidBody::Sptr physics = distractionValve->Add<RigidBody>(RigidBodyType::Kinematic);
+			physics->AddCollider(SphereCollider::Create(1.15f));
+
+			SoundEmmiter::Sptr emmiter = distractionValve->Add<SoundEmmiter>();
+			emmiter->muteAtZero = true;
+			emmiter->distractionVolume = 300;
+			emmiter->defaultColour = glm::vec3(0.086f, 0.070f, 0.02f);
+
+		}
+		 
+		GameObject::Sptr distractionVending = scene->CreateGameObject("Distraction Valve");
+		{
+			distractionVending->SetPostion(glm::vec3(-13.3f, 71.5f, 6.0f));
+			// Scale up the plane			
+			// Create and attach a RenderComponent to the object to draw our mesh
+
+			RigidBody::Sptr physics = distractionVending->Add<RigidBody>(RigidBodyType::Kinematic);
+			physics->AddCollider(SphereCollider::Create(4.0f));
+
+			SoundEmmiter::Sptr emmiter = distractionVending->Add<SoundEmmiter>();
+			emmiter->muteAtZero = true;
+			emmiter->distractionVolume = 60;
+			emmiter->defaultColour = glm::vec3(0.086f, 0.070f, 0.02f);
+		}
+
+
 		// Call scene awake to start up all of our components
 		scene->Window = window;
 		scene->Awake();
@@ -774,6 +807,7 @@ int main() {
 	///// Game loop /////
 	while (!glfwWindowShouldClose(window)) {
 
+		scene->SetupShaderAndLights(); //Update Lights in scene
 
 		if (scene->FindObjectByName("MenuPlane") != nullptr) {
 			menuPlane = scene->FindObjectByName("MenuPlane");
