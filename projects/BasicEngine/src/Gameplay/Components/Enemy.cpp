@@ -26,15 +26,16 @@ void Enemy::Awake()
 	body->SetLinearVelocity(glm::vec3(0));
 	body->SetAngularDamping(100.0f);
 	//body->SetLinearDamping(0.2f);
-
+	startPos = GetGameObject()->GetPosition();
 	scene->Lights.push_back(Light());
 	soundLight = scene->Lights.size() - 1;
 	scene->Lights[soundLight].Range = -listeningRadius * 8.0f;;
 	scene->Lights[soundLight].Color = blue;
 	player = scene->MainCamera->GetGameObject();
-	patrolPoints.push_back(glm::vec3(27.0f, 16.0f, 0.0f));
-	patrolPoints.push_back(glm::vec3(GetGameObject()->GetPosition()));
 	pathManager = scene->pathManager;
+	//patrolPoints.push_back(glm::vec3(20));
+	//patrolPoints.push_back(glm::vec3(70));
+
 	SetState(PatrollingState::getInstance());
 }
 
@@ -55,19 +56,43 @@ void Enemy::Update(float deltaTime)
 }
 
 void Enemy::RenderImGui() {
-	LABEL_LEFT(ImGui::DragFloat3, "Speed", &speed.x);
+	for (int i = 0; i < patrolPoints.size(); i++)
+	{
+		std::string name1 = "Patrol Points " + std::to_string(i);
+		const char* name2 = name1.c_str();
+		ImGui::DragFloat3(name2, &patrolPoints[i].x);
+	}
+
+	if (ImGui::Button("Add Patrol Point"))
+	{
+		patrolPoints.push_back(glm::vec3(0));
+	}
+
+	if (ImGui::Button("Remove Patrol Point"))
+	{
+		patrolPoints.pop_back();
+	}
 }
 
 nlohmann::json Enemy::ToJson() const {
-	return {
-		{ "speed", GlmToJson(speed) }
-		//Eventually make it so it saves the nodes's nbor list. You could do this by saving the index of the node's nbors in the navNodes list.
-	};
+
+	nlohmann::json result;
+	// Write out RigidBody data
+	for (int i = 0; i < patrolPoints.size(); i++)
+	{
+		result["PatrolPoint" + std::to_string(i)] = GlmToJson(patrolPoints[i]);
+	}
+	result["PatrolPointCount"] = GlmToJson(glm::vec3(patrolPoints.size()));
+	return result;
 }
 
 Enemy::Sptr Enemy::FromJson(const nlohmann::json& data) {
 	Enemy::Sptr result = std::make_shared<Enemy>();
-	result->speed = ParseJsonVec3(data["speed"]);
+	for (int i = 0; i < ParseJsonVec3(data["PatrolPointCount"]).x; i++)
+	{
+		result->patrolPoints.push_back(ParseJsonVec3(data["PatrolPoint" + std::to_string(i)]));
+	}
+	//result->speed = ParseJsonVec3(data["speed"]);
 	return result;
 }
 #pragma endregion "Default Functions"

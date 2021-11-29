@@ -93,6 +93,12 @@ void SwitchIndex(Enemy* e)
 
 void PatrollingState::Pathfind(Enemy* e, float deltaTime)
 {
+	if (e->patrolPoints.size() < 1)
+	{
+		e->target = e->startPos;
+		return;
+	}
+
 	glm::vec3 enemyPos = e->GetGameObject()->GetPosition();
 	glm::vec3 patrolPos = e->patrolPoints[e->pIndex];
 
