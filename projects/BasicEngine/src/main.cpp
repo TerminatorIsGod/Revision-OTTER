@@ -399,7 +399,12 @@ int main() {
 			{ ShaderPartType::Fragment, "shaders/toon_shading.glsl" }
 		});
 
-		//Meshes 
+		Shader::Sptr animationShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
+			{ ShaderPartType::Vertex, "shaders/vertex_animation_shader.glsl" },
+			{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
+		});
+
+		//Meshes
 		MeshResource::Sptr monkeyMesh = ResourceManager::CreateAsset<MeshResource>("Monkey.obj");
 		MeshResource::Sptr mapMesh = ResourceManager::CreateAsset<MeshResource>("map.obj");
 		MeshResource::Sptr mapMesh2 = ResourceManager::CreateAsset<MeshResource>("map2.obj");
