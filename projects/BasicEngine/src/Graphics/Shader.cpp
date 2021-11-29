@@ -6,7 +6,7 @@
 
 #include "Utils/FileHelpers.h"
 
-Shader::Shader() : 
+Shader::Shader() :
 	IResource(),
 	// We zero out all of our members so we don't have garbage data in our class
 	_handle(0)
@@ -89,11 +89,12 @@ bool Shader::LoadShaderPartFromFile(const char* path, ShaderPartType type) {
 		// resolve #include directives
 		std::string source = FileHelpers::ReadResolveIncludes(path);
 		// Pass off to LoadShaderPart
-		bool result =  LoadShaderPart(source.c_str(), type);
+		bool result = LoadShaderPart(source.c_str(), type);
 		_fileSourceMap[type].IsFilePath = true;
 		_fileSourceMap[type].Source = path;
 		return result;
-	} else {
+	}
+	else {
 		LOG_WARN("Could not open file at \"{}\"", path);
 		return false;
 	}
@@ -115,7 +116,7 @@ bool Shader::Link() {
 	glLinkProgram(_handle);
 
 	// Remove shader parts to save space (we can do this since we only needed the shader parts to compile an actual shader program)
-	for (auto& [type, id] : _handles) { 
+	for (auto& [type, id] : _handles) {
 		if (id != 0) {
 			glDetachShader(_handle, id);
 			glDeleteShader(id);
@@ -140,10 +141,12 @@ bool Shader::Link() {
 			glGetProgramInfoLog(_handle, length, &length, log);
 			LOG_ERROR("Shader failed to link:\n{}", log);
 			delete[] log;
-		} else {
+		}
+		else {
 			LOG_ERROR("Shader failed to link for an unknown reason!");
 		}
-	} else {
+	}
+	else {
 		LOG_TRACE("Linking complete, starting introspection");
 	}
 
@@ -264,7 +267,7 @@ void Shader::_IntrospectUniforms() {
 	// Iterate over all uniforms and extract some information
 	for (int ix = 0; ix < numInputs; ix++) {
 		// These are the parameters we want to collect
-		static GLenum pNames[] ={
+		static GLenum pNames[] = {
 			GL_NAME_LENGTH,
 			GL_TYPE,
 			GL_ARRAY_SIZE,
@@ -313,7 +316,7 @@ void Shader::_IntrospectUnifromBlocks() {
 	// Iterate over all blocks
 	for (int ix = 0; ix < numBlocks; ix++) {
 		// These are the properties that we want to extract
-		static GLenum pNamesBlockProperties[] ={
+		static GLenum pNamesBlockProperties[] = {
 			GL_NUM_ACTIVE_VARIABLES,
 			GL_BUFFER_BINDING,
 			GL_BUFFER_DATA_SIZE,
@@ -328,7 +331,7 @@ void Shader::_IntrospectUnifromBlocks() {
 			continue;
 
 		// We want to get all the handles to active uniforms in the block
-		static GLenum pNamesActiveVars[] ={
+		static GLenum pNamesActiveVars[] = {
 			GL_ACTIVE_VARIABLES
 		};
 		// We can use a vector to store results, initializing it's size to the number of
@@ -356,7 +359,7 @@ void Shader::_IntrospectUnifromBlocks() {
 		// Iterate over all the uniforms within the uniform block
 		for (int v = 0; v < results[0]; v++) {
 			// Parameters we wish to query from the uniform
-			static GLenum pNames[] ={
+			static GLenum pNames[] = {
 				GL_NAME_LENGTH,
 				GL_TYPE,
 				GL_ARRAY_SIZE,
@@ -382,7 +385,7 @@ void Shader::_IntrospectUnifromBlocks() {
 			}
 
 			LOG_TRACE("\t\tDetected a new uniform: {}[{}] -> {} @ {}", var.Name, var.ArraySize, var.Type, var.Location);
-			
+
 			// Add uniform to the block
 			block.SubUniforms.push_back(var);
 		}

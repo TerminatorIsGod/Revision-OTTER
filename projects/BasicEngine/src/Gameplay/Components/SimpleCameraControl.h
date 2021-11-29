@@ -67,6 +67,7 @@ protected:
 	float sneakSpeed = 4.0f;
 	float walkSpeed = 6.0f;
 	float runSpeed = 8.0f;
+	float speedScale = 500.0f;
 
 	float idleTimerDefault = 2.0f;
 	float idleTimer = idleTimerDefault;

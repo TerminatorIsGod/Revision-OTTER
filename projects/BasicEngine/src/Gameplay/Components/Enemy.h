@@ -21,7 +21,7 @@ public:
 
 #pragma region "Properties & Variables"
 
-	std::vector<GameObject::Sptr> lastHeardSounds;
+	std::vector<GameObject*> lastHeardSounds;
 	std::vector<glm::vec3> lastHeardPositions;
 	GameObject* player;
 	Scene* scene;
@@ -58,7 +58,7 @@ public:
 
 	//State Machine Stuff
 	glm::vec3 red = glm::vec3(0.2f, 0, 0);
-	glm::vec3 blue = glm::vec3(0.01, 0.01, 0.2f);
+	glm::vec3 blue = glm::vec3(0.0f, 0.0f, 0.019f);
 	glm::vec3 yellow = glm::vec3(0.2f, 0.2f, 0);
 
 	EnemyState* currentState;

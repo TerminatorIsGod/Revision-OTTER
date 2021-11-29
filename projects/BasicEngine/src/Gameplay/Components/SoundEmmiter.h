@@ -24,6 +24,7 @@ public:
 	float decaySpeed = 1;
 	float attackSpeed = 4;
 	float lerpSpeed;
+	glm::vec3 soundLightOffset = glm::vec3(0, 0, 0);
 
 	Scene* scene;
 
@@ -52,6 +53,5 @@ public:
 
 protected:
 	int soundLight;
-	glm::vec3 soundRingOffset = glm::vec3(0, 0, -5.0f);
 
 };

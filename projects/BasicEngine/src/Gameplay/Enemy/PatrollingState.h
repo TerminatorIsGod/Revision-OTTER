@@ -6,12 +6,12 @@ class PatrollingState : public EnemyState
 {
 public:
 
-	void Start(Enemy* enemy);
-	void End(Enemy* enemy);
+	void Start(Enemy* e);
+	void End(Enemy* e);
 
-	void Listen(Enemy* enemy, float deltaTime);
-	void Pathfind(Enemy* enemy, float deltaTime);
-	void Move(Enemy* enemy, float deltaTime);
+	void Listen(Enemy* e, float deltaTime);
+	void Pathfind(Enemy* e, float deltaTime);
+	void Move(Enemy* e, float deltaTime);
 
 	static EnemyState& getInstance();
 

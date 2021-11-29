@@ -34,7 +34,7 @@ void SoundEmmiter::Update(float deltaTime)
 		Attack(deltaTime);
 	}
 
-	scene->Lights[soundLight].Range = -volume * 16.0f;
+	scene->Lights[soundLight].Range = -volume * 8.0f;
 	scene->Lights[soundLight].Position = GetGameObject()->GetPosition();
 	//std::cout << "\nLight:" << " | " << soundLight->Position.y;
 
@@ -43,19 +43,30 @@ void SoundEmmiter::Update(float deltaTime)
 }
 
 void SoundEmmiter::RenderImGui() {
-	LABEL_LEFT(ImGui::DragFloat3, "Speed", &speed.x);
+	LABEL_LEFT(ImGui::Checkbox, "muteAtZero", &muteAtZero);
+	LABEL_LEFT(ImGui::DragFloat, "distractionVolume", &distractionVolume);
+	LABEL_LEFT(ImGui::DragFloat3, "defaultColour", &defaultColour.x);
 }
 
 nlohmann::json SoundEmmiter::ToJson() const {
 	return {
-		{ "speed", GlmToJson(speed) }
-		//Eventually make it so it saves the nodes's nbor list. You could do this by saving the index of the node's nbors in the navNodes list.
+		{ "muteAtZero", GlmToJson(glm::vec3(muteAtZero)) },
+		{ "distractionVolume", GlmToJson(glm::vec3(distractionVolume)) },
+		{ "defaultColour", GlmToJson(defaultColour) }
 	};
 }
 
 SoundEmmiter::Sptr SoundEmmiter::FromJson(const nlohmann::json& data) {
 	SoundEmmiter::Sptr result = std::make_shared<SoundEmmiter>();
-	result->speed = ParseJsonVec3(data["speed"]);
+
+	if (ParseJsonVec3(data["muteAtZero"]) == glm::vec3(1))
+		result->muteAtZero = true;
+	else
+		result->muteAtZero = false;
+
+	result->distractionVolume = ParseJsonVec3(data["distractionVolume"]).x;
+	result->defaultColour = ParseJsonVec3(data["defaultColour"]);
+
 	return result;
 }
 

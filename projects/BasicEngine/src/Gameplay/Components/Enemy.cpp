@@ -28,7 +28,7 @@ void Enemy::Awake()
 
 	scene->Lights.push_back(Light());
 	soundLight = scene->Lights.size() - 1;
-	scene->Lights[soundLight].Range = -listeningRadius * 16.0f;;
+	scene->Lights[soundLight].Range = -listeningRadius * 8.0f;;
 	scene->Lights[soundLight].Color = blue;
 	player = scene->MainCamera->GetGameObject();
 	SetState(PatrollingState::getInstance());

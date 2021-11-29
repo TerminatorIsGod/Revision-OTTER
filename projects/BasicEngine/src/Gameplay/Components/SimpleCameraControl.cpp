@@ -26,6 +26,7 @@ void SimpleCameraControl::Awake() {
 
 	soundEmmiter = GetComponent<SoundEmmiter>();
 	soundEmmiter->isDecaying = false;
+	soundEmmiter->soundLightOffset = glm::vec3(0, 0, -3.0f);
 	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
@@ -289,9 +290,9 @@ void SimpleCameraControl::IdleState(float deltaTime)
 	}
 
 	if (inhale)
-		soundEmmiter->targetVolume = 1.5f;
+		soundEmmiter->targetVolume = 4.5f;
 	else
-		soundEmmiter->targetVolume = 1.0f;
+		soundEmmiter->targetVolume = 5.5f;
 }
 
 void SimpleCameraControl::SneakState(float deltaTime)
