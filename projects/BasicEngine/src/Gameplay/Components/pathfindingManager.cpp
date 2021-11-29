@@ -15,6 +15,9 @@ void pathfindingManager::Awake() {
 	scene = GetGameObject()->GetScene();
 	_window = scene->Window;
 	UpdateNbors();
+
+	GameObject::Sptr myself(GetGameObject());
+	scene->pathManager = myself;
 }
 
 pathfindingManager::~pathfindingManager()
@@ -34,26 +37,26 @@ pathfindingManager::~pathfindingManager()
 //Pathfinding Stress-test
 void pathfindingManager::Update(float deltaTime)
 {
-	if (glfwGetKey(_window, GLFW_KEY_P))
-	{
-		std::vector<GameObject::Sptr> yo = requestPath(glm::vec3(0, 50.0f, 100), scene->MainCamera->GetGameObject()->GetPosition());
+	//if (glfwGetKey(_window, GLFW_KEY_P))
+	//{
+	//	std::vector<GameObject::Sptr> yo = requestPath(glm::vec3(0, 50.0f, 100), scene->MainCamera->GetGameObject()->GetPosition());
 
-		for (int i = 0; i < navNodes.size(); i++)
-		{
-			navNodes[i]->SetScale(glm::vec3(1.0f));
-			navNodes[i]->SetRotation(glm::vec3(0.0f));
+	//	for (int i = 0; i < navNodes.size(); i++)
+	//	{
+	//		navNodes[i]->SetScale(glm::vec3(1.0f));
+	//		navNodes[i]->SetRotation(glm::vec3(0.0f));
 
-		}
+	//	}
 
-		for (int i = 0; i < yo.size(); i++)
-		{
-			yo[i]->SetScale(glm::vec3(2.0f, 2.0f, 5.0f));
-		}
+	//	for (int i = 0; i < yo.size(); i++)
+	//	{
+	//		yo[i]->SetScale(glm::vec3(2.0f, 2.0f, 5.0f));
+	//	}
 
-		endNode->SetRotation(glm::vec3(90, 0, 0));
-		startNode->SetRotation(glm::vec3(30, 0, 0));
+	//	endNode->SetRotation(glm::vec3(90, 0, 0));
+	//	startNode->SetRotation(glm::vec3(30, 0, 0));
 
-	}
+	//}
 }
 
 
@@ -246,7 +249,7 @@ void pathfindingManager::OpenNbors(int nbor)
 
 void pathfindingManager::SequencePath()
 {
-	pathSet.push_back(endNode);
+	pathSet.push_back(endNode->GetPosition());
 
 	GameObject::Sptr current = endNode;
 	current = current->Get<NavNode>()->parent;
@@ -260,13 +263,13 @@ void pathfindingManager::SequencePath()
 		}
 		else
 		{
-			pathSet.push_back(current);
+			pathSet.push_back(current->GetPosition());
 			current = current->Get<NavNode>()->parent;;
 		}
 	}
 }
 
-std::vector<GameObject::Sptr> pathfindingManager::requestPath(glm::vec3 startPos, glm::vec3 targetPos)
+std::vector<glm::vec3> pathfindingManager::requestPath(glm::vec3 startPos, glm::vec3 targetPos)
 {
 	float minDistance = 999999;
 	GameObject::Sptr minNode = navNodes[0];
@@ -303,10 +306,9 @@ std::vector<GameObject::Sptr> pathfindingManager::requestPath(glm::vec3 startPos
 	RunPathfind();
 	if (pathSet.size() > 0)
 		return pathSet;
-	else //Returns a weird node to signify no path could be found
+	else //Returns a weird position to signify no path could be found
 	{
-		navNodes[0]->Get<NavNode>()->fCost = 420.69f;
-		pathSet.push_back(navNodes[0]);
+		pathSet.push_back(glm::vec3(69420.0f, 69420.0f, 69420.0f));
 		return pathSet;
 	}
 }

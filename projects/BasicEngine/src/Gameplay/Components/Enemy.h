@@ -50,9 +50,9 @@ public:
 
 	//Pathfinding
 	bool pathRequested = false;
-	std::vector<GameObject::Sptr> patrolPoints;
+	std::vector<glm::vec3> patrolPoints;
 	int pIndex = 0;
-	pathfindingManager pathManager;
+	GameObject::Sptr pathManager;
 	std::vector<glm::vec3> pathSet; // In unity this was a list of nodes, but I'm pretty sure we'll be fine with just positions
 	int nIndex;
 

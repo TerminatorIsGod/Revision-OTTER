@@ -17,7 +17,8 @@ public:
 
 	//Properties
 	std::vector<GameObject::Sptr> navNodes;
-	std::vector<GameObject::Sptr> openSet, closedSet, pathSet;
+	std::vector<GameObject::Sptr> openSet, closedSet;
+	std::vector<glm::vec3> pathSet;
 	GameObject::Sptr startNode, endNode;
 
 	glm::vec3 speed = glm::vec3(0.0f);
@@ -41,7 +42,7 @@ public:
 	void CheckIfEnd(int nbor);
 	void OpenNbors(int nbor);
 	void SequencePath();
-	std::vector<GameObject::Sptr> requestPath(glm::vec3 startPos, glm::vec3 targetPos);
+	std::vector<glm::vec3> requestPath(glm::vec3 startPos, glm::vec3 targetPos);
 	void CalculatePath();
 
 

@@ -24,6 +24,7 @@ void Enemy::Awake()
 	body = GetComponent<Gameplay::Physics::RigidBody>();
 	body->SetAngularFactor(glm::vec3(0, 0, 0));
 	body->SetLinearVelocity(glm::vec3(0));
+	body->SetAngularDamping(100.0f);
 	//body->SetLinearDamping(0.2f);
 
 	scene->Lights.push_back(Light());
@@ -31,6 +32,9 @@ void Enemy::Awake()
 	scene->Lights[soundLight].Range = -listeningRadius * 8.0f;;
 	scene->Lights[soundLight].Color = blue;
 	player = scene->MainCamera->GetGameObject();
+	patrolPoints.push_back(glm::vec3(27.0f, 16.0f, 0.0f));
+	patrolPoints.push_back(glm::vec3(GetGameObject()->GetPosition()));
+	pathManager = scene->pathManager;
 	SetState(PatrollingState::getInstance());
 }
 
@@ -99,7 +103,6 @@ void Enemy::Move(float deltaTime)
 
 void Enemy::Steering(float deltaTime)
 {
-	target = player->GetPosition();
 
 	//glm::vec3 dir = player->GetPosition() - GetGameObject()->GetPosition();
 	//body->SetLinearVelocity(dir);
