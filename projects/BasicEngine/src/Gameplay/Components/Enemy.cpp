@@ -4,6 +4,7 @@
 #include "Utils\GlmBulletConversions.h"
 #include <GLFW/glfw3.h>
 #include "Gameplay/Enemy/PatrollingState.h"
+#include "Gameplay/Enemy/AggravatedState.h"
 
 #pragma region "Default Functions"
 
@@ -118,8 +119,8 @@ void Enemy::Move(float deltaTime)
 	glm::vec3 leftDir = glm::vec3(-body->GetLinearVelocity().y + body->GetLinearVelocity().x, body->GetLinearVelocity().x + body->GetLinearVelocity().y, 0.0f) / 2.0f;
 	glm::vec3 rightDir = glm::vec3(body->GetLinearVelocity().y + body->GetLinearVelocity().x, -body->GetLinearVelocity().x + body->GetLinearVelocity().y, 0.0f) / 2.0f;
 
-	//Avoidance(leftDir, deltaTime);
-	//Avoidance(rightDir, deltaTime);
+	Avoidance(leftDir, deltaTime);
+	Avoidance(rightDir, deltaTime);
 	Avoidance(glm::vec3(-body->GetLinearVelocity().y, body->GetLinearVelocity().x, 0.0f), deltaTime);
 	Avoidance(glm::vec3(body->GetLinearVelocity().y, -body->GetLinearVelocity().x, 0.0f), deltaTime);
 

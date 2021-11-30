@@ -58,7 +58,7 @@ public:
 	int nIndex;
 
 	//State Machine Stuff
-	glm::vec3 red = glm::vec3(0.2f, 0, 0);
+	glm::vec3 red = glm::vec3(0.019f, 0, 0);
 	glm::vec3 blue = glm::vec3(0.0f, 0.0f, 0.019f);
 	glm::vec3 yellow = glm::vec3(0.2f, 0.2f, 0);
 
