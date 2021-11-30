@@ -2,6 +2,7 @@
 #include "Gameplay/Scene.h"
 #include "Gameplay/Components/SoundEmmiter.h"
 #include "Utils\GlmBulletConversions.h"
+#include "Gameplay/Enemy/AggravatedState.h"
 
 EnemyState& PatrollingState::getInstance()
 {
@@ -31,9 +32,6 @@ void PatrollingState::Listen(Enemy* e, float deltaTime)
 		float dist = glm::length(dir);
 		float totalRadius = s->Get<SoundEmmiter>()->volume + e->listeningRadius;
 
-		//if (s == e->player)
-		//	std::cout << "\nDist: " << dist - totalRadius;
-
 		if (dist >= totalRadius)
 			continue;
 
@@ -49,7 +47,6 @@ void PatrollingState::Listen(Enemy* e, float deltaTime)
 
 		e->lastHeardSounds.insert(e->lastHeardSounds.begin(), s);
 		e->lastHeardPositions.insert(e->lastHeardPositions.begin(), s->GetPosition());
-		e->pathRequested = false;
 
 		//Raycasting toward heard sound to determine state change
 		btCollisionWorld::ClosestRayResultCallback hit(ToBt(e->GetGameObject()->GetPosition()), ToBt(s->GetPosition()));
@@ -60,15 +57,16 @@ void PatrollingState::Listen(Enemy* e, float deltaTime)
 
 		glm::vec3 objectPos = ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
 
-		if (objectPos == glm::vec3(0))
-			return;
-
-		if (objectPos == s->GetPosition())
-			//e->SetState(AggravatedState::getInstance());
+		if (objectPos == e->player->GetPosition())
+		{
 			std::cout << "\nIM AGRO!!";
+			//e->SetState(AggravatedState::getInstance());
+		}
 		else
-			//e->SetState(DistractedState::getInstance());
+		{
 			std::cout << "\nIM Distracted!!";
+			//e->SetState(DistractedState::getInstance());
+		}
 
 	}
 
@@ -138,6 +136,8 @@ void PatrollingState::Pathfind(Enemy* e, float deltaTime)
 
 void PatrollingState::Move(Enemy* e, float  deltaTime)
 {
+	if (e->patrolPoints.size() < 1)
+		return;
 	e->Move(deltaTime);
 }
 
