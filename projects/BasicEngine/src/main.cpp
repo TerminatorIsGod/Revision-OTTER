@@ -276,6 +276,7 @@ void createMapAsset(MeshResource::Sptr mesh, Material::Sptr material, std::strin
 }
 
 
+Shader::Sptr animShader;
 
 int main() {
 	Logger::Init(); // We'll borrow the logger from the toolkit, but we need to initialize it
@@ -336,6 +337,12 @@ int main() {
 	glCullFace(GL_BACK);
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
+
+	Shader::Sptr animationShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
+		{ ShaderPartType::Vertex, "shaders/vertex_animation_shader.glsl" },
+		{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
+	});
+
 	bool loadScene = true;
 	// For now we can use a toggle to generate our scene vs load from file
 	if (loadScene) {
@@ -387,7 +394,7 @@ int main() {
 			{ ShaderPartType::Fragment, "shaders/toon_shading.glsl" }
 		});
 
-		//Meshes 
+		//Meshes
 		MeshResource::Sptr monkeyMesh = ResourceManager::CreateAsset<MeshResource>("Monkey.obj");
 		MeshResource::Sptr mapMesh = ResourceManager::CreateAsset<MeshResource>("map.obj");
 		MeshResource::Sptr mapMesh2 = ResourceManager::CreateAsset<MeshResource>("map2.obj");
@@ -417,6 +424,7 @@ int main() {
 		MeshResource::Sptr crate3_5 = ResourceManager::CreateAsset<MeshResource>("map/assets/Crate_3.5ft.obj");
 
 		MeshResource::Sptr staticCrates = ResourceManager::CreateAsset<MeshResource>("map/assets/Static_Crates.obj");
+
 
 
 		MeshResource::Sptr mapCollidersMesh = ResourceManager::CreateAsset<MeshResource>("mapColliders.obj");
@@ -804,6 +812,11 @@ int main() {
 	MenuSystem::Sptr menuSys;
 	Camera::Sptr camera;
 
+
+	
+	animShader = animationShader;
+	float delt = 0;
+
 	///// Game loop /////
 	while (!glfwWindowShouldClose(window)) {
 
@@ -871,6 +884,9 @@ int main() {
 		// Calculate the time since our last frame (dt)
 		double thisFrame = glfwGetTime();
 		float dt = static_cast<float>(thisFrame - lastFrame);
+		delt += dt;
+		
+		animShader->SetUniform("delta", delt);
 
 		// Showcasing how to use the imGui library!
 		bool isDebugWindowOpen = ImGui::Begin("Debugging");
