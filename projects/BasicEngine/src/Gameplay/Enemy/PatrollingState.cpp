@@ -12,7 +12,7 @@ EnemyState& PatrollingState::getInstance()
 
 void PatrollingState::Start(Enemy* e)
 {
-	std::cout << "\nEntered Patrolling State";
+	std::cout << "\n" << e->GetGameObject()->Name << ": Entered Patrolling State";
 	e->pathRequested = false;
 	e->scene->Lights[e->soundLight].Color = e->blue;
 	e->maxVelocity = e->IdleVelocity;
@@ -20,7 +20,7 @@ void PatrollingState::Start(Enemy* e)
 
 void PatrollingState::End(Enemy* e)
 {
-	std::cout << "\nExited Patrolling State";
+	std::cout << "\n" << e->GetGameObject()->Name << ": Exited Patrolling State";
 }
 
 void PatrollingState::Listen(Enemy* e, float deltaTime)
@@ -60,7 +60,7 @@ void PatrollingState::Listen(Enemy* e, float deltaTime)
 		if (objectPos == e->player->GetPosition())
 		{
 			std::cout << "\nIM AGRO!!";
-			//e->SetState(AggravatedState::getInstance());
+			e->SetState(AggravatedState::getInstance());
 		}
 		else
 		{

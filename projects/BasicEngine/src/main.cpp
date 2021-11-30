@@ -339,12 +339,12 @@ int main() {
 	bool loadScene = true;
 	// For now we can use a toggle to generate our scene vs load from file
 	if (loadScene) {
-
+		  
 		ResourceManager::LoadManifest("manifest.json");
 		scene = Scene::Load("demoscene.json");
-
+		 
 		//Texture2D::Sptr    whiteTex = ResourceManager::CreateAsset<Texture2D>("textures/white.jpg");
-
+		 
 		//Shader::Sptr basicShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
 		//	{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
 		//	{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
@@ -374,6 +374,12 @@ int main() {
 		Shader::Sptr basicShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
 			{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
 			{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
+		});
+
+		// This shader handles our basic materials without reflections (cause they expensive)
+		Shader::Sptr specShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
+			{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
+			{ ShaderPartType::Fragment, "shaders/frag_specular.glsl" } 
 		});
 
 		Shader::Sptr toonShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
@@ -426,6 +432,8 @@ int main() {
 		Texture2D::Sptr    whiteTex = ResourceManager::CreateAsset<Texture2D>("textures/white.jpg");
 		Texture2D::Sptr    tealTex = ResourceManager::CreateAsset<Texture2D>("textures/teal.jpg");
 		Texture2D::Sptr    leaflingTex = ResourceManager::CreateAsset<Texture2D>("textures/Leafling-texture.png");
+		Texture2D::Sptr    floorTex = ResourceManager::CreateAsset<Texture2D>("map/textures/Floors_Base_color.png");
+		Texture2D::Sptr    floorRoughnessTex = ResourceManager::CreateAsset<Texture2D>("map/textures/Floors_Roughness.png");
 
 
 		// Here we'll load in the cubemap, as well as a special shader to handle drawing the skybox
@@ -480,6 +488,15 @@ int main() {
 			whiteMaterial->MatShader = basicShader;
 			whiteMaterial->Texture = whiteTex;
 			whiteMaterial->Shininess = 1.0f;
+		}
+
+		Material::Sptr floorMaterial = ResourceManager::CreateAsset<Material>();
+		{
+			floorMaterial->Name = "Floor";
+			floorMaterial->MatShader = specShader;
+			floorMaterial->Texture = floorTex;
+			floorMaterial->Specular = floorRoughnessTex;
+			//floorMaterial->Shininess = 0.5f;
 		}
 
 		Material::Sptr tealMaterial = ResourceManager::CreateAsset<Material>();
@@ -687,7 +704,7 @@ int main() {
 		createMapSection(map_miscObjects, whiteMaterial);
 		createMapSection(map_shippingContainers, whiteMaterial);
 		createMapSection(map_walls, whiteMaterial);
-
+		 
 		for (int i = 0; i < 10; i++)
 		{
 			createMapAsset(shelfLarge, tealMaterial, "Large Shelf: (" + std::to_string(i) + ")");

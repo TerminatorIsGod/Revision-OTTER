@@ -53,7 +53,10 @@ void Enemy::Update(float deltaTime)
 		lastHeardSounds.pop_back();
 		lastHeardPositions.pop_back();
 	}
-
+	if (glfwGetKey(window, GLFW_KEY_P))
+	{
+		pathRequested = false;
+	}
 }
 
 void Enemy::RenderImGui() {

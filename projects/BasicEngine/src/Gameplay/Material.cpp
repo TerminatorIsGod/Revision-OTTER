@@ -8,11 +8,15 @@ namespace Gameplay {
 
 		// For textures, we pass the *slot* that the texture sure draw from
 		MatShader->SetUniform("u_Material.Diffuse", 1);
+		//MatShader->SetUniform("u_Material.Specular", 2); //Current won't write this to file
 
 		// Bind the texture
 		if (Texture != nullptr) { 
 			Texture->Bind(1);
 		}
+		//if (Specular != nullptr) {
+		//	Specular->Bind(2);
+		//}
 	}
 
 	Material::Sptr Material::FromJson(const nlohmann::json& data) {

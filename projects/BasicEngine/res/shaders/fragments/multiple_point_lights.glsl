@@ -10,7 +10,7 @@
 */
 
 // The maximum number of lights the shader supports, increasing this will lower performance!
-#define MAX_LIGHTS 8
+#define MAX_LIGHTS 10
 
 // Represents a single light source
 struct Light {

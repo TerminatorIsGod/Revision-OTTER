@@ -12,7 +12,8 @@ EnemyState& AggravatedState::getInstance()
 
 void AggravatedState::Start(Enemy* e)
 {
-	std::cout << "\nEntered Aggravated State";
+	std::cout << "\n" << e->GetGameObject()->Name << ": Entered Aggravated State";
+
 	e->pathRequested = false;
 	e->scene->Lights[e->soundLight].Color = e->red;
 	e->maxVelocity = e->IdleVelocity;
@@ -20,7 +21,7 @@ void AggravatedState::Start(Enemy* e)
 
 void AggravatedState::End(Enemy* e)
 {
-	std::cout << "\nExited Aggravated State";
+    std::cout << "\n" << e->GetGameObject()->Name << ": Exited Aggravated State";
 }
 
 void AggravatedState::Listen(Enemy* e, float deltaTime)
