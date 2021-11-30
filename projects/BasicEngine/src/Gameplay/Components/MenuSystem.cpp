@@ -38,7 +38,12 @@ namespace Gameplay {
 		GetGameObject()->Get<RenderComponent>()->SetMesh(planeMesh);
 
 		if (GetGameObject()->Name == "MenuPlane") {
-			createCamera();
+			if (GetGameObject()->GetScene()->FindObjectByName("Menu Camera")) {
+				_menucamera = GetGameObject()->GetScene()->FindObjectByName("Menu Camera")->Get<Camera>();
+			}
+			else {
+				createCamera();
+			}			
 			GetGameObject()->Get<RenderComponent>()->SetMaterial(mainmenuMaterial);
 		}
 		else {
