@@ -326,9 +326,6 @@ int main() {
 	ComponentManager::RegisterType<InventorySystem>();
 	ComponentManager::RegisterType<InteractSystem>();
 	ComponentManager::RegisterType<LerpSystem>();
-
-
-	ComponentManager::RegisterType<InventorySystem>();
 	ComponentManager::RegisterType<SceneSwapSystem>();
 
 	// GL states, we'll enable depth testing and backface fulling
