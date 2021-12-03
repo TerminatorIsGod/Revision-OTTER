@@ -50,6 +50,10 @@ void InventorySystem::Update(float deltaTime) {
 
 void InventorySystem::setKey(int key, bool value) {
 	_keys[key] = value;
+
+	key1 = _keys[0];
+	key2 = _keys[1];
+	key3 = _keys[2];
 }
 
 bool InventorySystem::getKey(int key) {

@@ -20,7 +20,7 @@ void LerpSystem::RenderImGui() {
 		guiStore->SetFloat(ImGui::GetID(&startz), startz);
 	}
 
-	if (LABEL_LEFT(ImGui::DragFloat3, "End Rotation", &startx, 1.0f)) {
+	if (LABEL_LEFT(ImGui::DragFloat3, "End Rotation", &endx, 1.0f)) {
 
 		// Update the editor state with our new values
 		guiStore->SetFloat(ImGui::GetID(&endx), endx);
@@ -29,6 +29,13 @@ void LerpSystem::RenderImGui() {
 	}
 
 	LABEL_LEFT(ImGui::DragFloat, "How long", &tLength);
+
+	if (oldCheck != (startx + starty + startz + endx + endy + endz)) {
+		setRotationStart();
+		setRotationEnd();
+		oldCheck = (startx + starty + startz + endx + endy + endz);
+	}
+
 }
 
 nlohmann::json LerpSystem::ToJson() const {
@@ -69,12 +76,17 @@ LerpSystem::Sptr LerpSystem::FromJson(const nlohmann::json& blob) {
 }
 
 void LerpSystem::Update(float deltaTime) {
+
+	std::cout << "Is lerping: " << beginLerp << std::endl;
+	std::cout << "T: " << t << " TL: " << tLength << " Direction: " << lerpReverse << std::endl;
+
 	if (beginLerp) {
 
 		if (lerpReverse) {
 			t -= deltaTime;
 
-			if (t < 0) {
+			if (t <= 0) {
+				t = 0;
 				beginLerp = false;
 				//t = 0;
 			}
@@ -82,7 +94,8 @@ void LerpSystem::Update(float deltaTime) {
 		else {
 			t += deltaTime;
 
-			if (t > tLength) {
+			if (t >= tLength) {
+				t = tLength;
 				beginLerp = false;
 				//t = 0;
 			}
@@ -90,7 +103,16 @@ void LerpSystem::Update(float deltaTime) {
 			
 		//t += deltaTime;
 
-		GetGameObject()->SetRotation(glm::slerp(startRot, endRot, t / tLength));
+		//std::cout << "StartEular: " << startx << " " << starty << " " << startz << std::endl;
+		//std::cout << "EndEular: " << endx << " " << endy << " " << endz << std::endl;
+
+		//std::cout << "Start: " << startRot.x << " " << startRot.y << " " << startRot.z << std::endl;
+		//std::cout << "End: " << endRot.x << " " << endRot.y << " " << endRot.z << std::endl;
+
+
+		//std::cout << "Rotation: " << lerpstuff(glm::vec3(startx, starty, startz), glm::vec3(endx, endy, endz), (t / tLength)).x << " " << lerpstuff(glm::vec3(startx, starty, startz), glm::vec3(endx, endy, endz), (t / tLength)).y << " " << lerpstuff(glm::vec3(startx, starty, startz), glm::vec3(endx, endy, endz), (t / tLength)).z << std::endl;
+
+		GetGameObject()->SetRotation(lerpstuff(glm::vec3(startx, starty, startz), glm::vec3(endx, endy, endz), (t / tLength)));
 
 		//if (lerpReverse) {
 		//	GetGameObject()->SetRotation(glm::slerp(endRot, startRot, t/tLength));
@@ -100,6 +122,10 @@ void LerpSystem::Update(float deltaTime) {
 		//}
 
 	}
+}
+
+glm::vec3 LerpSystem::lerpstuff(glm::vec3 a, glm::vec3 b, float t) {
+	return a * (1 - t) + (b * t);
 }
 
 void LerpSystem::setRotationStart() {
