@@ -2,7 +2,7 @@
 #include "Gameplay/Enemy/EnemyState.h"
 #include "Gameplay/Components/Enemy.h"
 
-class AggravatedState : public EnemyState
+class DistractedState : public EnemyState
 {
 public:
 
@@ -15,12 +15,13 @@ public:
 
 	void SwitchIndex(Enemy* e, float deltaTime);
 	static EnemyState& getInstance();
-	const float agroTimerMax = 8.0f;
+	const float distractedBackupTimerMax = 20.0f;
+	const float distractedTimerMax = 2.5f;
 
 private:
 	//Singleton Stuff
-	AggravatedState() {}
-	AggravatedState(const AggravatedState& other);
-	AggravatedState& operator=(const AggravatedState& other);
+	DistractedState() {}
+	DistractedState(const DistractedState& other);
+	DistractedState& operator=(const DistractedState& other);
 
 };

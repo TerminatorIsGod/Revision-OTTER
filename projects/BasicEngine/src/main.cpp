@@ -428,6 +428,7 @@ int main() {
 		MeshResource::Sptr leaflingMesh = ResourceManager::CreateAsset<MeshResource>("Leafling_Ver3_-_Rigged.obj");
 
 		MeshResource::Sptr navNodeMesh = ResourceManager::CreateAsset<MeshResource>("Puck.obj");
+		MeshResource::Sptr soundRing = ResourceManager::CreateAsset<MeshResource>("soundRing.obj");
 
 
 		//Textures
@@ -730,7 +731,7 @@ int main() {
 
 		GameObject::Sptr Leafling = scene->CreateGameObject("Leafling");
 		{
-			Leafling->SetPostion(glm::vec3(-5.0f, -5.0f, 0.0f));
+			Leafling->SetPostion(glm::vec3(-5.0f, 15.0f, -12.0f));
 			Leafling->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
 			Leafling->SetScale(glm::vec3(4.0f));
 
@@ -744,6 +745,16 @@ int main() {
 
 			Enemy::Sptr enemyBehaviour = Leafling->Add<Enemy>();
 			//enemyBehaviour->player = camera;
+		}
+
+		GameObject::Sptr debugSoundRing = scene->CreateGameObject("Debug Sound-Ring");
+		{
+			debugSoundRing->SetPostion(glm::vec3(-5.0f, 15.0f, -12.0f));
+			debugSoundRing->SetScale(glm::vec3(4.0f));
+
+			RenderComponent::Sptr renderer = debugSoundRing->Add<RenderComponent>();
+			renderer->SetMesh(soundRing);
+			renderer->SetMaterial(tealMaterial);
 		}
 
 

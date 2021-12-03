@@ -4,6 +4,7 @@
 #include "Utils\GlmBulletConversions.h"
 #include "Gameplay/Enemy/PatrollingState.h"
 
+
 EnemyState& AggravatedState::getInstance()
 {
 	static AggravatedState singleton;
@@ -32,48 +33,33 @@ void AggravatedState::Listen(Enemy* e, float deltaTime)
 	else
 		e->SetState(PatrollingState::getInstance());
 
-	for each (GameObject * s in e->scene->soundEmmiters)
-	{
-		//Checking if any sounds are in listening Radius
-		glm::vec3 dir = s->GetPosition() - e->GetGameObject()->GetPosition();
-		float dist = glm::length(dir);
-		float totalRadius = s->Get<SoundEmmiter>()->volume + e->listeningRadius;
 
-		if (dist >= totalRadius)
-			continue;
+	//Checking if any sounds are in listening Radius
+	glm::vec3 dir = e->player->GetPosition() - e->GetGameObject()->GetPosition();
+	float dist = glm::length(dir);
+	float totalRadius = e->player->Get<SoundEmmiter>()->volume + e->listeningRadius;
 
-		//Raycasting toward heard sound to determine state change
-		btCollisionWorld::ClosestRayResultCallback hit(ToBt(e->GetGameObject()->GetPosition()), ToBt(s->GetPosition()));
-		e->scene->GetPhysicsWorld()->rayTest(ToBt(e->GetGameObject()->GetPosition()), ToBt(s->GetPosition()), hit);
+	if (dist >= totalRadius)
+		return;
 
-		if (!hit.hasHit())
-			continue;
+	//Raycasting toward heard sound to determine state change
+	btCollisionWorld::ClosestRayResultCallback hit(ToBt(e->GetGameObject()->GetPosition()), ToBt(e->player->GetPosition()));
+	e->scene->GetPhysicsWorld()->rayTest(ToBt(e->GetGameObject()->GetPosition()), ToBt(e->player->GetPosition()), hit);
 
-		glm::vec3 objectPos = ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
+	if (!hit.hasHit())
+		return;
 
-		if (objectPos == glm::vec3(0))
-			return;
+	if (hit.m_collisionObject->isStaticObject())
+		return;
 
-		if (objectPos == e->player->GetPosition())
-		{
-			std::cout << "\nIM AGRO AGAIN!!";
-			e->agroTimer = agroTimerMax;
 
-			//Adding the heard sound to our lists (removing them if already there)
-			for (int i = 0; i < e->lastHeardSounds.size(); i++)
-			{
-				if (e->lastHeardSounds[i] == s)
-				{
-					e->lastHeardPositions.erase(e->lastHeardPositions.begin() + i);
-					e->lastHeardSounds.erase(e->lastHeardSounds.begin() + i);
-				}
-			}
+	std::cout << "\nIM AGRO AGAIN!!";
+	e->agroTimer = agroTimerMax;
 
-			e->lastHeardSounds.insert(e->lastHeardSounds.begin(), s);
-			e->lastHeardPositions.insert(e->lastHeardPositions.begin(), s->GetPosition());
-			e->pathRequested = false;
-		}
-	}
+
+	e->pathRequested = false;
+
+
 
 	if (e->nIndex > 0)
 		e->listeningRadius = glm::mix(e->listeningRadius, e->agroStationaryListeningRadius, 2.0f * deltaTime);
@@ -84,11 +70,17 @@ void AggravatedState::Listen(Enemy* e, float deltaTime)
 
 }
 
+void AggravatedState::SwitchIndex(Enemy* e, float deltaTime)
+{
+	if (e->nIndex > 0)
+		e->nIndex--;
+}
+
+
 void AggravatedState::Pathfind(Enemy* e, float deltaTime)
 {
-
 	glm::vec3 enemyPos = e->GetGameObject()->GetPosition();
-	glm::vec3 soundPos = e->lastHeardPositions[0];
+	glm::vec3 soundPos = e->player->GetPosition();
 
 	btCollisionWorld::ClosestRayResultCallback hit(ToBt(enemyPos), ToBt(soundPos));
 	e->scene->GetPhysicsWorld()->rayTest(ToBt(enemyPos), ToBt(soundPos), hit);
@@ -100,8 +92,6 @@ void AggravatedState::Pathfind(Enemy* e, float deltaTime)
 	if (objectPos == e->player->GetPosition())
 	{
 		e->target = soundPos;
-		//if (glm::length(soundPos - enemyPos) < 3.0f)
-		//	SwitchIndex2(e);
 		return;
 	}
 
@@ -109,7 +99,7 @@ void AggravatedState::Pathfind(Enemy* e, float deltaTime)
 	{
 		e->pathSet.clear();
 		//std::cout << "\nCalculated Path to: " << patrolPos.x << ", " << patrolPos.y << ", " << patrolPos.z;
-		e->pathSet = e->pathManager->Get<pathfindingManager>()->requestPath(enemyPos, e->lastHeardPositions[0]);
+		e->pathSet = e->pathManager->Get<pathfindingManager>()->requestPath(enemyPos, e->player->GetPosition());
 
 		if (e->pathSet[0] == glm::vec3(69420.0f, 69420.0f, 69420.0f))
 		{
@@ -125,8 +115,7 @@ void AggravatedState::Pathfind(Enemy* e, float deltaTime)
 
 	if (glm::length(e->GetGameObject()->GetPosition() - e->pathSet[e->nIndex]) < 3.0f)
 	{
-		if (e->nIndex > 0)
-			e->nIndex--;
+		SwitchIndex(e, deltaTime);
 	}
 
 

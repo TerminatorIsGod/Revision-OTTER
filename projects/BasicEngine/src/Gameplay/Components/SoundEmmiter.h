@@ -25,7 +25,7 @@ public:
 	float attackSpeed = 4;
 	float lerpSpeed;
 	glm::vec3 soundLightOffset = glm::vec3(0, 0, 0);
-
+	const float soundLightMultiplier = 4.5f;
 	Scene* scene;
 
 	bool isDecaying = true;

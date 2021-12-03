@@ -33,12 +33,10 @@ public:
 	glm::vec3 target;
 	float soundExpireTimerDefault = 5.0f;
 	float soundExpireTimer;
-	float agroTimer = 5.0f;
 
 	//Steering Movement
 	float maxVelocity = 4.0f;
-	float AgroVelocity = 8.0f;
-	float IdleVelocity = 4.0f;
+
 	float maxRotationSpeed = 0.1f;
 	glm::vec3 desiredVelocity;
 	glm::vec3 targetRotation;
@@ -48,6 +46,7 @@ public:
 	//Listening Light
 	float listeningRadius = 3.0f;
 	int soundLight;
+	const float soundLightMultiplier = 4.5f;
 
 	//Pathfinding
 	bool pathRequested = false;
@@ -55,16 +54,22 @@ public:
 	int pIndex = 0;
 	GameObject::Sptr pathManager;
 	std::vector<glm::vec3> pathSet; // In unity this was a list of nodes, but I'm pretty sure we'll be fine with just positions
-	int nIndex;
+	int nIndex = 0;
 
 	//State Machine Stuff
 	glm::vec3 red = glm::vec3(0.019f, 0, 0);
 	glm::vec3 blue = glm::vec3(0.0f, 0.0f, 0.019f);
-	glm::vec3 yellow = glm::vec3(0.2f, 0.2f, 0);
+	glm::vec3 yellow = glm::vec3(0.019f, 0.019f, 0);
+
 	const float agroMovingListeningRadius = 12.0f;
 	const float agroStationaryListeningRadius = 6.0f;
+	const float patrolListeningRadius = 4.0f; // this is normmally 4
 
-	const float patrolListeningRadius = 4.0f;
+	float AgroVelocity = 8.0f;
+	float IdleVelocity = 4.0f;
+
+	float agroTimer = 5.0f;
+	float distractedBackupTimer = 20.0f, distractedTimer = 5.0f;
 
 	EnemyState* currentState;
 

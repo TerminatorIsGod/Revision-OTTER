@@ -104,7 +104,7 @@ Enemy::Sptr Enemy::FromJson(const nlohmann::json& data) {
 void Enemy::MoveListeningLight()
 {
 	scene->Lights[soundLight].Position = GetGameObject()->GetPosition();
-	scene->Lights[soundLight].Range = -listeningRadius * 8.0f;;
+	scene->Lights[soundLight].Range = -listeningRadius * soundLightMultiplier;
 }
 
 void Enemy::SetState(EnemyState& newState)

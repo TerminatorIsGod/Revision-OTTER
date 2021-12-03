@@ -1,31 +1,48 @@
-#include "Gameplay/Enemy/PatrollingState.h"
+#include "Gameplay/Enemy/DistractedState.h"
 #include "Gameplay/Scene.h"
 #include "Gameplay/Components/SoundEmmiter.h"
 #include "Utils\GlmBulletConversions.h"
+#include "Gameplay/Enemy/PatrollingState.h"
 #include "Gameplay/Enemy/AggravatedState.h"
-#include "Gameplay/Enemy/DistractedState.h"
 
-EnemyState& PatrollingState::getInstance()
+
+EnemyState& DistractedState::getInstance()
 {
-	static PatrollingState singleton;
+	static DistractedState singleton;
 	return singleton;
 }
 
-void PatrollingState::Start(Enemy* e)
+void DistractedState::Start(Enemy* e)
 {
-	std::cout << "\n" << e->GetGameObject()->Name << ": Entered Patrolling State";
+	std::cout << "\n" << e->GetGameObject()->Name << ": Entered Distracted State";
 
 	e->pathRequested = false;
 	e->maxVelocity = e->IdleVelocity;
+	e->distractedBackupTimer = distractedBackupTimerMax;
+	e->distractedTimer = distractedTimerMax;
 }
 
-void PatrollingState::End(Enemy* e)
+void DistractedState::End(Enemy* e)
 {
-	std::cout << "\n" << e->GetGameObject()->Name << ": Exited Patrolling State";
+	std::cout << "\n" << e->GetGameObject()->Name << ": Exited Distracted State";
 }
 
-void PatrollingState::Listen(Enemy* e, float deltaTime)
+void DistractedState::Listen(Enemy* e, float deltaTime)
 {
+	//std::cout << "\nSWITCHING BACK IN: " << e->distractedTimer;
+	//Backup distraction timer
+	if (e->distractedBackupTimer > 0)
+		e->distractedBackupTimer -= deltaTime;
+	else
+		e->SetState(PatrollingState::getInstance());
+
+	//Distraction timer when enemy reaches destination
+	if (e->lastHeardSounds.size() == 0)
+		e->distractedTimer -= deltaTime;
+
+	if (e->distractedTimer <= 0)
+		e->SetState(PatrollingState::getInstance());
+
 	for each (GameObject * s in e->scene->soundEmmiters)
 	{
 		//Checking if any sounds are in listening Radius
@@ -35,8 +52,6 @@ void PatrollingState::Listen(Enemy* e, float deltaTime)
 
 		if (dist >= totalRadius)
 			continue;
-
-
 
 		//Raycasting toward heard sound to determine state change
 		btCollisionWorld::ClosestRayResultCallback hit(ToBt(e->GetGameObject()->GetPosition()), ToBt(s->GetPosition()));
@@ -61,6 +76,8 @@ void PatrollingState::Listen(Enemy* e, float deltaTime)
 		e->lastHeardSounds.insert(e->lastHeardSounds.begin(), s);
 		e->lastHeardPositions.insert(e->lastHeardPositions.begin(), s->GetPosition());
 
+		e->pathRequested = false;
+
 		//Determining State Change
 		glm::vec3 objectPos = ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
 		if (objectPos == e->player->GetPosition())
@@ -68,70 +85,61 @@ void PatrollingState::Listen(Enemy* e, float deltaTime)
 			std::cout << "\nIM AGRO!!";
 			e->SetState(AggravatedState::getInstance());
 		}
-		else
-		{
-			std::cout << "\nIM Distracted!!: ";
-			e->SetState(DistractedState::getInstance());
-		}
-
 	}
 
 	//Sound Light Lerping
 	e->listeningRadius = glm::mix(e->listeningRadius, e->patrolListeningRadius, 2.0f * deltaTime);
-	e->scene->Lights[e->soundLight].Color = glm::mix(e->scene->Lights[e->soundLight].Color, e->blue, 4.0f * deltaTime);
-
+	e->scene->Lights[e->soundLight].Color = glm::mix(e->scene->Lights[e->soundLight].Color, e->yellow, 4.0f * deltaTime);
 }
 
-void SwitchIndex(Enemy* e)
+void DistractedState::SwitchIndex(Enemy* e, float deltaTime)
 {
 	if (e->nIndex > 0)
-	{
 		e->nIndex--;
-	}
 	else
 	{
-		if (e->pIndex < e->patrolPoints.size() - 1)
-			e->pIndex++;
-		else
-			e->pIndex = 0;
+		if (e->lastHeardSounds.size() <= 0)
+			return;
 
+		e->lastHeardPositions.erase(e->lastHeardPositions.begin());
+		e->lastHeardSounds.erase(e->lastHeardSounds.begin());
 		e->pathRequested = false;
 	}
 }
 
-void PatrollingState::Pathfind(Enemy* e, float deltaTime)
+void DistractedState::Pathfind(Enemy* e, float deltaTime)
 {
-	if (e->patrolPoints.size() < 1)
-	{
-		e->target = e->startPos;
+	if (e->lastHeardSounds.size() <= 0)
 		return;
-	}
 
 	glm::vec3 enemyPos = e->GetGameObject()->GetPosition();
-	glm::vec3 patrolPos = e->patrolPoints[e->pIndex];
+	glm::vec3 soundPos = e->lastHeardPositions[0];
 
-	btCollisionWorld::ClosestRayResultCallback hit(ToBt(enemyPos), ToBt(patrolPos));
-	e->scene->GetPhysicsWorld()->rayTest(ToBt(enemyPos), ToBt(patrolPos), hit);
+	btCollisionWorld::ClosestRayResultCallback hit(ToBt(enemyPos), ToBt(soundPos));
+	e->scene->GetPhysicsWorld()->rayTest(ToBt(enemyPos), ToBt(soundPos), hit);
 
 	if (!hit.hasHit())
+		return;
+
+	glm::vec3 objectPos = ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
+	if (objectPos == e->lastHeardPositions[0])
 	{
-		e->target = patrolPos;
-		if (glm::length(patrolPos - enemyPos) < 3.0f)
-			SwitchIndex(e);
+		e->target = soundPos;
+		if (glm::length(soundPos - enemyPos) < 10.0f)
+			SwitchIndex(e, deltaTime);
 		return;
 	}
 
 	if (!e->pathRequested)
 	{
 		e->pathSet.clear();
-		std::cout << "\nCalculated Path to: " << patrolPos.x << ", " << patrolPos.y << ", " << patrolPos.z;
-		e->pathSet = e->pathManager->Get<pathfindingManager>()->requestPath(enemyPos, patrolPos);
+		//std::cout << "\nCalculated Path to: " << patrolPos.x << ", " << patrolPos.y << ", " << patrolPos.z;
+		e->pathSet = e->pathManager->Get<pathfindingManager>()->requestPath(enemyPos, e->lastHeardPositions[0]);
+
 		if (e->pathSet[0] == glm::vec3(69420.0f, 69420.0f, 69420.0f))
 		{
-			//Hmm I wonder what should happen if the enemy can't find a path while patrolling? 
-			//This isn't something that should ever happen in this state tho.
-			//Oooh it should prob just switch index and go towards the next patrol point
-			//e->pathSet[0] = e->GetGameObject()->GetPosition();
+			e->SetState(PatrollingState::getInstance());
+			return;
 		}
 
 		e->nIndex = e->pathSet.size() - 1;
@@ -141,16 +149,13 @@ void PatrollingState::Pathfind(Enemy* e, float deltaTime)
 	e->target = e->pathSet[e->nIndex];
 
 	if (glm::length(e->GetGameObject()->GetPosition() - e->pathSet[e->nIndex]) < 3.0f)
-		SwitchIndex(e);
-
-
-
+	{
+		SwitchIndex(e, deltaTime);
+	}
 }
 
-void PatrollingState::Move(Enemy* e, float  deltaTime)
+void DistractedState::Move(Enemy* e, float  deltaTime)
 {
-	if (e->patrolPoints.size() < 1)
-		return;
 	e->Move(deltaTime);
 }
 

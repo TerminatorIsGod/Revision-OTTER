@@ -253,9 +253,7 @@ void SimpleCameraControl::Interact(float deltaTime)
 
 
 	glm::vec3 objectPos = ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
-	//hit.m_collisionObject->
-	//float tag =
-	//std::cout << "\nOBJECT TAG: " << tag;
+
 	if (objectPos == glm::vec3(0))
 		return;
 
