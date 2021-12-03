@@ -46,7 +46,6 @@ public:
 	//Listening Light
 	float listeningRadius = 3.0f;
 	int soundLight;
-	const float soundLightMultiplier = 4.5f;
 
 	//Pathfinding
 	bool pathRequested = false;

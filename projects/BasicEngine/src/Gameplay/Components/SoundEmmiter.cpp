@@ -34,7 +34,7 @@ void SoundEmmiter::Update(float deltaTime)
 		Attack(deltaTime);
 	}
 
-	scene->Lights[soundLight].Range = -volume * soundLightMultiplier;
+	scene->Lights[soundLight].Range = volume * volume * -1.20f;
 	scene->Lights[soundLight].Position = GetGameObject()->GetPosition();
 	//std::cout << "\nLight:" << " | " << soundLight->Position.y;
 
