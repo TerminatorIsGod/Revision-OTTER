@@ -30,18 +30,23 @@ public:
 	float starty = 0;
 	float startz = 0;
 	
-	float endx;
-	float endy;
-	float endz;
+	float endx = 0;
+	float endy = 0;
+	float endz = 0;
 
-	float tLength;
+	float oldCheck = 0;
 
-	glm::quat startRot;
-	glm::quat endRot;
+	float tLength = 1;
 
-	float t;
-	bool beginLerp;
-	bool lerpReverse;
+	glm::quat startRot = glm::quat(1,0,0,0);
+	glm::quat endRot = glm::quat(1, 0, 0, 0);
+
+	float t = 0;
+	bool beginLerp = false;
+	bool lerpReverse = false;
+
+
+	glm::vec3 lerpstuff(glm::vec3 a, glm::vec3 b, float t);
 
 	void setRotationStart();
 	void setRotationStart(glm::vec3 xyz);

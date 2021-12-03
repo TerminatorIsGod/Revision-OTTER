@@ -52,7 +52,7 @@ InteractSystem::Sptr InteractSystem::FromJson(const nlohmann::json& blob) {
 }
 
 void InteractSystem::Update(float deltaTime) {
-	if (glfwGetKey(_window, GLFW_KEY_E) == GLFW_PRESS && isKeyPressed == false) {
+	if ((glfwGetKey(_window, GLFW_KEY_E) == GLFW_PRESS) && (isKeyPressed == false)) {
 		isKeyPressed = true;
 		if (_requiresKey) {
 
@@ -68,7 +68,7 @@ void InteractSystem::Update(float deltaTime) {
 		}
 					
 	}
-	else {
+	else if((glfwGetKey(_window, GLFW_KEY_E) != GLFW_PRESS) && (isKeyPressed == true)){
 		isKeyPressed = false;
 	}
 
@@ -76,17 +76,26 @@ void InteractSystem::Update(float deltaTime) {
 
 void InteractSystem::interact() {
 
-	_distance = _player->GetPosition().length() - GetGameObject()->GetPosition().length();
+	_distance = (_player->GetPosition().length() - GetGameObject()->GetPosition().length());
+
+	glm::vec3 ppos = _player->GetPosition();
+	glm::vec3 opos = GetGameObject()->GetPosition();
+
+	glm::vec3 tpos = ppos - opos;
+	_distance = sqrt(pow(tpos.x, 2) + pow(tpos.y, 2) + pow(tpos.z, 2));
 
 
-	if (_distance < _interactDistance) {
+	if (_distance <= _interactDistance) {
 
 		if (_lerpS) {
 			_lerpS->lerpReverse = isOpen;
 			_lerpS->beginLerp = true;
 		}
 		
-		std::cout << GetGameObject()->Name << " OBJECT INTERACTED";
+		if (_iskey) {
+			_player->Get<InventorySystem>()->setKey(_requiredKey, true);
+		}
+
 	}
 
 }
