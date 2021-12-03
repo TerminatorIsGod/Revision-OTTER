@@ -346,12 +346,12 @@ int main() {
 	bool loadScene = true;
 	// For now we can use a toggle to generate our scene vs load from file
 	if (loadScene) {
-		  
+
 		ResourceManager::LoadManifest("manifest.json");
 		scene = Scene::Load("demoscene.json");
-		 
+
 		//Texture2D::Sptr    whiteTex = ResourceManager::CreateAsset<Texture2D>("textures/white.jpg");
-		 
+
 		//Shader::Sptr basicShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
 		//	{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
 		//	{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
@@ -386,7 +386,7 @@ int main() {
 		// This shader handles our basic materials without reflections (cause they expensive)
 		Shader::Sptr specShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
 			{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
-			{ ShaderPartType::Fragment, "shaders/frag_specular.glsl" } 
+			{ ShaderPartType::Fragment, "shaders/frag_specular.glsl" }
 		});
 
 		Shader::Sptr toonShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
@@ -712,7 +712,7 @@ int main() {
 		createMapSection(map_miscObjects, whiteMaterial);
 		createMapSection(map_shippingContainers, whiteMaterial);
 		createMapSection(map_walls, whiteMaterial);
-		 
+
 		for (int i = 0; i < 10; i++)
 		{
 			createMapAsset(shelfLarge, tealMaterial, "Large Shelf: (" + std::to_string(i) + ")");
@@ -741,7 +741,6 @@ int main() {
 			RigidBody::Sptr physics = Leafling->Add<RigidBody>(RigidBodyType::Dynamic);
 			ICollider::Sptr collider = physics->AddCollider(SphereCollider::Create(2.0f));
 			collider->SetPosition(glm::vec3(0, 3.0f, -1.0f));
-
 			RenderComponent::Sptr renderer = Leafling->Add<RenderComponent>();
 			renderer->SetMesh(leaflingMesh);
 			renderer->SetMaterial(leaflingMaterial);
@@ -813,7 +812,7 @@ int main() {
 	Camera::Sptr camera;
 
 
-	
+
 	animShader = animationShader;
 	float delt = 0;
 
@@ -885,7 +884,7 @@ int main() {
 		double thisFrame = glfwGetTime();
 		float dt = static_cast<float>(thisFrame - lastFrame);
 		delt += dt;
-		
+
 		animShader->SetUniform("delta", delt);
 
 		// Showcasing how to use the imGui library!

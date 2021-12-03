@@ -52,7 +52,6 @@ void SimpleCameraControl::Update(float deltaTime)
 void SimpleCameraControl::Movement(float deltaTime)
 {
 	auto _body = GetComponent<Gameplay::Physics::RigidBody>();
-
 	/*if (glfwGetMouseButton(_window, 0)) {
 	if (_isMousePressed == false) {
 		glfwGetCursorPos(_window, &_prevMousePos.x, &_prevMousePos.y);
@@ -254,8 +253,9 @@ void SimpleCameraControl::Interact(float deltaTime)
 
 
 	glm::vec3 objectPos = ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
-	//std::cout << "\nCollider Pos: " << objectPos.y;
-
+	//hit.m_collisionObject->
+	//float tag =
+	//std::cout << "\nOBJECT TAG: " << tag;
 	if (objectPos == glm::vec3(0))
 		return;
 

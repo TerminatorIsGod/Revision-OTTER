@@ -15,133 +15,125 @@ void AggravatedState::Start(Enemy* e)
 	std::cout << "\n" << e->GetGameObject()->Name << ": Entered Aggravated State";
 
 	e->pathRequested = false;
-	e->scene->Lights[e->soundLight].Color = e->red;
-	e->maxVelocity = e->IdleVelocity;
+	e->agroTimer = agroTimerMax;
+	e->maxVelocity = e->AgroVelocity;
 }
 
 void AggravatedState::End(Enemy* e)
 {
-    std::cout << "\n" << e->GetGameObject()->Name << ": Exited Aggravated State";
+	std::cout << "\n" << e->GetGameObject()->Name << ": Exited Aggravated State";
 }
 
 void AggravatedState::Listen(Enemy* e, float deltaTime)
 {
-	//for each (GameObject * s in e->scene->soundEmmiters)
-	//{
-	//	//Checking if any sounds are in listening Radius
-	//	glm::vec3 dir = s->GetPosition() - e->GetGameObject()->GetPosition();
-	//	float dist = glm::length(dir);
-	//	float totalRadius = s->Get<SoundEmmiter>()->volume + e->listeningRadius;
+	//std::cout << "\n\nAGRO TIMER: " << e->agroTimer;
+	if (e->agroTimer > 0)
+		e->agroTimer -= 1.0f * deltaTime;
+	else
+		e->SetState(PatrollingState::getInstance());
 
-	//	//if (s == e->player)
-	//	//	std::cout << "\nDist: " << dist - totalRadius;
+	for each (GameObject * s in e->scene->soundEmmiters)
+	{
+		//Checking if any sounds are in listening Radius
+		glm::vec3 dir = s->GetPosition() - e->GetGameObject()->GetPosition();
+		float dist = glm::length(dir);
+		float totalRadius = s->Get<SoundEmmiter>()->volume + e->listeningRadius;
 
-	//	if (dist >= totalRadius)
-	//		continue;
+		if (dist >= totalRadius)
+			continue;
 
-	//	//Adding the heard sound to our lists (removing them if already there)
-	//	for (int i = 0; i < e->lastHeardSounds.size(); i++)
-	//	{
-	//		if (e->lastHeardSounds[i] == s)
-	//		{
-	//			e->lastHeardPositions.erase(e->lastHeardPositions.begin() + i);
-	//			e->lastHeardSounds.erase(e->lastHeardSounds.begin() + i);
-	//		}
-	//	}
+		//Raycasting toward heard sound to determine state change
+		btCollisionWorld::ClosestRayResultCallback hit(ToBt(e->GetGameObject()->GetPosition()), ToBt(s->GetPosition()));
+		e->scene->GetPhysicsWorld()->rayTest(ToBt(e->GetGameObject()->GetPosition()), ToBt(s->GetPosition()), hit);
 
-	//	e->lastHeardSounds.insert(e->lastHeardSounds.begin(), s);
-	//	e->lastHeardPositions.insert(e->lastHeardPositions.begin(), s->GetPosition());
-	//	e->pathRequested = false;
+		if (!hit.hasHit())
+			continue;
 
-	//	//Raycasting toward heard sound to determine state change
-	//	btCollisionWorld::ClosestRayResultCallback hit(ToBt(e->GetGameObject()->GetPosition()), ToBt(s->GetPosition()));
-	//	e->scene->GetPhysicsWorld()->rayTest(ToBt(e->GetGameObject()->GetPosition()), ToBt(s->GetPosition()), hit);
+		glm::vec3 objectPos = ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
 
-	//	if (!hit.hasHit())
-	//		continue;
+		if (objectPos == glm::vec3(0))
+			return;
 
-	//	glm::vec3 objectPos = ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
+		if (objectPos == e->player->GetPosition())
+		{
+			std::cout << "\nIM AGRO AGAIN!!";
+			e->agroTimer = agroTimerMax;
 
-	//	if (objectPos == glm::vec3(0))
-	//		return;
+			//Adding the heard sound to our lists (removing them if already there)
+			for (int i = 0; i < e->lastHeardSounds.size(); i++)
+			{
+				if (e->lastHeardSounds[i] == s)
+				{
+					e->lastHeardPositions.erase(e->lastHeardPositions.begin() + i);
+					e->lastHeardSounds.erase(e->lastHeardSounds.begin() + i);
+				}
+			}
 
-	//	if (objectPos == s->GetPosition())
-	//		std::cout << "\nIM AGRO!!";
+			e->lastHeardSounds.insert(e->lastHeardSounds.begin(), s);
+			e->lastHeardPositions.insert(e->lastHeardPositions.begin(), s->GetPosition());
+			e->pathRequested = false;
+		}
+	}
 
-	//	//e->SetState(AggravatedState::getInstance());
-	//	else
-	//		std::cout << "\nIM Distracted!!";
+	if (e->nIndex > 0)
+		e->listeningRadius = glm::mix(e->listeningRadius, e->agroStationaryListeningRadius, 2.0f * deltaTime);
+	else
+		e->listeningRadius = glm::mix(e->listeningRadius, e->agroMovingListeningRadius, 2.0f * deltaTime);
 
-	//	//e->SetState(DistractedState::getInstance());
+	e->scene->Lights[e->soundLight].Color = glm::mix(e->scene->Lights[e->soundLight].Color, e->red, 8.0f * deltaTime);
 
-	//}
-
-}
-
-void SwitchIndex2(Enemy* e)
-{
-	//if (e->nIndex > 0)
-	//{
-	//	e->nIndex--;
-	//}
-	//else
-	//{
-	//	if (e->pIndex < e->patrolPoints.size() - 1)
-	//		e->pIndex++;
-	//	else
-	//		e->pIndex = 0;
-
-	//	e->pathRequested = false;
-	//}
 }
 
 void AggravatedState::Pathfind(Enemy* e, float deltaTime)
 {
-	//if (e->patrolPoints.size() < 1)
-	//{
-	//	e->target = e->startPos;
-	//	return;
-	//}
 
-	//glm::vec3 enemyPos = e->GetGameObject()->GetPosition();
-	//glm::vec3 patrolPos = e->patrolPoints[e->pIndex];
+	glm::vec3 enemyPos = e->GetGameObject()->GetPosition();
+	glm::vec3 soundPos = e->lastHeardPositions[0];
 
-	//btCollisionWorld::ClosestRayResultCallback hit(ToBt(enemyPos), ToBt(patrolPos));
-	//e->scene->GetPhysicsWorld()->rayTest(ToBt(enemyPos), ToBt(patrolPos), hit);
+	btCollisionWorld::ClosestRayResultCallback hit(ToBt(enemyPos), ToBt(soundPos));
+	e->scene->GetPhysicsWorld()->rayTest(ToBt(enemyPos), ToBt(soundPos), hit);
 
-	//if (!hit.hasHit())
-	//{
-	//	e->target = patrolPos;
-	//	if (glm::length(patrolPos - enemyPos) < 3.0f)
-	//		SwitchIndex(e);
-	//	return;
-	//}
+	if (!hit.hasHit())
+		return;
 
-	//if (!e->pathRequested)
-	//{
-	//	e->pathSet.clear();
-	//	std::cout << "\nCalculated Path to: " << patrolPos.x << ", " << patrolPos.y << ", " << patrolPos.z;
-	//	e->pathSet = e->pathManager->Get<pathfindingManager>()->requestPath(enemyPos, patrolPos);
-	//	if (e->pathSet[0] == glm::vec3(69420.0f, 69420.0f, 69420.0f))
-	//	{
-	//		//Hmm I wonder what should happen if the enemy can't find a path while patrolling? 
-	//		//This isn't something that should ever happen in this state tho.
-	//		//Oooh it should prob just switch index and go towards the next patrol point
-	//		//e->pathSet[0] = e->GetGameObject()->GetPosition();
-	//	}
+	glm::vec3 objectPos = ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
+	if (objectPos == e->player->GetPosition())
+	{
+		e->target = soundPos;
+		//if (glm::length(soundPos - enemyPos) < 3.0f)
+		//	SwitchIndex2(e);
+		return;
+	}
 
-	//	e->nIndex = e->pathSet.size() - 1;
-	//	e->pathRequested = true;
-	//}
+	if (!e->pathRequested)
+	{
+		e->pathSet.clear();
+		//std::cout << "\nCalculated Path to: " << patrolPos.x << ", " << patrolPos.y << ", " << patrolPos.z;
+		e->pathSet = e->pathManager->Get<pathfindingManager>()->requestPath(enemyPos, e->lastHeardPositions[0]);
 
-	//e->target = e->pathSet[e->nIndex];
+		if (e->pathSet[0] == glm::vec3(69420.0f, 69420.0f, 69420.0f))
+		{
+			e->SetState(PatrollingState::getInstance());
+			return;
+		}
 
-	//if (glm::length(e->GetGameObject()->GetPosition() - e->pathSet[e->nIndex]) < 3.0f)
-	//	SwitchIndex(e);
+		e->nIndex = e->pathSet.size() - 1;
+		e->pathRequested = true;
+	}
+
+	e->target = e->pathSet[e->nIndex];
+
+	if (glm::length(e->GetGameObject()->GetPosition() - e->pathSet[e->nIndex]) < 3.0f)
+	{
+		if (e->nIndex > 0)
+			e->nIndex--;
+	}
+
+
 }
 
 void AggravatedState::Move(Enemy* e, float  deltaTime)
 {
-	//e->Move(deltaTime);
+	e->Move(deltaTime);
 }
 

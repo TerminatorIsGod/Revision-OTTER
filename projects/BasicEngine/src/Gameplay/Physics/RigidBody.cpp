@@ -26,7 +26,7 @@ namespace Gameplay::Physics {
 		_linearVelocityDirty(false),
 		_angularVelocity(btVector3(0, 0, 0)),
 		_angularVelocityDirty(false),
-		_angularFactor(btVector3(1,1,1)),
+		_angularFactor(btVector3(1, 1, 1)),
 		_angularFactorDirty(false)
 	{ }
 
@@ -139,7 +139,8 @@ namespace Gameplay::Physics {
 			else if (_type == RigidBodyType::Static) {
 				_body->setCollisionFlags(flags | btCollisionObject::CF_KINEMATIC_OBJECT);
 				_body->setGravity(btVector3(0.0f, 0.0f, 0.0f));
-			} else {
+			}
+			else {
 				// If dynamic, we need to restore gravity from the scene
 				_body->setCollisionFlags(flags);
 				_body->setGravity(_scene->GetPhysicsWorld()->getGravity());
@@ -155,14 +156,15 @@ namespace Gameplay::Physics {
 		// Update any dirty state that may have changed
 		_HandleStateDirty();
 
-		if (_type != RigidBodyType::Static) {		
+		if (_type != RigidBodyType::Static) {
 			btTransform transform;
 			_CopyGameobjectTransformTo(transform);
 
 			// Copy to body and to it's motion state
 			if (_type == RigidBodyType::Dynamic) {
 				_body->setWorldTransform(transform);
-			} else {
+			}
+			else {
 				// Kinematics prefer to be driven my motion state for some reason :|
 				_body->getMotionState()->setWorldTransform(transform);
 			}
@@ -208,7 +210,7 @@ namespace Gameplay::Physics {
 		_motionState = new btDefaultMotionState();
 
 		// Get the object's starting transform, create a bullet representation for it
-		btTransform transform; 
+		btTransform transform;
 		transform.setIdentity();
 		transform.setOrigin(ToBt(context->GetPosition()));
 		transform.setRotation(ToBt(context->GetRotation()));
@@ -224,18 +226,18 @@ namespace Gameplay::Physics {
 		// If the object is kinematic (driven by a controller), tell bullet that
 		if (_type == RigidBodyType::Kinematic) {
 			_body->setCollisionFlags(_body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-		} 
+		}
 		// If the object is static, disable it's gravity and notify bullet
 		else if (_type == RigidBodyType::Static) {
 			_body->setGravity(btVector3(0.0f, 0.0f, 0.0f));
 			_body->setCollisionFlags(_body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
 		}
-	
+
 		_body->setActivationState(DISABLE_DEACTIVATION);
 
 		// Copy over group and mask info
 		_body->getBroadphaseProxy()->m_collisionFilterGroup = _collisionGroup;
-		_body->getBroadphaseProxy()->m_collisionFilterMask  = _collisionMask;
+		_body->getBroadphaseProxy()->m_collisionFilterMask = _collisionMask;
 	}
 
 	void RigidBody::RenderImGui()
@@ -261,7 +263,7 @@ namespace Gameplay::Physics {
 		// Read out the RigidBody config
 		result->_type = ParseRigidBodyType(data["type"], RigidBodyType::Unknown);
 		result->_mass = data["mass"];
-		result->_linearDamping  = data["linear_damping"];
+		result->_linearDamping = data["linear_damping"];
 		result->_angularDamping = data["angular_damping"];
 		// Read out base physics data
 		result->FromJsonBase(data);
@@ -295,7 +297,7 @@ namespace Gameplay::Physics {
 
 		// Handle updating our group or mask if they've changed
 		_HandleGroupDirty();
-	
+
 		// If our damping parameters have changed, notify Bullet and clear the flag
 		if (_isDampingDirty) {
 			_body->setDamping(_linearDamping, _angularDamping);

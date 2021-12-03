@@ -13,8 +13,8 @@ EnemyState& PatrollingState::getInstance()
 void PatrollingState::Start(Enemy* e)
 {
 	std::cout << "\n" << e->GetGameObject()->Name << ": Entered Patrolling State";
+
 	e->pathRequested = false;
-	e->scene->Lights[e->soundLight].Color = e->blue;
 	e->maxVelocity = e->IdleVelocity;
 }
 
@@ -69,6 +69,9 @@ void PatrollingState::Listen(Enemy* e, float deltaTime)
 		}
 
 	}
+
+	e->listeningRadius = glm::mix(e->listeningRadius, e->patrolListeningRadius, 2.0f * deltaTime);
+	e->scene->Lights[e->soundLight].Color = glm::mix(e->scene->Lights[e->soundLight].Color, e->blue, 4.0f * deltaTime);
 
 }
 
@@ -132,6 +135,9 @@ void PatrollingState::Pathfind(Enemy* e, float deltaTime)
 
 	if (glm::length(e->GetGameObject()->GetPosition() - e->pathSet[e->nIndex]) < 3.0f)
 		SwitchIndex(e);
+
+
+
 }
 
 void PatrollingState::Move(Enemy* e, float  deltaTime)

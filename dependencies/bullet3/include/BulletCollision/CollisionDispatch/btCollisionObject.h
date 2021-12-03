@@ -324,7 +324,6 @@ public:
 	{
 		return m_friction;
 	}
-
 	void setRollingFriction(btScalar frict)
 	{
 		m_updateRevision++;

@@ -14,6 +14,7 @@ public:
 	void Move(Enemy* e, float deltaTime);
 
 	static EnemyState& getInstance();
+	const float agroTimerMax = 8.0f;
 
 private:
 	//Singleton Stuff

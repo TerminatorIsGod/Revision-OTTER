@@ -104,6 +104,7 @@ Enemy::Sptr Enemy::FromJson(const nlohmann::json& data) {
 void Enemy::MoveListeningLight()
 {
 	scene->Lights[soundLight].Position = GetGameObject()->GetPosition();
+	scene->Lights[soundLight].Range = -listeningRadius * 8.0f;;
 }
 
 void Enemy::SetState(EnemyState& newState)
@@ -112,6 +113,7 @@ void Enemy::SetState(EnemyState& newState)
 	currentState = &newState;
 	currentState->Start(this);
 }
+
 
 void Enemy::Move(float deltaTime)
 {
@@ -208,13 +210,13 @@ void Enemy::Avoidance(glm::vec3 dir, float deltaTime)
 	if (!hit.hasHit())
 		return;
 
-
 	//Add avoidance force
 	glm::vec3 newDir = glm::normalize(body->GetLinearVelocity()) - dir;
 	newDir = glm::vec3(newDir.x, newDir.y, 0.0f);
 
 	body->ApplyForce(glm::normalize(newDir) * avoidanceStrength * deltaTime);
 }
+
 
 void Enemy::IsPlayerDead()
 {
