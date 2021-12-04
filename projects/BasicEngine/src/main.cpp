@@ -60,6 +60,8 @@
 #include "Gameplay/Components/SoundEmmiter.h"
 #include "Gameplay/Components/Enemy.h"
 
+#include "Gameplay/Components/Ladder.h"
+
 
 // Physics
 #include "Gameplay/Physics/RigidBody.h"
@@ -117,7 +119,9 @@ void GlDebugMessage(GLenum source, GLenum type, GLuint id, GLenum severity, GLsi
 // Stores our GLFW window in a global variable for now
 GLFWwindow* window;
 // The current size of our window in pixels
-glm::ivec2 windowSize = glm::ivec2(800, 800);
+//glm::ivec2 windowSize = glm::ivec2(800, 800);
+glm::ivec2 windowSize = glm::ivec2(1920, 1080);
+
 // The title of our GLFW window
 std::string windowTitle = "INFR-1350U";
 
@@ -321,6 +325,7 @@ int main() {
 	ComponentManager::RegisterType<pathfindingManager>();
 	ComponentManager::RegisterType<SoundEmmiter>();
 	ComponentManager::RegisterType<Enemy>();
+	ComponentManager::RegisterType<Ladder>();
 
 	ComponentManager::RegisterType<MenuSystem>();
 	ComponentManager::RegisterType<InventorySystem>();
