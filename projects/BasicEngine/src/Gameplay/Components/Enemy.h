@@ -29,7 +29,7 @@ public:
 	Gameplay::Physics::RigidBody::Sptr body;
 	glm::quat currentRot;
 
-	glm::vec3 startPos;
+	glm::vec3 startPos = glm::vec3(0);
 	glm::vec3 target;
 	float soundExpireTimerDefault = 5.0f;
 	float soundExpireTimer;

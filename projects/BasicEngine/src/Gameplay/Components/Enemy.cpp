@@ -27,7 +27,7 @@ void Enemy::Awake()
 	body->SetLinearVelocity(glm::vec3(0));
 	body->SetAngularDamping(100.0f);
 	//body->SetLinearDamping(0.2f);
-	startPos = GetGameObject()->GetPosition();
+	GetGameObject()->SetPostion(startPos);
 	scene->Lights.push_back(Light());
 	soundLight = scene->Lights.size() - 1;
 	scene->Lights[soundLight].Range = -listeningRadius * 8.0f;;
@@ -57,6 +57,8 @@ void Enemy::Update(float deltaTime)
 	{
 		pathRequested = false;
 	}
+
+	GetGameObject()->SetPostion(glm::vec3(GetGameObject()->GetPosition().x, GetGameObject()->GetPosition().y, startPos.z));
 }
 
 void Enemy::RenderImGui() {
@@ -76,6 +78,8 @@ void Enemy::RenderImGui() {
 	{
 		patrolPoints.pop_back();
 	}
+
+	ImGui::DragFloat3("Starting Position", &startPos.x);
 }
 
 nlohmann::json Enemy::ToJson() const {
@@ -87,6 +91,7 @@ nlohmann::json Enemy::ToJson() const {
 		result["PatrolPoint" + std::to_string(i)] = GlmToJson(patrolPoints[i]);
 	}
 	result["PatrolPointCount"] = GlmToJson(glm::vec3(patrolPoints.size()));
+	result["StartingPosition"] = GlmToJson(startPos);
 	return result;
 }
 
@@ -96,7 +101,8 @@ Enemy::Sptr Enemy::FromJson(const nlohmann::json& data) {
 	{
 		result->patrolPoints.push_back(ParseJsonVec3(data["PatrolPoint" + std::to_string(i)]));
 	}
-	//result->speed = ParseJsonVec3(data["speed"]);
+	result->startPos = ParseJsonVec3(data["StartingPosition"]);
+
 	return result;
 }
 #pragma endregion "Default Functions"

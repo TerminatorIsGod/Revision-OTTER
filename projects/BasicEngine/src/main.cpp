@@ -547,6 +547,7 @@ int main() {
 		planeMesh->AddParam(MeshBuilderParam::CreatePlane(ZERO, UNIT_Z, UNIT_X, glm::vec2(1.0f)));
 		planeMesh->GenerateMesh();
 
+
 		// Set up the scene's camera
 		//At some point the camera should be seperate from player, and parented to it. OR, just make it so the collider doesn't rotate with the transform
 		//GameObject::Sptr camera = scene->CreateGameObject("Main Camera");
