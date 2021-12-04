@@ -109,6 +109,10 @@ void PatrollingState::Pathfind(Enemy* e, float deltaTime)
 
 	glm::vec3 enemyPos = e->GetGameObject()->GetPosition();
 	glm::vec3 patrolPos = e->patrolPoints[e->pIndex];
+	if (glm::length(patrolPos - enemyPos) > 0)
+	{
+		btCollisionWorld::ClosestRayResultCallback hit(ToBt(enemyPos), ToBt(patrolPos));
+		e->scene->GetPhysicsWorld()->rayTest(ToBt(enemyPos), ToBt(patrolPos), hit);
 
 	if (glm::length(patrolPos - enemyPos) > 0)
 	{
@@ -143,7 +147,7 @@ void PatrollingState::Pathfind(Enemy* e, float deltaTime)
 
 	e->target = e->pathSet[e->nIndex];
 
-	if (glm::length(e->GetGameObject()->GetPosition() - e->pathSet[e->nIndex]) < 3.0f)
+	if (glm::length(e->GetGameObject()->GetPosition() - e->pathSet[e->nIndex]) < 3.f) //3
 		SwitchIndex(e);
 
 

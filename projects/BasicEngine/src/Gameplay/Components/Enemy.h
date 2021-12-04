@@ -40,8 +40,8 @@ public:
 	float maxRotationSpeed = 0.1f;
 	glm::vec3 desiredVelocity;
 	glm::vec3 targetRotation;
-	float avoidanceRange = 3.0f;
-	float avoidanceStrength = 2000.0f;
+	float avoidanceRange = 2.5f; //3
+	float avoidanceStrength = 1000.0f; //2000 //1500 seems okay
 
 	//Listening Light
 	float listeningRadius = 3.0f;
