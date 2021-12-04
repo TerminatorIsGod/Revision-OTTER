@@ -49,6 +49,10 @@ namespace Gameplay::Physics {
 		}
 	}
 
+	btTransform RigidBody::GetTransform() {
+		return _body->getWorldTransform();
+	}
+
 	float RigidBody::GetMass() const {
 		return _type == RigidBodyType::Static ? 0.0f : _mass;
 	}

@@ -126,7 +126,6 @@ namespace Gameplay::Physics {
 		}
 	}
 
-
 	void PhysicsBase::SetCollisionGroup(int value) {
 		_collisionGroup = 1 << value;
 		_isGroupMaskDirty = true;

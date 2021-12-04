@@ -84,6 +84,12 @@ void InteractSystem::interact() {
 	glm::vec3 tpos = ppos - opos;
 	_distance = sqrt(pow(tpos.x, 2) + pow(tpos.y, 2) + pow(tpos.z, 2));
 
+	//Gameplay::Physics::RigidBody::Sptr _body = GetGameObject()->Get<Gameplay::Physics::RigidBody>();
+
+	//if (_body != nullptr) {
+	//	_body->IsEnabled = !isOpen;
+	//}
+
 
 	if (_distance <= _interactDistance) {
 

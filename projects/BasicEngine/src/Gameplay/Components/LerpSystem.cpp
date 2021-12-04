@@ -114,6 +114,15 @@ void LerpSystem::Update(float deltaTime) {
 
 		GetGameObject()->SetRotation(lerpstuff(glm::vec3(startx, starty, startz), glm::vec3(endx, endy, endz), (t / tLength)));
 
+		//btTransform trans = _body->GetTransform();
+		//trans.setIdentity();
+		//btQuaternion quat;
+		//btScalar btx = GetGameObject()->GetRotation().x;
+		//btScalar bty = GetGameObject()->GetRotation().y;
+		//btScalar btz = GetGameObject()->GetRotation().z;
+		//quat.setEuler(btx, bty, btz);
+		//trans.setRotation(quat);
+
 		//if (lerpReverse) {
 		//	GetGameObject()->SetRotation(glm::slerp(endRot, startRot, t/tLength));
 		//}

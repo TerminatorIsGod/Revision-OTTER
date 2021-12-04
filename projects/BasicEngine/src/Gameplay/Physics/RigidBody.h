@@ -45,6 +45,8 @@ namespace Gameplay::Physics {
 		/// </summary>
 		float GetMass() const;
 
+		btTransform RigidBody::GetTransform();
+
 		/// <summary>
 		/// Sets the linear damping for this object
 		/// This is how quickly the object will bleed off linear (moving)
