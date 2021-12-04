@@ -76,10 +76,10 @@ protected:
 	//Oxygen Stuff
 	float chokeVol = 12.0f;
 	float replenishVol = 10.0f;
-	float oxygenMeterMax = 60.0f;
+	float oxygenMeterMax = 120.0f;
 	float oxygenMeter = oxygenMeterMax;
 	float oxygenDecaySpeed = 1.0f;
-	float oxygenReplenishSpeed = 2.0f;
+	float oxygenReplenishSpeed = 4.0f;
 	float breathHoldDecaySpeed = 2.0f;
 
 	SoundEmmiter::Sptr soundEmmiter;

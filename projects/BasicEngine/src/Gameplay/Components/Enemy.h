@@ -29,7 +29,7 @@ public:
 	Gameplay::Physics::RigidBody::Sptr body;
 	glm::quat currentRot;
 
-	glm::vec3 startPos;
+	glm::vec3 startPos = glm::vec3(0);
 	glm::vec3 target;
 	float soundExpireTimerDefault = 5.0f;
 	float soundExpireTimer;
@@ -40,8 +40,8 @@ public:
 	float maxRotationSpeed = 0.1f;
 	glm::vec3 desiredVelocity;
 	glm::vec3 targetRotation;
-	float avoidanceRange = 3.0f;
-	float avoidanceStrength = 2000.0f;
+	float avoidanceRange = 2.5f; //3
+	float avoidanceStrength = 1000.0f; //2000 //1500 seems okay
 
 	//Listening Light
 	float listeningRadius = 3.0f;

@@ -125,7 +125,7 @@ void DistractedState::Pathfind(Enemy* e, float deltaTime)
 	if (objectPos == e->lastHeardPositions[0])
 	{
 		e->target = soundPos;
-		if (glm::length(soundPos - enemyPos) < 10.0f)
+		if (glm::length(soundPos - enemyPos) < 12.0f)
 			SwitchIndex(e, deltaTime);
 		return;
 	}
@@ -148,7 +148,7 @@ void DistractedState::Pathfind(Enemy* e, float deltaTime)
 
 	e->target = e->pathSet[e->nIndex];
 
-	if (glm::length(e->GetGameObject()->GetPosition() - e->pathSet[e->nIndex]) < 3.0f)
+	if (glm::length(e->GetGameObject()->GetPosition() - e->pathSet[e->nIndex]) < 12.0f)
 	{
 		SwitchIndex(e, deltaTime);
 	}

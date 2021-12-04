@@ -8,6 +8,7 @@
 #include "Utils/JsonGlmHelpers.h"
 #include "Utils/ImGuiHelper.h"
 #include "Utils\GlmBulletConversions.h"
+#include "Gameplay/Components/Ladder.h"
 
 SimpleCameraControl::SimpleCameraControl() :
 	IComponent(),
@@ -268,6 +269,11 @@ void SimpleCameraControl::Interact(float deltaTime)
 		//std::cout << "\nObject Pos: " << _scene->soundEmmiters[i]->GetPosition().y;
 	}
 
+	for (int i = 0; i < _scene->ladders.size(); i++)
+	{
+		if (objectPos == _scene->ladders[i]->GetPosition())
+			GetGameObject()->SetPostion(_scene->ladders[i]->Get<Ladder>()->teleportPos);
+	}
 }
 
 void SimpleCameraControl::IdleState(float deltaTime)
