@@ -27,6 +27,14 @@ void AggravatedState::End(Enemy* e)
 
 void AggravatedState::Listen(Enemy* e, float deltaTime)
 {
+	if (e->nIndex > 0)
+		e->listeningRadius = glm::mix(e->listeningRadius, e->agroStationaryListeningRadius, 2.0f * deltaTime);
+	else
+		e->listeningRadius = glm::mix(e->listeningRadius, e->agroMovingListeningRadius, 2.0f * deltaTime);
+
+	e->scene->Lights[e->soundLight].Color = glm::mix(e->scene->Lights[e->soundLight].Color, e->red, 8.0f * deltaTime);
+
+
 	//std::cout << "\n\nAGRO TIMER: " << e->agroTimer;
 	if (e->agroTimer > 0)
 		e->agroTimer -= 1.0f * deltaTime;
@@ -52,22 +60,12 @@ void AggravatedState::Listen(Enemy* e, float deltaTime)
 	if (hit.m_collisionObject->isStaticObject())
 		return;
 
+	//std::cout << "\nMADE IT BRU";
 
 	std::cout << "\nIM AGRO AGAIN!!";
 	e->agroTimer = agroTimerMax;
 
-
 	e->pathRequested = false;
-
-
-
-	if (e->nIndex > 0)
-		e->listeningRadius = glm::mix(e->listeningRadius, e->agroStationaryListeningRadius, 2.0f * deltaTime);
-	else
-		e->listeningRadius = glm::mix(e->listeningRadius, e->agroMovingListeningRadius, 2.0f * deltaTime);
-
-	e->scene->Lights[e->soundLight].Color = glm::mix(e->scene->Lights[e->soundLight].Color, e->red, 8.0f * deltaTime);
-
 }
 
 void AggravatedState::SwitchIndex(Enemy* e, float deltaTime)

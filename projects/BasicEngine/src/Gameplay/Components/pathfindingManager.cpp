@@ -125,6 +125,7 @@ void pathfindingManager::UpdateNbors()
 		}
 		//std::cout << "\n " << navNodes[i]->Get<NavNode>()->neighbors.size();
 	}
+	std::cout << "\n\nNavNode Neighbors Updated.";
 }
 
 bool pathfindingManager::StartAndEndCheck()

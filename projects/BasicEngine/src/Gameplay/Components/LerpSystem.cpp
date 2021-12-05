@@ -3,6 +3,8 @@
 #include "Gameplay/GameObject.h"
 #include "Gameplay/Scene.h"
 #include "Utils/ImGuiHelper.h"
+#include "Gameplay/Components/pathfindingManager.h"
+#include "Gameplay/Physics/RigidBody.h"
 
 void LerpSystem::Awake()
 {
@@ -63,7 +65,7 @@ LerpSystem::LerpSystem() :
 
 LerpSystem::~LerpSystem() = default;
 
-LerpSystem::Sptr LerpSystem::FromJson(const nlohmann::json& blob) {
+LerpSystem::Sptr LerpSystem::FromJson(const nlohmann::json & blob) {
 	LerpSystem::Sptr result = std::make_shared<LerpSystem>();
 	result->startx = blob["startx"];
 	result->starty = blob["starty"];
@@ -77,10 +79,12 @@ LerpSystem::Sptr LerpSystem::FromJson(const nlohmann::json& blob) {
 
 void LerpSystem::Update(float deltaTime) {
 
-	std::cout << "Is lerping: " << beginLerp << std::endl;
-	std::cout << "T: " << t << " TL: " << tLength << " Direction: " << lerpReverse << std::endl;
+	//std::cout << "Is lerping: " << beginLerp << std::endl;
+	//std::cout << "T: " << t << " TL: " << tLength << " Direction: " << lerpReverse << std::endl;
 
 	if (beginLerp) {
+		auto _body = GetComponent<Gameplay::Physics::RigidBody>();
+		_body->SetType(RigidBodyType::Kinematic);
 
 		if (lerpReverse) {
 			t -= deltaTime;
@@ -88,6 +92,8 @@ void LerpSystem::Update(float deltaTime) {
 			if (t <= 0) {
 				t = 0;
 				beginLerp = false;
+				_body->SetType(RigidBodyType::Static);
+				GetGameObject()->GetScene()->pathManager->Get<pathfindingManager>()->UpdateNbors();
 				//t = 0;
 			}
 		}
@@ -97,10 +103,12 @@ void LerpSystem::Update(float deltaTime) {
 			if (t >= tLength) {
 				t = tLength;
 				beginLerp = false;
+				_body->SetType(RigidBodyType::Static);
+				GetGameObject()->GetScene()->pathManager->Get<pathfindingManager>()->UpdateNbors();
 				//t = 0;
 			}
 		}
-			
+
 		//t += deltaTime;
 
 		//std::cout << "StartEular: " << startx << " " << starty << " " << startz << std::endl;

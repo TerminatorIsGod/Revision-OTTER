@@ -26,6 +26,10 @@ void PatrollingState::End(Enemy* e)
 
 void PatrollingState::Listen(Enemy* e, float deltaTime)
 {
+	//Sound Light Lerping
+	e->listeningRadius = glm::mix(e->listeningRadius, e->patrolListeningRadius, 2.0f * deltaTime);
+	e->scene->Lights[e->soundLight].Color = glm::mix(e->scene->Lights[e->soundLight].Color, e->blue, 4.0f * deltaTime);
+
 	for each (GameObject * s in e->scene->soundEmmiters)
 	{
 		//Checking if any sounds are in listening Radius
@@ -73,13 +77,7 @@ void PatrollingState::Listen(Enemy* e, float deltaTime)
 			std::cout << "\nIM Distracted!!: ";
 			e->SetState(DistractedState::getInstance());
 		}
-
 	}
-
-	//Sound Light Lerping
-	e->listeningRadius = glm::mix(e->listeningRadius, e->patrolListeningRadius, 2.0f * deltaTime);
-	e->scene->Lights[e->soundLight].Color = glm::mix(e->scene->Lights[e->soundLight].Color, e->blue, 4.0f * deltaTime);
-
 }
 
 void SwitchIndex(Enemy* e)

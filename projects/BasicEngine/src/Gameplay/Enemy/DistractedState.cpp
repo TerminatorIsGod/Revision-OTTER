@@ -29,6 +29,10 @@ void DistractedState::End(Enemy* e)
 
 void DistractedState::Listen(Enemy* e, float deltaTime)
 {
+	//Sound Light Lerping
+	e->listeningRadius = glm::mix(e->listeningRadius, e->patrolListeningRadius, 2.0f * deltaTime);
+	e->scene->Lights[e->soundLight].Color = glm::mix(e->scene->Lights[e->soundLight].Color, e->yellow, 4.0f * deltaTime);
+
 	//std::cout << "\nSWITCHING BACK IN: " << e->distractedTimer;
 	//Backup distraction timer
 	if (e->distractedBackupTimer > 0)
@@ -86,10 +90,6 @@ void DistractedState::Listen(Enemy* e, float deltaTime)
 			e->SetState(AggravatedState::getInstance());
 		}
 	}
-
-	//Sound Light Lerping
-	e->listeningRadius = glm::mix(e->listeningRadius, e->patrolListeningRadius, 2.0f * deltaTime);
-	e->scene->Lights[e->soundLight].Color = glm::mix(e->scene->Lights[e->soundLight].Color, e->yellow, 4.0f * deltaTime);
 }
 
 void DistractedState::SwitchIndex(Enemy* e, float deltaTime)
