@@ -34,8 +34,6 @@ public:
 	float endy = 0;
 	float endz = 0;
 
-	float oldCheck = 0;
-
 	float tLength = 1;
 
 	glm::quat startRot = glm::quat(1,0,0,0);
@@ -44,6 +42,8 @@ public:
 	float t = 0;
 	bool beginLerp = false;
 	bool lerpReverse = false;
+
+	bool doUpdateNbors = false;
 
 
 	glm::vec3 lerpstuff(glm::vec3 a, glm::vec3 b, float t);

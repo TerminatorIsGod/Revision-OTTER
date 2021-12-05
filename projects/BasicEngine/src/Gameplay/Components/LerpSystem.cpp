@@ -32,11 +32,7 @@ void LerpSystem::RenderImGui() {
 
 	LABEL_LEFT(ImGui::DragFloat, "How long", &tLength);
 
-	if (oldCheck != (startx + starty + startz + endx + endy + endz)) {
-		setRotationStart();
-		setRotationEnd();
-		oldCheck = (startx + starty + startz + endx + endy + endz);
-	}
+	LABEL_LEFT(ImGui::Checkbox, "Update AI", &doUpdateNbors);
 
 }
 
@@ -48,7 +44,8 @@ nlohmann::json LerpSystem::ToJson() const {
 		{ "endx", endx},
 		{ "endy", endy},
 		{ "endz",  endz},
-		{ "tlength", tLength}
+		{ "tlength", tLength},
+		{ "updateAI", doUpdateNbors}
 	};
 }
 
@@ -60,7 +57,8 @@ LerpSystem::LerpSystem() :
 	endx(0),
 	endy(0),
 	endz(0),
-	tLength(1)
+	tLength(1),
+	doUpdateNbors(0)
 { }
 
 LerpSystem::~LerpSystem() = default;
@@ -74,6 +72,7 @@ LerpSystem::Sptr LerpSystem::FromJson(const nlohmann::json & blob) {
 	result->endy = blob["endy"];
 	result->endz = blob["endz"];
 	result->tLength = blob["tlength"];
+	result->doUpdateNbors = blob["updateAI"];
 	return result;
 }
 
@@ -93,7 +92,8 @@ void LerpSystem::Update(float deltaTime) {
 				t = 0;
 				beginLerp = false;
 				_body->SetType(RigidBodyType::Static);
-				GetGameObject()->GetScene()->pathManager->Get<pathfindingManager>()->UpdateNbors();
+				if(doUpdateNbors)
+					GetGameObject()->GetScene()->pathManager->Get<pathfindingManager>()->UpdateNbors();
 				//t = 0;
 			}
 		}
@@ -104,7 +104,8 @@ void LerpSystem::Update(float deltaTime) {
 				t = tLength;
 				beginLerp = false;
 				_body->SetType(RigidBodyType::Static);
-				GetGameObject()->GetScene()->pathManager->Get<pathfindingManager>()->UpdateNbors();
+				if(doUpdateNbors)
+					GetGameObject()->GetScene()->pathManager->Get<pathfindingManager>()->UpdateNbors();
 				//t = 0;
 			}
 		}
