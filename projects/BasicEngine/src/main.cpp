@@ -79,6 +79,7 @@
 #include <Gameplay/Components/MenuSystem.h>
 #include <Gameplay/Components/InteractSystem.h>
 #include <Gameplay/Components/LerpSystem.h>
+#include <Gameplay/Components/CurveLerpSystem.h>
 
 
 
@@ -332,6 +333,7 @@ int main() {
 	ComponentManager::RegisterType<InteractSystem>();
 	ComponentManager::RegisterType<LerpSystem>();
 	ComponentManager::RegisterType<SceneSwapSystem>();
+	ComponentManager::RegisterType<CurveLerpSystem>();
 
 	// GL states, we'll enable depth testing and backface fulling
 	glEnable(GL_DEPTH_TEST);
@@ -352,20 +354,197 @@ int main() {
 		ResourceManager::LoadManifest("manifest.json");
 		scene = Scene::Load("demoscene.json");
 
-		//Texture2D::Sptr    whiteTex = ResourceManager::CreateAsset<Texture2D>("textures/white.jpg");
+		/*Texture2D::Sptr    whiteTex = ResourceManager::CreateAsset<Texture2D>("textures/white.jpg");
 
-		//Shader::Sptr basicShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
-		//	{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
-		//	{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
-		//});
-		//MeshResource::Sptr staticCrates = ResourceManager::CreateAsset<MeshResource>("map/Static_Crates.obj");
-		//Material::Sptr whiteMaterial = ResourceManager::CreateAsset<Material>();
-		//{
-		//	whiteMaterial->Name = "White";
-		//	whiteMaterial->MatShader = basicShader;
-		//	whiteMaterial->Texture = whiteTex;
-		//	whiteMaterial->Shininess = 1.0f;
-		//}
+
+		Texture2D::Sptr    Poster1Tex = ResourceManager::CreateAsset<Texture2D>("textures/Artboard_1.png");
+		Texture2D::Sptr    Poster2Tex = ResourceManager::CreateAsset<Texture2D>("textures/Artboard_2.png");
+		Texture2D::Sptr    Poster3Tex = ResourceManager::CreateAsset<Texture2D>("textures/Artboard_3.png");
+		Texture2D::Sptr    Poster4Tex = ResourceManager::CreateAsset<Texture2D>("textures/Artboard_4.png");
+
+		MeshResource::Sptr planeMesh = ResourceManager::CreateAsset<MeshResource>();
+		planeMesh->AddParam(MeshBuilderParam::CreatePlane(ZERO, UNIT_Z, UNIT_X, glm::vec2(1.0f)));
+		planeMesh->GenerateMesh();
+
+		MeshResource::Sptr ValveMesh = ResourceManager::CreateAsset<MeshResource>("map/Valve.obj");
+
+		Shader::Sptr basicShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
+			{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
+			{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
+		});
+
+		Material::Sptr WhiteMaterial = ResourceManager::CreateAsset<Material>();
+		{
+			WhiteMaterial->Name = "White";
+			WhiteMaterial->MatShader = basicShader;
+			WhiteMaterial->Texture = whiteTex;
+			WhiteMaterial->Shininess = 1.0f;
+		}
+
+		Material::Sptr Poster1Material = ResourceManager::CreateAsset<Material>();
+		{
+			Poster1Material->Name = "Poster1";
+			Poster1Material->MatShader = basicShader;
+			Poster1Material->Texture = Poster1Tex;
+			Poster1Material->Shininess = 1.0f;
+		}
+
+		Material::Sptr Poster2Material = ResourceManager::CreateAsset<Material>();
+		{
+			Poster2Material->Name = "Poster2";
+			Poster2Material->MatShader = basicShader;
+			Poster2Material->Texture = Poster2Tex;
+			Poster2Material->Shininess = 1.0f;
+		}
+
+		Material::Sptr Poster3Material = ResourceManager::CreateAsset<Material>();
+		{
+			Poster3Material->Name = "Poster3";
+			Poster3Material->MatShader = basicShader;
+			Poster3Material->Texture = Poster3Tex;
+			Poster3Material->Shininess = 1.0f;
+		}
+
+		Material::Sptr Poster4Material = ResourceManager::CreateAsset<Material>();
+		{
+			Poster4Material->Name = "Poster4";
+			Poster4Material->MatShader = basicShader;
+			Poster4Material->Texture = Poster4Tex;
+			Poster4Material->Shininess = 1.0f;
+		}
+		
+
+		GameObject::Sptr distractionValve = scene->CreateGameObject("Valve");
+		{
+			// Set position in the scene
+			distractionValve->SetPostion(glm::vec3(0.0f, 0.0f, 2.0f));
+			// Scale down the plane
+			distractionValve->SetScale(glm::vec3(1.0f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = distractionValve->Add<RenderComponent>();
+			renderer->SetMesh(ValveMesh);
+			renderer->SetMaterial(WhiteMaterial);
+
+			distractionValve->Add<LerpSystem>();
+			distractionValve->Add<InteractSystem>();
+		}
+
+		GameObject::Sptr poster1 = scene->CreateGameObject("Poster 1");
+		{
+			// Set position in the scene
+			poster1->SetPostion(glm::vec3(0.0f, 0.0f, 2.0f));
+			// Scale down the plane
+			poster1->SetScale(glm::vec3(1.0f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = poster1->Add<RenderComponent>();
+			renderer->SetMesh(planeMesh);
+			renderer->SetMaterial(Poster1Material);
+		}
+
+		GameObject::Sptr poster2 = scene->CreateGameObject("Poster 2");
+		{
+			// Set position in the scene
+			poster2->SetPostion(glm::vec3(0.0f, 0.0f, 2.0f));
+			// Scale down the plane
+			poster2->SetScale(glm::vec3(1.0f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = poster2->Add<RenderComponent>();
+			renderer->SetMesh(planeMesh);
+			renderer->SetMaterial(Poster1Material);
+		}
+
+		GameObject::Sptr poster3 = scene->CreateGameObject("Poster 3");
+		{
+			// Set position in the scene
+			poster3->SetPostion(glm::vec3(0.0f, 0.0f, 2.0f));
+			// Scale down the plane
+			poster3->SetScale(glm::vec3(1.0f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = poster3->Add<RenderComponent>();
+			renderer->SetMesh(planeMesh);
+			renderer->SetMaterial(Poster1Material);
+		}
+
+		GameObject::Sptr poster4 = scene->CreateGameObject("Poster 4");
+		{
+			// Set position in the scene
+			poster4->SetPostion(glm::vec3(0.0f, 0.0f, 2.0f));
+			// Scale down the plane
+			poster4->SetScale(glm::vec3(1.0f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = poster4->Add<RenderComponent>();
+			renderer->SetMesh(planeMesh);
+			renderer->SetMaterial(Poster1Material);
+		}*/
+
+		/*GameObject::Sptr doorMagenta2 = scene->CreateGameObject("Door Magenta 2");
+		{
+			// Set position in the scene
+			doorMagenta2->SetPostion(glm::vec3(0.0f, 0.0f, 2.0f));
+			// Scale down the plane
+			doorMagenta2->SetScale(glm::vec3(1.0f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = doorMagenta2->Add<RenderComponent>();
+			renderer->SetMesh(doorMagentaMesh);
+			renderer->SetMaterial(whiteMaterial);
+
+			doorMagenta2->Add<LerpSystem>();
+			doorMagenta2->Add<InteractSystem>();
+		}
+
+		GameObject::Sptr doorMagenta3 = scene->CreateGameObject("Door Magenta 3");
+		{
+			// Set position in the scene
+			doorMagenta3->SetPostion(glm::vec3(0.0f, 0.0f, 2.0f));
+			// Scale down the plane
+			doorMagenta3->SetScale(glm::vec3(1.0f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = doorMagenta3->Add<RenderComponent>();
+			renderer->SetMesh(doorMagentaMesh);
+			renderer->SetMaterial(whiteMaterial);
+
+			doorMagenta3->Add<LerpSystem>();
+			doorMagenta3->Add<InteractSystem>();
+		}
+
+		GameObject::Sptr doorOrange1 = scene->CreateGameObject("Door Orange 1");
+		{
+			// Set position in the scene
+			doorOrange1->SetPostion(glm::vec3(0.0f, 0.0f, 2.0f));
+			// Scale down the plane
+			doorOrange1->SetScale(glm::vec3(1.0f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = doorOrange1->Add<RenderComponent>();
+			renderer->SetMesh(doorOrangeMesh);
+			renderer->SetMaterial(whiteMaterial);
+
+			doorOrange1->Add<LerpSystem>();
+			doorOrange1->Add<InteractSystem>();
+		}
+
+		GameObject::Sptr doorOrange2 = scene->CreateGameObject("Door Orange 2");
+		{
+			// Set position in the scene
+			doorOrange2->SetPostion(glm::vec3(0.0f, 0.0f, 2.0f));
+			// Scale down the plane
+			doorOrange2->SetScale(glm::vec3(1.0f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = doorOrange2->Add<RenderComponent>();
+			renderer->SetMesh(doorOrangeMesh);
+			renderer->SetMaterial(whiteMaterial);
+
+			doorOrange2->Add<LerpSystem>();
+			doorOrange2->Add<InteractSystem>();
+		}*/
 
 		// Call scene awake to start up all of our components
 		scene->Window = window;
@@ -723,8 +902,6 @@ int main() {
 			createMapAsset(shelfMedium, tealMaterial, "Medium Shelf: (" + std::to_string(i) + ")");
 			createMapAsset(shelfSmall, tealMaterial, "Small Shelf: (" + std::to_string(i) + ")");
 		}
-		createMapAsset(key1, tealMaterial, "Key 1");
-		createMapAsset(key2, tealMaterial, "Key 2");
 
 		for (int i = 0; i < 4; i++)
 		{
