@@ -282,6 +282,7 @@ void createMapAsset(MeshResource::Sptr mesh, Material::Sptr material, std::strin
 
 
 Shader::Sptr animShader;
+float delt;
 
 int main() {
 	Logger::Init(); // We'll borrow the logger from the toolkit, but we need to initialize it
@@ -345,22 +346,6 @@ int main() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glfwSwapInterval(1);
 
-	Texture2D::Sptr    leaflingTex = ResourceManager::CreateAsset<Texture2D>("textures/Leafling-texture.png");
-
-	Shader::Sptr animationShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
-		{ ShaderPartType::Vertex, "shaders/vertex_animation_shader.glsl" },
-		{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
-	});
-
-	Material::Sptr animationMaterial = ResourceManager::CreateAsset<Material>();
-	{
-		animationMaterial->Name = "Animation";
-		animationMaterial->MatShader = animationShader;
-		animationMaterial->Texture = leaflingTex;
-		animationMaterial->Shininess = 0.1f;
-	}
-
-
 	bool loadScene = true;
 	// For now we can use a toggle to generate our scene vs load from file
 	if (loadScene) {
@@ -375,90 +360,51 @@ int main() {
 		//Texture2D::Sptr    oxygenFillTex = ResourceManager::CreateAsset<Texture2D>("ui/OxygenFill.png");
 		//Texture2D::Sptr    interactTex = ResourceManager::CreateAsset<Texture2D>("ui/E.png");
 
-		//Shader::Sptr unlitShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
-		//	{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
-		//	{ ShaderPartType::Fragment, "shaders/frag_textured_unlit.glsl" }
-		//});
-		//Material::Sptr crosshairMat = ResourceManager::CreateAsset<Material>();
-		//{
-		//	crosshairMat->Name = "Crosshair";
-		//	crosshairMat->MatShader = unlitShader;
-		//	crosshairMat->Texture = crosshairTex;
-		//	crosshairMat->Shininess = 1.0f;
-		//}
-		 
-		//Material::Sptr oxygenMeterMat = ResourceManager::CreateAsset<Material>();
-		//{
-		//	oxygenMeterMat->Name = "Oxygen Meter";
-		//	oxygenMeterMat->MatShader = unlitShader;
-		//	oxygenMeterMat->Texture = oxygenMeterTex;
-		//	oxygenMeterMat->Shininess = 1.0f;
-		//}
-		 
-		//Material::Sptr oxygenFillMat = ResourceManager::CreateAsset<Material>();
-		//{
-		//	oxygenFillMat->Name = "Oxygen Fill";
-		//	oxygenFillMat->MatShader = unlitShader;
-		//	oxygenFillMat->Texture = oxygenFillTex;
-		//	oxygenFillMat->Shininess = 1.0f;
-		//}
-		 
-		//Material::Sptr interactMat = ResourceManager::CreateAsset<Material>();
-		//{
-		//	interactMat->Name = "Interact";
-		//	interactMat->MatShader = unlitShader;
-		//	interactMat->Texture = interactTex;
-		//	interactMat->Shininess = 1.0f;
-		//}
-		//GameObject::Sptr uiCrosshair = scene->CreateGameObject("UI Crosshair");
-		//{
-		//	//uiCrosshair->SetPostion(glm::vec3(-5.0f, 15.0f, -12.0f));
-		//	uiCrosshair->SetScale(glm::vec3(0.002f));
+		Texture2D::Sptr    whiteTex = ResourceManager::CreateAsset<Texture2D>("textures/white.jpg");
+		Texture2D::Sptr    pinkTex = ResourceManager::CreateAsset<Texture2D>("textures/pink.jpg");
+		MeshResource::Sptr cockAltMesh = ResourceManager::CreateAsset<MeshResource>("Map/Cockroach.obj");
 
-		//	RenderComponent::Sptr renderer = uiCrosshair->Add<RenderComponent>();
-		//	renderer->SetMesh(UIMesh);
-		//	renderer->SetMaterial(crosshairMat);
-		  
-		//	UIElement::Sptr ui = uiCrosshair->Add<UIElement>();
-		//	ui->posOffset = glm::vec3(0.0f, 0.0f, -0.25f);
-		//}
+		animShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
+			{ ShaderPartType::Vertex, "shaders/vertex_animation.glsl" },
+			{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
+		});
 
-		//GameObject::Sptr uiOxygenFill = scene->CreateGameObject("Oxygen Fill");
-		//{
-		//	//uiCrosshair->SetPostion(glm::vec3(-5.0f, 15.0f, -12.0f));
-		//	uiOxygenFill->SetScale(glm::vec3(0.015f));
-		//	RenderComponent::Sptr renderer = uiOxygenFill->Add<RenderComponent>();
-		//	renderer->SetMesh(UIMesh);
-		//	renderer->SetMaterial(oxygenFillMat);
+		Material::Sptr WhiteMaterial = ResourceManager::CreateAsset<Material>();
+		{
+			WhiteMaterial->Name = "White";
+			WhiteMaterial->MatShader = animShader;
+			WhiteMaterial->Texture = whiteTex;
+			WhiteMaterial->Shininess = 1.0f;
+		}
 
-		//	UIElement::Sptr ui = uiOxygenFill->Add<UIElement>();
-		//	ui->posOffset = glm::vec3(0.38f, -0.17f, -0.25001f);
-		//}
+		GameObject::Sptr cock1 = scene->CreateGameObject("Cockthing");
+		{
+			// Set position in the scene
+			cock1->SetPostion(glm::vec3(24.831f, 7.802f, -12.0f));
+			cock1->SetRotation(glm::vec3(90,0,0));
+			// Scale down the plane
+			cock1->SetScale(glm::vec3(0.25f));
 
-		//GameObject::Sptr uiOxygenMeter = scene->CreateGameObject("Oxygen Meter");
-		//{
-		//	//uiCrosshair->SetPostion(glm::vec3(-5.0f, 15.0f, -12.0f));
-		//	uiOxygenMeter->SetScale(glm::vec3(0.015f));
-		//	RenderComponent::Sptr renderer = uiOxygenMeter->Add<RenderComponent>();
-		//	renderer->SetMesh(UIMesh);
-		//	renderer->SetMaterial(oxygenMeterMat);
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = cock1->Add<RenderComponent>();
+			renderer->SetMesh(cockAltMesh);
+			renderer->SetMaterial(WhiteMaterial);
 
-		//	UIElement::Sptr ui = uiOxygenMeter->Add<UIElement>();
-		//	ui->posOffset = glm::vec3(0.38f, -0.17f, -0.25f);
-		//}
+			//cock1->Add<CurveLerpSystem>();
+		}
 
-		//GameObject::Sptr uiInteract = scene->CreateGameObject("E Interact");
-		//{
-		//	//uiCrosshair->SetPostion(glm::vec3(-5.0f, 15.0f, -12.0f));
-		//	uiInteract->SetScale(glm::vec3(0.008f));
+		/*GameObject::Sptr leafW1 = scene->CreateGameObject("LeafW1");
+		{
+			// Set position in the scene
+			leafW1->SetPostion(glm::vec3(0.0f, 0.0f, 2.0f));
+			// Scale down the plane
+			leafW1->SetScale(glm::vec3(1.0f));
 
-		//	RenderComponent::Sptr renderer = uiInteract->Add<RenderComponent>();
-		//	renderer->SetMesh(UIMesh);
-		//	renderer->SetMaterial(interactMat);
-
-		//	UIElement::Sptr ui = uiInteract->Add<UIElement>();
-		//	ui->posOffset = glm::vec3(0.0f, -0.03f, -0.25f);
-		//}
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = leafW1->Add<RenderComponent>();
+			renderer->SetMesh(leafW1Mesh);
+			renderer->SetMaterial(WhiteMaterial);
+		}*/
 
 		/*Texture2D::Sptr    whiteTex = ResourceManager::CreateAsset<Texture2D>("textures/white.jpg");
 
@@ -1201,10 +1147,7 @@ int main() {
 	MenuSystem::Sptr menuSys;
 	Camera::Sptr camera;
 
-
-
-	animShader = animationShader;
-	float delt = 0;
+	//float delt = 0;
 
 	///// Game loop /////
 	while (!glfwWindowShouldClose(window)) {
@@ -1266,7 +1209,7 @@ int main() {
 			}
 		}
 
-
+		
 		glfwPollEvents();
 		ImGuiHelper::StartFrame();
 
@@ -1274,7 +1217,15 @@ int main() {
 		double thisFrame = glfwGetTime();
 		float dt = static_cast<float>(thisFrame - lastFrame);
 		delt += dt;
-
+		if (delt > 1)
+			delt = 0;
+		float randomNum;
+		randomNum = ((float)(rand() % 2) + 1);
+		animShader->SetUniform("randomx", randomNum);
+		randomNum = ((float)(rand() % 2) + 1);
+		animShader->SetUniform("randomy", randomNum);
+		randomNum = ((float)(rand() % 2) + 1);
+		animShader->SetUniform("randomz", randomNum);
 		animShader->SetUniform("delta", delt);
 
 		// Showcasing how to use the imGui library!

@@ -59,3 +59,21 @@ struct VertexPosNormTexCol {
 
 	static const std::vector<BufferAttribute> V_DECL;
 };
+
+struct VertexPosNormTexColAlt {
+	glm::vec3 Position;
+	glm::vec3 Normal;
+	glm::vec2 UV;
+	glm::vec4 Color;
+
+	glm::vec3 Position2;
+	glm::vec3 Normal2;
+
+	VertexPosNormTexColAlt() : Position(glm::vec3(0.0f)), Normal(glm::vec3(0.0f)), UV(glm::vec2(0.0f, 0.0f)), Color(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)), Position2(glm::vec3(0.0f)), Normal2(glm::vec3(0.0f)) {}
+	VertexPosNormTexColAlt(const glm::vec3& pos, const glm::vec3& norm, const glm::vec2& uv, const glm::vec4& col, const glm::vec3& pos2, const glm::vec3& norm2) :
+		Position(pos), Normal(norm), UV(uv), Color(col), Position2(pos2), Normal2(norm2) {}
+	VertexPosNormTexColAlt(float x, float y, float z, float nX, float nY, float nZ, float u, float v, float r, float g, float b, float a, float px, float py, float pz, float n2x, float n2y, float n2z = 1.0f) :
+		Position({ x, y, z }), Normal({ nX, nY, nZ }), UV({ u, v }), Color({ r, g, b, a }), Position2({ px, py, pz }), Normal2({n2x, n2y, n2z}) {}
+
+	static const std::vector<BufferAttribute> V_DECL;
+};
