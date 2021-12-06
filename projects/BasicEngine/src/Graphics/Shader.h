@@ -13,12 +13,12 @@
 // We can use an enum to make our code more readable and restrict
 // values to only ones we want to accept
 ENUM(ShaderPartType, GLint,
-	 Vertex       = GL_VERTEX_SHADER,
-	 Fragment     = GL_FRAGMENT_SHADER,
-	 TessControl  = GL_TESS_CONTROL_SHADER,
-	 TessEval     = GL_TESS_EVALUATION_SHADER,
-	 Geometry     = GL_GEOMETRY_SHADER,
-	 Unknown      = GL_NONE // Usually good practice to have an "unknown" or "none" state for enums
+	Vertex = GL_VERTEX_SHADER,
+	Fragment = GL_FRAGMENT_SHADER,
+	TessControl = GL_TESS_CONTROL_SHADER,
+	TessEval = GL_TESS_EVALUATION_SHADER,
+	Geometry = GL_GEOMETRY_SHADER,
+	Unknown = GL_NONE // Usually good practice to have an "unknown" or "none" state for enums
 );
 
 /// <summary>
@@ -71,7 +71,7 @@ public:
 
 		std::vector<UniformInfo> SubUniforms;
 	};
-	
+
 public:
 	/// <summary>
 	/// Creates a new empty shader object
@@ -133,7 +133,7 @@ public:
 	void SetUniform(int location, const glm::ivec3* value, int count = 1);
 	void SetUniform(int location, const glm::ivec4* value, int count = 1);
 	void SetUniform(int location, const bool* value, int count = 1);
-	void SetUniform(int location, const glm::bvec2* value, int count = 1); 
+	void SetUniform(int location, const glm::bvec2* value, int count = 1);
 	void SetUniform(int location, const glm::bvec3* value, int count = 1);
 	void SetUniform(int location, const glm::bvec4* value, int count = 1);
 
@@ -142,8 +142,9 @@ public:
 		int location = __GetUniformLocation(name);
 		if (location != -1) {
 			SetUniform(location, &value, 1);
-		} else {
-			LOG_WARN("Ignoring uniform \"{}\"", name);
+		}
+		else {
+			//LOG_WARN("Ignoring uniform \"{}\"", name);
 		}
 	}
 	template <typename T>
@@ -151,8 +152,9 @@ public:
 		int location = __GetUniformLocation(name);
 		if (location != -1) {
 			SetUniform(location, &values, count);
-		} else {
-			LOG_WARN("Ignoring uniform \"{}\"", name);
+		}
+		else {
+			//LOG_WARN("Ignoring uniform \"{}\"", name);
 		}
 	}
 	template <typename T>
@@ -160,11 +162,12 @@ public:
 		int location = __GetUniformLocation(name);
 		if (location != -1) {
 			SetUniformMatrix(location, &value, 1, transposed);
-		} else {
-			LOG_WARN("Ignoring uniform \"{}\"", name);
+		}
+		else {
+			//LOG_WARN("Ignoring uniform \"{}\"", name);
 		}
 	}
-	
+
 	void BindUniformBlockToSlot(const std::string& name, int uboSlot);
 
 protected:
@@ -174,7 +177,7 @@ protected:
 	// Stores all the handles to our shaders until we
 	// are ready to compile them into a program
 	std::unordered_map<ShaderPartType, int> _handles;
-	
+
 	// Map access to look up uniform locations and blocks
 	std::unordered_map<std::string, UniformInfo> _uniforms;
 	std::unordered_map<std::string, UniformBlockInfo> _uniformBlocks;

@@ -18,8 +18,11 @@ public:
 
 	virtual void Awake() override;
 	virtual void Update(float deltaTime) override;
+	glm::vec3 startingPos = glm::vec3(2.7, -8, 6);
+
 
 public:
+
 	virtual void RenderImGui() override;
 	MAKE_TYPENAME(SimpleCameraControl);
 	virtual nlohmann::json ToJson() const override;
@@ -29,7 +32,7 @@ public:
 	void OxygenSystem(float deltaTime);
 	void SwitchState(float deltaTime);
 	void Interact(float deltaTime);
-
+	void ShowInteract();
 
 	void IdleState(float deltaTime);
 	void SneakState(float deltaTime);
@@ -37,7 +40,7 @@ public:
 	void RunState(float deltaTime);
 
 	void SetSpeed(float newSpeed);
-
+	void MoveUI(float deltaTime);
 protected:
 	float _shiftMultipler;
 	glm::vec2 _mouseSensitivity;
@@ -63,11 +66,18 @@ protected:
 	};
 
 	PlayerState playerState = Idle;
+<<<<<<< HEAD
 
 	float sneakSpeed = 6.f; //
 	float walkSpeed = 8.f; //2
 	float runSpeed = 10.f; //3
 	float speedScale = 80.f; //scaled with volume of light //50
+=======
+	float sneakSpeed = 4.0f;
+	float walkSpeed = 6.0f;
+	float runSpeed = 8.0f;
+	float speedScale = 500.0f;
+>>>>>>> main
 
 	float idleTimerDefault = 2.0f;
 	float idleTimer = idleTimerDefault;

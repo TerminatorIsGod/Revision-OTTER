@@ -61,6 +61,7 @@
 #include "Gameplay/Components/Enemy.h"
 
 #include "Gameplay/Components/Ladder.h"
+#include "Gameplay/Components/UIElement.h"
 
 
 // Physics
@@ -73,7 +74,6 @@
 #include "Gameplay/Physics/TriggerVolume.h"
 #include "Graphics/DebugDraw.h"
 #include "Gameplay/Components/TriggerVolumeEnterBehaviour.h"
-
 
 #include "Gameplay/Components/SimpleCameraControl.h"
 #include <Gameplay/Components/MenuSystem.h>
@@ -282,6 +282,7 @@ void createMapAsset(MeshResource::Sptr mesh, Material::Sptr material, std::strin
 
 
 Shader::Sptr animShader;
+float delt;
 
 int main() {
 	Logger::Init(); // We'll borrow the logger from the toolkit, but we need to initialize it
@@ -327,6 +328,7 @@ int main() {
 	ComponentManager::RegisterType<SoundEmmiter>();
 	ComponentManager::RegisterType<Enemy>();
 	ComponentManager::RegisterType<Ladder>();
+	ComponentManager::RegisterType<UIElement>();
 
 	ComponentManager::RegisterType<MenuSystem>();
 	ComponentManager::RegisterType<InventorySystem>();
@@ -339,7 +341,9 @@ int main() {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
-	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glfwSwapInterval(1);
 
 	Shader::Sptr animationShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
@@ -353,6 +357,94 @@ int main() {
 
 		ResourceManager::LoadManifest("manifest.json");
 		scene = Scene::Load("demoscene.json");
+
+		////UI Textures & Mesh
+		//MeshResource::Sptr UIMesh = ResourceManager::CreateAsset<MeshResource>("ui/UIPlane.obj");
+		//Texture2D::Sptr    crosshairTex = ResourceManager::CreateAsset<Texture2D>("ui/Crosshair.png");
+		//Texture2D::Sptr    oxygenMeterTex = ResourceManager::CreateAsset<Texture2D>("ui/OxygenMeter.png");
+		//Texture2D::Sptr    oxygenFillTex = ResourceManager::CreateAsset<Texture2D>("ui/OxygenFill.png");
+		//Texture2D::Sptr    interactTex = ResourceManager::CreateAsset<Texture2D>("ui/E.png");
+
+				// This shader handles our basic materials without reflections (cause they expensive)
+		//Shader::Sptr unlitShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
+		//	{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
+		//	{ ShaderPartType::Fragment, "shaders/frag_textured_unlit.glsl" }
+		//});
+		//Texture2D::Sptr    creditsTex = ResourceManager::CreateAsset<Texture2D>("textures/DemoCredits.png");
+
+		//Material::Sptr creditsMat = ResourceManager::CreateAsset<Material>();
+		//{
+		//	creditsMat->Name = "Credits";
+		//	creditsMat->MatShader = unlitShader;
+		//	creditsMat->Texture = creditsTex;
+		//	creditsMat->Shininess = 1.0f;
+		//}
+
+		//GameObject::Sptr creditsScreen = scene->CreateGameObject("creditsScreen");
+		//{
+		//	// Set position in the scene
+		//	creditsScreen->SetPostion(glm::vec3(10000, 10000, 10000));
+		//	creditsScreen->SetRotation(glm::vec3(90, 0, 0));
+		//	// Scale down the plane
+		//	//cock1->SetScale(glm::vec3(0.25f));
+
+		//	// Create and attach a render component
+		//	RenderComponent::Sptr renderer = creditsScreen->Add<RenderComponent>();
+		//	renderer->SetMesh(UIMesh);
+		//	renderer->SetMaterial(creditsMat);
+		//}
+
+		//GameObject::Sptr sceneSwapper = scene->CreateGameObject("sceneSwapper");
+		//{
+		//	SceneSwapSystem::Sptr swapper = sceneSwapper->Add<SceneSwapSystem>();
+		//	swapper->setScene(scene);
+		//}
+
+		Texture2D::Sptr    whiteTex = ResourceManager::CreateAsset<Texture2D>("textures/white.jpg");
+		Texture2D::Sptr    pinkTex = ResourceManager::CreateAsset<Texture2D>("textures/pink.jpg");
+		MeshResource::Sptr cockAltMesh = ResourceManager::CreateAsset<MeshResource>("Map/Cockroach.obj");
+
+		animShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
+			{ ShaderPartType::Vertex, "shaders/vertex_animation.glsl" },
+			{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
+		});
+
+		Material::Sptr WhiteMaterial = ResourceManager::CreateAsset<Material>();
+		{
+			WhiteMaterial->Name = "White";
+			WhiteMaterial->MatShader = animShader;
+			WhiteMaterial->Texture = whiteTex;
+			WhiteMaterial->Shininess = 1.0f;
+		}
+
+		GameObject::Sptr cock1 = scene->CreateGameObject("Cockthing");
+		{
+			// Set position in the scene
+			cock1->SetPostion(glm::vec3(24.831f, 7.802f, -12.0f));
+			cock1->SetRotation(glm::vec3(90, 0, 0));
+			// Scale down the plane
+			cock1->SetScale(glm::vec3(0.25f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = cock1->Add<RenderComponent>();
+			renderer->SetMesh(cockAltMesh);
+			renderer->SetMaterial(WhiteMaterial);
+
+			//cock1->Add<CurveLerpSystem>();
+		}
+
+		/*GameObject::Sptr leafW1 = scene->CreateGameObject("LeafW1");
+		{
+			// Set position in the scene
+			leafW1->SetPostion(glm::vec3(0.0f, 0.0f, 2.0f));
+			// Scale down the plane
+			leafW1->SetScale(glm::vec3(1.0f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = leafW1->Add<RenderComponent>();
+			renderer->SetMesh(leafW1Mesh);
+			renderer->SetMaterial(WhiteMaterial);
+		}*/
 
 		/*Texture2D::Sptr    whiteTex = ResourceManager::CreateAsset<Texture2D>("textures/white.jpg");
 
@@ -412,7 +504,7 @@ int main() {
 			Poster4Material->Texture = Poster4Tex;
 			Poster4Material->Shininess = 1.0f;
 		}
-		
+
 
 		GameObject::Sptr distractionValve = scene->CreateGameObject("Valve");
 		{
@@ -565,6 +657,12 @@ int main() {
 		});
 
 		// This shader handles our basic materials without reflections (cause they expensive)
+		Shader::Sptr unlitShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
+			{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
+			{ ShaderPartType::Fragment, "shaders/frag_textured_unlit.glsl" }
+		});
+
+		// This shader handles our basic materials without reflections (cause they expensive)
 		Shader::Sptr specShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
 			{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
 			{ ShaderPartType::Fragment, "shaders/frag_specular.glsl" }
@@ -624,6 +722,15 @@ int main() {
 		Texture2D::Sptr    leaflingTex = ResourceManager::CreateAsset<Texture2D>("textures/Leafling-texture.png");
 		Texture2D::Sptr    floorTex = ResourceManager::CreateAsset<Texture2D>("map/textures/Floors_Base_color.png");
 		Texture2D::Sptr    floorRoughnessTex = ResourceManager::CreateAsset<Texture2D>("map/textures/Floors_Roughness.png");
+		Texture2D::Sptr    creditsTex = ResourceManager::CreateAsset<Texture2D>("textures/DemoCredits.png");
+
+
+		//UI Textures & Mesh
+		MeshResource::Sptr UIMesh = ResourceManager::CreateAsset<MeshResource>("ui/UIPlane.obj");
+		Texture2D::Sptr    crosshairTex = ResourceManager::CreateAsset<Texture2D>("ui/Crosshair.png");
+		Texture2D::Sptr    oxygenMeterTex = ResourceManager::CreateAsset<Texture2D>("ui/OxygenMeter.png");
+		Texture2D::Sptr    oxygenFillTex = ResourceManager::CreateAsset<Texture2D>("ui/OxygenFill.png");
+		Texture2D::Sptr    interactTex = ResourceManager::CreateAsset<Texture2D>("ui/E.png");
 
 
 		// Here we'll load in the cubemap, as well as a special shader to handle drawing the skybox
@@ -711,6 +818,46 @@ int main() {
 			toonMaterial->MatShader = toonShader;
 			toonMaterial->Texture = whiteTex;
 			toonMaterial->Shininess = 1.0f;
+		}
+
+		Material::Sptr crosshairMat = ResourceManager::CreateAsset<Material>();
+		{
+			crosshairMat->Name = "Crosshair";
+			crosshairMat->MatShader = unlitShader;
+			crosshairMat->Texture = crosshairTex;
+			crosshairMat->Shininess = 1.0f;
+		}
+
+		Material::Sptr oxygenMeterMat = ResourceManager::CreateAsset<Material>();
+		{
+			oxygenMeterMat->Name = "Oxygen Meter";
+			oxygenMeterMat->MatShader = unlitShader;
+			oxygenMeterMat->Texture = oxygenMeterTex;
+			oxygenMeterMat->Shininess = 1.0f;
+		}
+
+		Material::Sptr oxygenFillMat = ResourceManager::CreateAsset<Material>();
+		{
+			oxygenFillMat->Name = "Oxygen Fill";
+			oxygenFillMat->MatShader = unlitShader;
+			oxygenFillMat->Texture = oxygenFillTex;
+			oxygenFillMat->Shininess = 1.0f;
+		}
+
+		Material::Sptr interactMat = ResourceManager::CreateAsset<Material>();
+		{
+			interactMat->Name = "Interact";
+			interactMat->MatShader = unlitShader;
+			interactMat->Texture = interactTex;
+			interactMat->Shininess = 1.0f;
+		}
+
+		Material::Sptr creditsMat = ResourceManager::CreateAsset<Material>();
+		{
+			creditsMat->Name = "Credits";
+			creditsMat->MatShader = unlitShader;
+			creditsMat->Texture = creditsTex;
+			creditsMat->Shininess = 1.0f;
 		}
 
 		// Create some lights for our scene
@@ -912,23 +1059,23 @@ int main() {
 			createMapAsset(crate3_5, tealMaterial, "Crate 3.5ft: (" + std::to_string(i) + ")");
 		}
 
-		GameObject::Sptr Leafling = scene->CreateGameObject("Leafling");
-		{
-			Leafling->SetPostion(glm::vec3(-5.0f, 15.0f, -12.0f));
-			Leafling->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
-			Leafling->SetScale(glm::vec3(4.0f));
+		//GameObject::Sptr Leafling = scene->CreateGameObject("Leafling");
+		//{
+		//	Leafling->SetPostion(glm::vec3(-5.0f, 15.0f, -12.0f));
+		//	Leafling->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
+		//	Leafling->SetScale(glm::vec3(4.0f));
 
-			//add physics body
-			RigidBody::Sptr physics = Leafling->Add<RigidBody>(RigidBodyType::Dynamic);
-			ICollider::Sptr collider = physics->AddCollider(SphereCollider::Create(2.0f));
-			collider->SetPosition(glm::vec3(0, 3.0f, -1.0f));
-			RenderComponent::Sptr renderer = Leafling->Add<RenderComponent>();
-			renderer->SetMesh(leaflingMesh);
-			renderer->SetMaterial(leaflingMaterial);
+		//	//add physics body
+		//	RigidBody::Sptr physics = Leafling->Add<RigidBody>(RigidBodyType::Dynamic);
+		//	ICollider::Sptr collider = physics->AddCollider(SphereCollider::Create(2.0f));
+		//	collider->SetPosition(glm::vec3(0, 3.0f, -1.0f));
+		//	RenderComponent::Sptr renderer = Leafling->Add<RenderComponent>();
+		//	renderer->SetMesh(leaflingMesh);
+		//	renderer->SetMaterial(animationMaterial);
 
-			Enemy::Sptr enemyBehaviour = Leafling->Add<Enemy>();
-			//enemyBehaviour->player = camera;
-		}
+		//	Enemy::Sptr enemyBehaviour = Leafling->Add<Enemy>();
+		//	//enemyBehaviour->player = camera;
+		//}
 
 		GameObject::Sptr debugSoundRing = scene->CreateGameObject("Debug Sound-Ring");
 		{
@@ -940,7 +1087,55 @@ int main() {
 			renderer->SetMaterial(tealMaterial);
 		}
 
+		GameObject::Sptr uiCrosshair = scene->CreateGameObject("UI Crosshair");
+		{
+			//uiCrosshair->SetPostion(glm::vec3(-5.0f, 15.0f, -12.0f));
+			uiCrosshair->SetScale(glm::vec3(0.002f));
 
+			RenderComponent::Sptr renderer = uiCrosshair->Add<RenderComponent>();
+			renderer->SetMesh(UIMesh);
+			renderer->SetMaterial(crosshairMat);
+
+			UIElement::Sptr ui = uiCrosshair->Add<UIElement>();
+			ui->posOffset = glm::vec3(0.0f, 0.0f, -0.25f);
+		}
+
+		GameObject::Sptr uiOxygenFill = scene->CreateGameObject("Oxygen Fill");
+		{
+			//uiCrosshair->SetPostion(glm::vec3(-5.0f, 15.0f, -12.0f));
+			uiOxygenFill->SetScale(glm::vec3(0.015f));
+			RenderComponent::Sptr renderer = uiOxygenFill->Add<RenderComponent>();
+			renderer->SetMesh(UIMesh);
+			renderer->SetMaterial(oxygenFillMat);
+
+			UIElement::Sptr ui = uiOxygenFill->Add<UIElement>();
+			ui->posOffset = glm::vec3(0.38f, -0.17f, -0.25001f);
+		}
+
+		GameObject::Sptr uiOxygenMeter = scene->CreateGameObject("Oxygen Meter");
+		{
+			//uiCrosshair->SetPostion(glm::vec3(-5.0f, 15.0f, -12.0f));
+			uiOxygenMeter->SetScale(glm::vec3(0.015f));
+			RenderComponent::Sptr renderer = uiOxygenMeter->Add<RenderComponent>();
+			renderer->SetMesh(UIMesh);
+			renderer->SetMaterial(oxygenMeterMat);
+
+			UIElement::Sptr ui = uiOxygenMeter->Add<UIElement>();
+			ui->posOffset = glm::vec3(0.38f, -0.17f, -0.25f);
+		}
+
+		GameObject::Sptr uiInteract = scene->CreateGameObject("E Interact");
+		{
+			//uiCrosshair->SetPostion(glm::vec3(-5.0f, 15.0f, -12.0f));
+			uiInteract->SetScale(glm::vec3(0.008f));
+
+			RenderComponent::Sptr renderer = uiInteract->Add<RenderComponent>();
+			renderer->SetMesh(UIMesh);
+			renderer->SetMaterial(interactMat);
+
+			UIElement::Sptr ui = uiInteract->Add<UIElement>();
+			ui->posOffset = glm::vec3(0.0f, -0.03f, -0.25f);
+		}
 		//Generate Nodes
 		//for (int x = -2; x < 8; x++)
 		//{
@@ -982,7 +1177,7 @@ int main() {
 	// We'll use this to allow editing the save/load path
 	// via ImGui, note the reserve to allocate extra space
 	// for input!
-	std::string scenePath = "scene.json";
+	std::string scenePath = "demoscene.json";
 	scenePath.reserve(256);
 
 	bool isRotating = true;
@@ -1002,10 +1197,7 @@ int main() {
 	MenuSystem::Sptr menuSys;
 	Camera::Sptr camera;
 
-
-
-	animShader = animationShader;
-	float delt = 0;
+	//float delt = 0;
 
 	///// Game loop /////
 	while (!glfwWindowShouldClose(window)) {
@@ -1075,7 +1267,15 @@ int main() {
 		double thisFrame = glfwGetTime();
 		float dt = static_cast<float>(thisFrame - lastFrame);
 		delt += dt;
-
+		if (delt > 1)
+			delt = 0;
+		float randomNum;
+		randomNum = ((float)(rand() % 2) + 1);
+		animShader->SetUniform("randomx", randomNum);
+		randomNum = ((float)(rand() % 2) + 1);
+		animShader->SetUniform("randomy", randomNum);
+		randomNum = ((float)(rand() % 2) + 1);
+		animShader->SetUniform("randomz", randomNum);
 		animShader->SetUniform("delta", delt);
 
 		// Showcasing how to use the imGui library!

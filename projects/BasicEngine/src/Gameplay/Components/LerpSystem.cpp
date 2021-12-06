@@ -83,7 +83,8 @@ void LerpSystem::Update(float deltaTime) {
 
 	if (beginLerp) {
 		auto _body = GetComponent<Gameplay::Physics::RigidBody>();
-		_body->SetType(RigidBodyType::Kinematic);
+		if(_body != nullptr)
+			_body->SetType(RigidBodyType::Kinematic);
 
 		if (lerpReverse) {
 			t -= deltaTime;
@@ -91,11 +92,13 @@ void LerpSystem::Update(float deltaTime) {
 			if (t <= 0) {
 				t = 0;
 				beginLerp = false;
-				_body->SetType(RigidBodyType::Static);
+				if (_body != nullptr)
+					_body->SetType(RigidBodyType::Static);
 				if(doUpdateNbors)
 					GetGameObject()->GetScene()->pathManager->Get<pathfindingManager>()->UpdateNbors();
+				}
 				//t = 0;
-			}
+			
 		}
 		else {
 			t += deltaTime;
@@ -103,11 +106,13 @@ void LerpSystem::Update(float deltaTime) {
 			if (t >= tLength) {
 				t = tLength;
 				beginLerp = false;
-				_body->SetType(RigidBodyType::Static);
+				if (_body != nullptr)
+					_body->SetType(RigidBodyType::Static);
 				if(doUpdateNbors)
 					GetGameObject()->GetScene()->pathManager->Get<pathfindingManager>()->UpdateNbors();
+				}
 				//t = 0;
-			}
+			 
 		}
 
 		//t += deltaTime;

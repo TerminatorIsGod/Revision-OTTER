@@ -26,4 +26,10 @@ const std::vector<BufferAttribute> VertexPosNormTexCol::V_DECL = {
 	BufferAttribute(2, 3, AttributeType::Float, sizeof(VertexPosNormTexCol), (size_t)&VPNTC->Normal, AttribUsage::Normal),
 	BufferAttribute(3, 2, AttributeType::Float, sizeof(VertexPosNormTexCol), (size_t)&VPNTC->UV, AttribUsage::Texture),
 };
+const std::vector<BufferAttribute> VertexPosNormTexColAlt::V_DECL = {
+	BufferAttribute(7, 3, AttributeType::Float, sizeof(VertexPosNormTexCol), (size_t)&VPNTC->Position, AttribUsage::Position),
+	BufferAttribute(8, 4, AttributeType::Float, sizeof(VertexPosNormTexCol), (size_t)&VPNTC->Color, AttribUsage::Color),
+	BufferAttribute(9, 3, AttributeType::Float, sizeof(VertexPosNormTexCol), (size_t)&VPNTC->Normal, AttribUsage::Normal),
+	BufferAttribute(10, 2, AttributeType::Float, sizeof(VertexPosNormTexCol), (size_t)&VPNTC->UV, AttribUsage::Texture),
+};
 #pragma warning(pop)

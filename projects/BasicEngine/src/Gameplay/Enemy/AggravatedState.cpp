@@ -3,6 +3,7 @@
 #include "Gameplay/Components/SoundEmmiter.h"
 #include "Utils\GlmBulletConversions.h"
 #include "Gameplay/Enemy/PatrollingState.h"
+#include "Gameplay/Components/SimpleCameraControl.h"
 
 
 EnemyState& AggravatedState::getInstance()
@@ -49,6 +50,9 @@ void AggravatedState::Listen(Enemy* e, float deltaTime)
 
 	if (dist >= totalRadius)
 		return;
+
+	if (dist < 7.0f)
+		e->player->SetPostion(e->player->Get<SimpleCameraControl>()->startingPos);
 
 	//Raycasting toward heard sound to determine state change
 	btCollisionWorld::ClosestRayResultCallback hit(ToBt(e->GetGameObject()->GetPosition()), ToBt(e->player->GetPosition()));

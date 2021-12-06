@@ -123,9 +123,15 @@ VertexArrayObject::Sptr ObjLoader::LoadFromFile(const std::string& filename)
 
 	// Create the VAO, and add the vertices
 	VertexArrayObject::Sptr result = VertexArrayObject::Create();
-	result->AddVertexBuffer(vertexBuffer, VertexPosNormTexCol::V_DECL);
-
-	result->SetVDecl(VertexPosNormTexCol::V_DECL);
+	if (filename == "Map/Cockroach.obj" || filename == "Cockroach.obj" || filename == "Map/Cockroach") {
+		result->AddVertexBuffer(vertexBuffer, VertexPosNormTexColAlt::V_DECL);
+		result->SetVDecl(VertexPosNormTexColAlt::V_DECL);
+		std::cout << "Alternative Object Detected!" << std::endl;
+	}
+	else {
+		result->AddVertexBuffer(vertexBuffer, VertexPosNormTexCol::V_DECL);
+		result->SetVDecl(VertexPosNormTexCol::V_DECL);
+	}
 	
 	// Calculate and trace out how long it took us to load
 	float endTime = glfwGetTime();

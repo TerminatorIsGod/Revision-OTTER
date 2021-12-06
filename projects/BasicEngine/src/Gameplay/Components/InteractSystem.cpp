@@ -4,7 +4,7 @@
 #include "Gameplay/Scene.h"
 #include "Utils/ImGuiHelper.h"
 #include <Gameplay/Components/InventorySystem.h>
-
+#include "Gameplay/Components/SimpleCameraControl.h"
 void InteractSystem::Awake()
 {
 	_window = GetGameObject()->GetScene()->Window;
@@ -52,6 +52,18 @@ InteractSystem::Sptr InteractSystem::FromJson(const nlohmann::json& blob) {
 }
 
 void InteractSystem::Update(float deltaTime) {
+
+	glm::vec3 ppos = _player->GetPosition();
+	glm::vec3 opos = GetGameObject()->GetPosition();
+
+	glm::vec3 tpos = ppos - opos;
+	_distance = sqrt(pow(tpos.x, 2) + pow(tpos.y, 2) + pow(tpos.z, 2));
+
+	if (_distance <= _interactDistance) {
+		if (_iskey || _player->Get<InventorySystem>()->getKey(_requiredKey))
+		_player->Get<SimpleCameraControl>()->ShowInteract();
+	}
+
 	if ((glfwGetKey(_window, GLFW_KEY_E) == GLFW_PRESS) && (isKeyPressed == false)) {
 		isKeyPressed = true;
 		if (_requiresKey) {

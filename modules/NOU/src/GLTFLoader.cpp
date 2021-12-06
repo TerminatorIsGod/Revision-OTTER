@@ -8,9 +8,7 @@ Helpful reference: https://www.khronos.org/files/gltf20-reference-guide.pdf
 */
 
 #include "NOU/GLTFLoader.h"
-
 #include <sstream>
-
 #include "tiny_gltf.h"
 
 namespace nou::GLTF
@@ -42,8 +40,8 @@ namespace nou::GLTF
 	}
 
 	void DumpErrorsAndWarnings(const std::string& filename,
-							   const std::string& err,
-							   const std::string& warn)
+		const std::string& err,
+		const std::string& warn)
 	{
 		if (!err.empty())
 			printf("Error extracting mesh from %s: %s\n",
@@ -53,15 +51,15 @@ namespace nou::GLTF
 				filename.c_str(), warn.c_str());
 	}
 
-	bool ParseGLTF(const std::string& filename, tinygltf::Model& gltf, 
-				   std::string& err, std::string& warn)
+	bool ParseGLTF(const std::string& filename, tinygltf::Model& gltf,
+		std::string& err, std::string& warn)
 	{
 		auto loader = std::make_unique<tinygltf::TinyGLTF>();
 
 		std::string tinygltfErr, tinygltfWarn;
 
 		size_t extIndex = filename.find('.');
-		
+
 		if (extIndex == std::string::npos || extIndex >= filename.length() - 1)
 		{
 			err = "Filename specified incorrectly - no extension!";
@@ -78,9 +76,9 @@ namespace nou::GLTF
 
 		bool binary = ext == "glb";
 
-		bool result = (binary) ? 
-					  loader->LoadBinaryFromFile(&gltf, &tinygltfErr, &tinygltfWarn, filename.c_str())
-					: loader->LoadASCIIFromFile(&gltf, &tinygltfErr, &tinygltfWarn, filename.c_str());
+		bool result = (binary) ?
+			loader->LoadBinaryFromFile(&gltf, &tinygltfErr, &tinygltfWarn, filename.c_str())
+			: loader->LoadASCIIFromFile(&gltf, &tinygltfErr, &tinygltfWarn, filename.c_str());
 
 		if (!tinygltfErr.empty())
 		{
@@ -103,14 +101,14 @@ namespace nou::GLTF
 	}
 
 	bool ExtractGeometry(const tinygltf::Model& gltf, Mesh& mesh, bool flipUVY,
-						 std::string& err, std::string& warn)
+		std::string& err, std::string& warn)
 	{
 		if (gltf.meshes.size() == 0)
 		{
 			err = "No meshes in file.";
 			return false;
 		}
-			
+
 		const tinygltf::Mesh& meshData = gltf.meshes[0];
 
 		if (meshData.primitives.size() == 0)
@@ -127,27 +125,27 @@ namespace nou::GLTF
 
 		for (size_t i = 0; i < meshData.primitives.size(); ++i)
 		{
-			if(!ProcessPrimitive(gltf, i, verts, uvs, normals, 
-						         flipUVY, hasNormals, hasUVs, err, warn))
+			if (!ProcessPrimitive(gltf, i, verts, uvs, normals,
+				flipUVY, hasNormals, hasUVs, err, warn))
 				return false;
 		}
 
 		mesh.SetVerts(verts);
 
-		if(hasNormals)
+		if (hasNormals)
 			mesh.SetNormals(normals);
 
-		if(hasUVs)
+		if (hasUVs)
 			mesh.SetUVs(uvs);
 
 		return true;
 	}
 
 	bool ProcessPrimitive(const tinygltf::Model& gltf, size_t geomIndex,
-		                  std::vector<glm::vec3>& verts, std::vector<glm::vec2>& uvs,
-		                  std::vector<glm::vec3>& normals, bool flipUVY,
-						  bool& hasNormals, bool& hasUVs,
-		                  std::string& err, std::string& warn)
+		std::vector<glm::vec3>& verts, std::vector<glm::vec2>& uvs,
+		std::vector<glm::vec3>& normals, bool flipUVY,
+		bool& hasNormals, bool& hasUVs,
+		std::string& err, std::string& warn)
 	{
 		const tinygltf::Primitive geom = gltf.meshes[0].primitives[geomIndex];
 
@@ -282,7 +280,7 @@ namespace nou::GLTF
 	{
 		auto it = geom.attributes.find(name);
 
-		if(it == geom.attributes.end())
+		if (it == geom.attributes.end())
 			return -1;
 
 		return it->second;
@@ -298,7 +296,7 @@ namespace nou::GLTF
 		size_t len = acc.count;
 		int stride = acc.ByteStride(bv);
 		int size = tinygltf::GetComponentSizeInBytes(acc.componentType) *
-				   tinygltf::GetNumComponentsInType(acc.type);
+			tinygltf::GetNumComponentsInType(acc.type);
 
 		return { data, len, stride, size };
 	}
