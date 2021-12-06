@@ -9,6 +9,7 @@
 #include "Utils/ImGuiHelper.h"
 #include "Utils\GlmBulletConversions.h"
 #include "Gameplay/Components/Ladder.h"
+#include "Gameplay/Components/UIElement.h"
 
 SimpleCameraControl::SimpleCameraControl() :
 	IComponent(),
@@ -48,6 +49,8 @@ void SimpleCameraControl::Update(float deltaTime)
 	}
 	else
 		isEPressed = false;
+
+	MoveUI(deltaTime);
 }
 
 void SimpleCameraControl::Movement(float deltaTime)
@@ -320,6 +323,36 @@ void SimpleCameraControl::RunState(float deltaTime)
 void SimpleCameraControl::SetSpeed(float newSpeed)
 {
 	_moveSpeeds = glm::vec3(newSpeed * 300.0f);
+}
+
+void SimpleCameraControl::MoveUI(float deltaTime)
+{
+	glm::vec3 viewDir = currentRot * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f);
+	for (int i = 0; i < _scene->uiImages.size(); i++)
+	{
+
+		glm::vec3 offset = _scene->uiImages[i]->Get<UIElement>()->posOffset;
+		glm::vec4 newOffset = glm::vec4(offset, 1.0);
+		glm::vec3 localOffset = glm::vec3(newOffset * GetGameObject()->GetInverseTransform());
+
+		glm::vec3 offset2 = glm::vec3(0, 0, 780);
+		glm::vec4 newOffset2 = glm::vec4(offset2, 1.0);
+		glm::vec3 localOffset2 = glm::vec3(newOffset2 * GetGameObject()->GetInverseTransform());
+		_scene->uiImages[i]->SetPostion(GetGameObject()->GetPosition() + localOffset);
+		_scene->uiImages[i]->LookAt(GetGameObject()->GetPosition() + localOffset2);
+
+		if (i == 1)
+		{
+			float meterPercent = oxygenMeter / oxygenMeterMax;
+			_scene->uiImages[i]->SetScale(glm::vec3(_scene->uiImages[i]->GetScale().x, 0.015f * meterPercent, _scene->uiImages[i]->GetScale().z));
+
+			glm::vec3 offset = _scene->uiImages[i]->Get<UIElement>()->posOffset - glm::vec3(0.0f, 0.065f * (1 - meterPercent), 0.0f);
+			glm::vec4 newOffset = glm::vec4(offset, 1.0);
+			glm::vec3 localOffset = glm::vec3(newOffset * GetGameObject()->GetInverseTransform());
+			_scene->uiImages[i]->SetPostion(GetGameObject()->GetPosition() + localOffset);
+		}
+	}
+
 }
 
 

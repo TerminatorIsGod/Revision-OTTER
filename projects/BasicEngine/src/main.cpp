@@ -61,6 +61,7 @@
 #include "Gameplay/Components/Enemy.h"
 
 #include "Gameplay/Components/Ladder.h"
+#include "Gameplay/Components/UIElement.h"
 
 
 // Physics
@@ -74,11 +75,11 @@
 #include "Graphics/DebugDraw.h"
 #include "Gameplay/Components/TriggerVolumeEnterBehaviour.h"
 
-
 #include "Gameplay/Components/SimpleCameraControl.h"
 #include <Gameplay/Components/MenuSystem.h>
 #include <Gameplay/Components/InteractSystem.h>
 #include <Gameplay/Components/LerpSystem.h>
+#include <Gameplay/Components/CurveLerpSystem.h>
 
 
 
@@ -326,46 +327,238 @@ int main() {
 	ComponentManager::RegisterType<SoundEmmiter>();
 	ComponentManager::RegisterType<Enemy>();
 	ComponentManager::RegisterType<Ladder>();
+	ComponentManager::RegisterType<UIElement>();
 
 	ComponentManager::RegisterType<MenuSystem>();
 	ComponentManager::RegisterType<InventorySystem>();
 	ComponentManager::RegisterType<InteractSystem>();
 	ComponentManager::RegisterType<LerpSystem>();
 	ComponentManager::RegisterType<SceneSwapSystem>();
+	ComponentManager::RegisterType<CurveLerpSystem>();
 
 	// GL states, we'll enable depth testing and backface fulling
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
-	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glfwSwapInterval(1);
 
+	Texture2D::Sptr    leaflingTex = ResourceManager::CreateAsset<Texture2D>("textures/Leafling-texture.png");
 
 	Shader::Sptr animationShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
 		{ ShaderPartType::Vertex, "shaders/vertex_animation_shader.glsl" },
 		{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
 	});
 
-	bool loadScene = true;
+	Material::Sptr animationMaterial = ResourceManager::CreateAsset<Material>();
+	{
+		animationMaterial->Name = "Animation";
+		animationMaterial->MatShader = animationShader;
+		animationMaterial->Texture = leaflingTex;
+		animationMaterial->Shininess = 0.1f;
+	}
+
+
+	bool loadScene = false;
 	// For now we can use a toggle to generate our scene vs load from file
 	if (loadScene) {
 
 		ResourceManager::LoadManifest("manifest.json");
 		scene = Scene::Load("demoscene.json");
 
-		//Texture2D::Sptr    whiteTex = ResourceManager::CreateAsset<Texture2D>("textures/white.jpg");
+		/*Texture2D::Sptr    whiteTex = ResourceManager::CreateAsset<Texture2D>("textures/white.jpg");
 
-		//Shader::Sptr basicShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
-		//	{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
-		//	{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
-		//});
-		//MeshResource::Sptr staticCrates = ResourceManager::CreateAsset<MeshResource>("map/Static_Crates.obj");
-		//Material::Sptr whiteMaterial = ResourceManager::CreateAsset<Material>();
-		//{
-		//	whiteMaterial->Name = "White";
-		//	whiteMaterial->MatShader = basicShader;
-		//	whiteMaterial->Texture = whiteTex;
-		//	whiteMaterial->Shininess = 1.0f;
-		//}
+
+		Texture2D::Sptr    Poster1Tex = ResourceManager::CreateAsset<Texture2D>("textures/Artboard_1.png");
+		Texture2D::Sptr    Poster2Tex = ResourceManager::CreateAsset<Texture2D>("textures/Artboard_2.png");
+		Texture2D::Sptr    Poster3Tex = ResourceManager::CreateAsset<Texture2D>("textures/Artboard_3.png");
+		Texture2D::Sptr    Poster4Tex = ResourceManager::CreateAsset<Texture2D>("textures/Artboard_4.png");
+
+		MeshResource::Sptr planeMesh = ResourceManager::CreateAsset<MeshResource>();
+		planeMesh->AddParam(MeshBuilderParam::CreatePlane(ZERO, UNIT_Z, UNIT_X, glm::vec2(1.0f)));
+		planeMesh->GenerateMesh();
+
+		MeshResource::Sptr ValveMesh = ResourceManager::CreateAsset<MeshResource>("map/Valve.obj");
+
+		Shader::Sptr basicShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
+			{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
+			{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
+		});
+
+		Material::Sptr WhiteMaterial = ResourceManager::CreateAsset<Material>();
+		{
+			WhiteMaterial->Name = "White";
+			WhiteMaterial->MatShader = basicShader;
+			WhiteMaterial->Texture = whiteTex;
+			WhiteMaterial->Shininess = 1.0f;
+		}
+
+		Material::Sptr Poster1Material = ResourceManager::CreateAsset<Material>();
+		{
+			Poster1Material->Name = "Poster1";
+			Poster1Material->MatShader = basicShader;
+			Poster1Material->Texture = Poster1Tex;
+			Poster1Material->Shininess = 1.0f;
+		}
+
+		Material::Sptr Poster2Material = ResourceManager::CreateAsset<Material>();
+		{
+			Poster2Material->Name = "Poster2";
+			Poster2Material->MatShader = basicShader;
+			Poster2Material->Texture = Poster2Tex;
+			Poster2Material->Shininess = 1.0f;
+		}
+
+		Material::Sptr Poster3Material = ResourceManager::CreateAsset<Material>();
+		{
+			Poster3Material->Name = "Poster3";
+			Poster3Material->MatShader = basicShader;
+			Poster3Material->Texture = Poster3Tex;
+			Poster3Material->Shininess = 1.0f;
+		}
+
+		Material::Sptr Poster4Material = ResourceManager::CreateAsset<Material>();
+		{
+			Poster4Material->Name = "Poster4";
+			Poster4Material->MatShader = basicShader;
+			Poster4Material->Texture = Poster4Tex;
+			Poster4Material->Shininess = 1.0f;
+		}
+		
+
+		GameObject::Sptr distractionValve = scene->CreateGameObject("Valve");
+		{
+			// Set position in the scene
+			distractionValve->SetPostion(glm::vec3(0.0f, 0.0f, 2.0f));
+			// Scale down the plane
+			distractionValve->SetScale(glm::vec3(1.0f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = distractionValve->Add<RenderComponent>();
+			renderer->SetMesh(ValveMesh);
+			renderer->SetMaterial(WhiteMaterial);
+
+			distractionValve->Add<LerpSystem>();
+			distractionValve->Add<InteractSystem>();
+		}
+
+		GameObject::Sptr poster1 = scene->CreateGameObject("Poster 1");
+		{
+			// Set position in the scene
+			poster1->SetPostion(glm::vec3(0.0f, 0.0f, 2.0f));
+			// Scale down the plane
+			poster1->SetScale(glm::vec3(1.0f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = poster1->Add<RenderComponent>();
+			renderer->SetMesh(planeMesh);
+			renderer->SetMaterial(Poster1Material);
+		}
+
+		GameObject::Sptr poster2 = scene->CreateGameObject("Poster 2");
+		{
+			// Set position in the scene
+			poster2->SetPostion(glm::vec3(0.0f, 0.0f, 2.0f));
+			// Scale down the plane
+			poster2->SetScale(glm::vec3(1.0f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = poster2->Add<RenderComponent>();
+			renderer->SetMesh(planeMesh);
+			renderer->SetMaterial(Poster1Material);
+		}
+
+		GameObject::Sptr poster3 = scene->CreateGameObject("Poster 3");
+		{
+			// Set position in the scene
+			poster3->SetPostion(glm::vec3(0.0f, 0.0f, 2.0f));
+			// Scale down the plane
+			poster3->SetScale(glm::vec3(1.0f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = poster3->Add<RenderComponent>();
+			renderer->SetMesh(planeMesh);
+			renderer->SetMaterial(Poster1Material);
+		}
+
+		GameObject::Sptr poster4 = scene->CreateGameObject("Poster 4");
+		{
+			// Set position in the scene
+			poster4->SetPostion(glm::vec3(0.0f, 0.0f, 2.0f));
+			// Scale down the plane
+			poster4->SetScale(glm::vec3(1.0f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = poster4->Add<RenderComponent>();
+			renderer->SetMesh(planeMesh);
+			renderer->SetMaterial(Poster1Material);
+		}*/
+
+		/*GameObject::Sptr doorMagenta2 = scene->CreateGameObject("Door Magenta 2");
+		{
+			// Set position in the scene
+			doorMagenta2->SetPostion(glm::vec3(0.0f, 0.0f, 2.0f));
+			// Scale down the plane
+			doorMagenta2->SetScale(glm::vec3(1.0f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = doorMagenta2->Add<RenderComponent>();
+			renderer->SetMesh(doorMagentaMesh);
+			renderer->SetMaterial(whiteMaterial);
+
+			doorMagenta2->Add<LerpSystem>();
+			doorMagenta2->Add<InteractSystem>();
+		}
+
+		GameObject::Sptr doorMagenta3 = scene->CreateGameObject("Door Magenta 3");
+		{
+			// Set position in the scene
+			doorMagenta3->SetPostion(glm::vec3(0.0f, 0.0f, 2.0f));
+			// Scale down the plane
+			doorMagenta3->SetScale(glm::vec3(1.0f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = doorMagenta3->Add<RenderComponent>();
+			renderer->SetMesh(doorMagentaMesh);
+			renderer->SetMaterial(whiteMaterial);
+
+			doorMagenta3->Add<LerpSystem>();
+			doorMagenta3->Add<InteractSystem>();
+		}
+
+		GameObject::Sptr doorOrange1 = scene->CreateGameObject("Door Orange 1");
+		{
+			// Set position in the scene
+			doorOrange1->SetPostion(glm::vec3(0.0f, 0.0f, 2.0f));
+			// Scale down the plane
+			doorOrange1->SetScale(glm::vec3(1.0f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = doorOrange1->Add<RenderComponent>();
+			renderer->SetMesh(doorOrangeMesh);
+			renderer->SetMaterial(whiteMaterial);
+
+			doorOrange1->Add<LerpSystem>();
+			doorOrange1->Add<InteractSystem>();
+		}
+
+		GameObject::Sptr doorOrange2 = scene->CreateGameObject("Door Orange 2");
+		{
+			// Set position in the scene
+			doorOrange2->SetPostion(glm::vec3(0.0f, 0.0f, 2.0f));
+			// Scale down the plane
+			doorOrange2->SetScale(glm::vec3(1.0f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = doorOrange2->Add<RenderComponent>();
+			renderer->SetMesh(doorOrangeMesh);
+			renderer->SetMaterial(whiteMaterial);
+
+			doorOrange2->Add<LerpSystem>();
+			doorOrange2->Add<InteractSystem>();
+		}*/
 
 		// Call scene awake to start up all of our components
 		scene->Window = window;
@@ -383,6 +576,12 @@ int main() {
 		Shader::Sptr basicShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
 			{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
 			{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
+		});
+
+		// This shader handles our basic materials without reflections (cause they expensive)
+		Shader::Sptr unlitShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
+			{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
+			{ ShaderPartType::Fragment, "shaders/frag_textured_unlit.glsl" }
 		});
 
 		// This shader handles our basic materials without reflections (cause they expensive)
@@ -445,6 +644,12 @@ int main() {
 		Texture2D::Sptr    leaflingTex = ResourceManager::CreateAsset<Texture2D>("textures/Leafling-texture.png");
 		Texture2D::Sptr    floorTex = ResourceManager::CreateAsset<Texture2D>("map/textures/Floors_Base_color.png");
 		Texture2D::Sptr    floorRoughnessTex = ResourceManager::CreateAsset<Texture2D>("map/textures/Floors_Roughness.png");
+
+		//UI Textures & Mesh
+		MeshResource::Sptr UIMesh = ResourceManager::CreateAsset<MeshResource>("ui/UIPlane.obj");
+		Texture2D::Sptr    crosshairTex = ResourceManager::CreateAsset<Texture2D>("ui/Crosshair.png");
+		Texture2D::Sptr    oxygenMeterTex = ResourceManager::CreateAsset<Texture2D>("ui/OxygenMeter.png");
+		Texture2D::Sptr    oxygenFillTex = ResourceManager::CreateAsset<Texture2D>("ui/OxygenFill.png");
 
 
 		// Here we'll load in the cubemap, as well as a special shader to handle drawing the skybox
@@ -532,6 +737,30 @@ int main() {
 			toonMaterial->MatShader = toonShader;
 			toonMaterial->Texture = whiteTex;
 			toonMaterial->Shininess = 1.0f;
+		}
+
+		Material::Sptr crosshairMat = ResourceManager::CreateAsset<Material>();
+		{
+			crosshairMat->Name = "Crosshair";
+			crosshairMat->MatShader = unlitShader;
+			crosshairMat->Texture = crosshairTex;
+			crosshairMat->Shininess = 1.0f;
+		}
+
+		Material::Sptr oxygenMeterMat = ResourceManager::CreateAsset<Material>();
+		{
+			oxygenMeterMat->Name = "Oxygen Meter";
+			oxygenMeterMat->MatShader = unlitShader;
+			oxygenMeterMat->Texture = oxygenMeterTex;
+			oxygenMeterMat->Shininess = 1.0f;
+		}
+
+		Material::Sptr oxygenFillMat = ResourceManager::CreateAsset<Material>();
+		{
+			oxygenFillMat->Name = "Oxygen Fill";
+			oxygenFillMat->MatShader = unlitShader;
+			oxygenFillMat->Texture = oxygenFillTex;
+			oxygenFillMat->Shininess = 1.0f;
 		}
 
 		// Create some lights for our scene
@@ -723,8 +952,6 @@ int main() {
 			createMapAsset(shelfMedium, tealMaterial, "Medium Shelf: (" + std::to_string(i) + ")");
 			createMapAsset(shelfSmall, tealMaterial, "Small Shelf: (" + std::to_string(i) + ")");
 		}
-		createMapAsset(key1, tealMaterial, "Key 1");
-		createMapAsset(key2, tealMaterial, "Key 2");
 
 		for (int i = 0; i < 4; i++)
 		{
@@ -735,23 +962,23 @@ int main() {
 			createMapAsset(crate3_5, tealMaterial, "Crate 3.5ft: (" + std::to_string(i) + ")");
 		}
 
-		GameObject::Sptr Leafling = scene->CreateGameObject("Leafling");
-		{
-			Leafling->SetPostion(glm::vec3(-5.0f, 15.0f, -12.0f));
-			Leafling->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
-			Leafling->SetScale(glm::vec3(4.0f));
+		//GameObject::Sptr Leafling = scene->CreateGameObject("Leafling");
+		//{
+		//	Leafling->SetPostion(glm::vec3(-5.0f, 15.0f, -12.0f));
+		//	Leafling->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
+		//	Leafling->SetScale(glm::vec3(4.0f));
 
-			//add physics body
-			RigidBody::Sptr physics = Leafling->Add<RigidBody>(RigidBodyType::Dynamic);
-			ICollider::Sptr collider = physics->AddCollider(SphereCollider::Create(2.0f));
-			collider->SetPosition(glm::vec3(0, 3.0f, -1.0f));
-			RenderComponent::Sptr renderer = Leafling->Add<RenderComponent>();
-			renderer->SetMesh(leaflingMesh);
-			renderer->SetMaterial(leaflingMaterial);
+		//	//add physics body
+		//	RigidBody::Sptr physics = Leafling->Add<RigidBody>(RigidBodyType::Dynamic);
+		//	ICollider::Sptr collider = physics->AddCollider(SphereCollider::Create(2.0f));
+		//	collider->SetPosition(glm::vec3(0, 3.0f, -1.0f));
+		//	RenderComponent::Sptr renderer = Leafling->Add<RenderComponent>();
+		//	renderer->SetMesh(leaflingMesh);
+		//	renderer->SetMaterial(animationMaterial);
 
-			Enemy::Sptr enemyBehaviour = Leafling->Add<Enemy>();
-			//enemyBehaviour->player = camera;
-		}
+		//	Enemy::Sptr enemyBehaviour = Leafling->Add<Enemy>();
+		//	//enemyBehaviour->player = camera;
+		//}
 
 		GameObject::Sptr debugSoundRing = scene->CreateGameObject("Debug Sound-Ring");
 		{
@@ -761,6 +988,43 @@ int main() {
 			RenderComponent::Sptr renderer = debugSoundRing->Add<RenderComponent>();
 			renderer->SetMesh(soundRing);
 			renderer->SetMaterial(tealMaterial);
+		}
+
+		GameObject::Sptr uiCrosshair = scene->CreateGameObject("UI Crosshair");
+		{
+			//uiCrosshair->SetPostion(glm::vec3(-5.0f, 15.0f, -12.0f));
+			uiCrosshair->SetScale(glm::vec3(0.002f));
+
+			RenderComponent::Sptr renderer = uiCrosshair->Add<RenderComponent>();
+			renderer->SetMesh(UIMesh);
+			renderer->SetMaterial(crosshairMat);
+
+			UIElement::Sptr ui = uiCrosshair->Add<UIElement>();
+			ui->posOffset = glm::vec3(0.0f, 0.0f, -0.25f);
+		}
+
+		GameObject::Sptr uiOxygenFill = scene->CreateGameObject("Oxygen Fill");
+		{
+			//uiCrosshair->SetPostion(glm::vec3(-5.0f, 15.0f, -12.0f));
+			uiOxygenFill->SetScale(glm::vec3(0.015f));
+			RenderComponent::Sptr renderer = uiOxygenFill->Add<RenderComponent>();
+			renderer->SetMesh(UIMesh);
+			renderer->SetMaterial(oxygenFillMat);
+
+			UIElement::Sptr ui = uiOxygenFill->Add<UIElement>();
+			ui->posOffset = glm::vec3(0.38f, -0.17f, -0.25001f);
+		}
+
+		GameObject::Sptr uiOxygenMeter = scene->CreateGameObject("Oxygen Meter");
+		{
+			//uiCrosshair->SetPostion(glm::vec3(-5.0f, 15.0f, -12.0f));
+			uiOxygenMeter->SetScale(glm::vec3(0.015f));
+			RenderComponent::Sptr renderer = uiOxygenMeter->Add<RenderComponent>();
+			renderer->SetMesh(UIMesh);
+			renderer->SetMaterial(oxygenMeterMat);
+
+			UIElement::Sptr ui = uiOxygenMeter->Add<UIElement>();
+			ui->posOffset = glm::vec3(0.38f, -0.17f, -0.25f);
 		}
 
 
@@ -805,7 +1069,7 @@ int main() {
 	// We'll use this to allow editing the save/load path
 	// via ImGui, note the reserve to allocate extra space
 	// for input!
-	std::string scenePath = "scene.json";
+	std::string scenePath = "demoscene.json";
 	scenePath.reserve(256);
 
 	bool isRotating = true;

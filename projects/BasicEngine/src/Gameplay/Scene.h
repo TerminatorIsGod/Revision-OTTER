@@ -9,7 +9,6 @@
 #include "Physics/BulletDebugDraw.h"
 
 #include "Graphics/UniformBuffer.h"
-
 struct GLFWwindow;
 
 class TextureCube;
@@ -55,6 +54,8 @@ namespace Gameplay {
 		GameObject::Sptr pathManager;
 
 		std::vector<GameObject::Sptr> ladders;
+		std::vector<GameObject::Sptr> uiImages;
+
 
 		Scene();
 		~Scene();

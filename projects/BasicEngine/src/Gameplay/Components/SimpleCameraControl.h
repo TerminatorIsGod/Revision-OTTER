@@ -37,7 +37,7 @@ public:
 	void RunState(float deltaTime);
 
 	void SetSpeed(float newSpeed);
-
+	void MoveUI(float deltaTime);
 protected:
 	float _shiftMultipler;
 	glm::vec2 _mouseSensitivity;
