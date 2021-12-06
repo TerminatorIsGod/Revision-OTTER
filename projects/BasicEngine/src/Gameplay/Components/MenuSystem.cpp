@@ -10,8 +10,8 @@ namespace Gameplay {
 			{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
 		});
 
-		Texture2D::Sptr    mainmenuTex = ResourceManager::CreateAsset<Texture2D>("textures/19201080.png");
-		Texture2D::Sptr    pausemenuTex = ResourceManager::CreateAsset<Texture2D>("textures/19201080.png");
+		Texture2D::Sptr    mainmenuTex = ResourceManager::CreateAsset<Texture2D>("textures/Resonace_title_screen.png");
+		Texture2D::Sptr    pausemenuTex = ResourceManager::CreateAsset<Texture2D>("textures/Pause_screen.png");
 
 		Gameplay::Material::Sptr mainmenuMaterial = ResourceManager::CreateAsset<Gameplay::Material>();
 		{
