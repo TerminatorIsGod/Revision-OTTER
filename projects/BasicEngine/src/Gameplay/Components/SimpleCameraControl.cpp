@@ -25,6 +25,7 @@ SimpleCameraControl::~SimpleCameraControl() = default;
 void SimpleCameraControl::Awake() {
 	_scene = GetGameObject()->GetScene();
 	_window = _scene->Window;
+	GetGameObject()->SetPostion(startingPos);
 
 	soundEmmiter = GetComponent<SoundEmmiter>();
 	soundEmmiter->isDecaying = false;
@@ -82,15 +83,27 @@ void SimpleCameraControl::Movement(float deltaTime)
 		float xoffset = centerx - currentMousePos.x;
 		float yoffset = centery - currentMousePos.y;
 
+
 		glfwSetCursorPos(_window, centerx, centery);
 
 
 		_currentRot.x += static_cast<float>(xoffset) * _mouseSensitivity.x;  //_currentRot.x += static_cast<float>(currentMousePos.x - _prevMousePos.x) * _mouseSensitivity.x;
 		_currentRot.y += static_cast<float>(yoffset) * _mouseSensitivity.y;
+		std::cout << "\nY Rot: " << _currentRot.y;
+		if (_currentRot.y > 172)
+			_currentRot.y = 172;
+		else if (_currentRot.y < 4.5)
+			_currentRot.y = 4.5;
+
 		glm::quat rotX = glm::angleAxis(glm::radians(_currentRot.x), glm::vec3(0, 0, 1));
 		glm::quat rotY = glm::angleAxis(glm::radians(_currentRot.y), glm::vec3(1, 0, 0));
 		currentRot = rotX * rotY;
+
+
+
 		GetGameObject()->SetRotation(currentRot);
+
+
 
 		_prevMousePos = currentMousePos;
 
@@ -126,7 +139,7 @@ void SimpleCameraControl::Movement(float deltaTime)
 			soundEmmiter->lerpSpeed = soundEmmiter->attackSpeed;
 		}
 
-		if (glfwGetKey(_window, GLFW_KEY_J))
+		/*if (glfwGetKey(_window, GLFW_KEY_J))
 		{
 			if (!isJPressed)
 			{
@@ -138,7 +151,7 @@ void SimpleCameraControl::Movement(float deltaTime)
 			}
 		}
 		else
-			isJPressed = false;
+			isJPressed = false;*/
 
 		input *= deltaTime;
 
@@ -260,7 +273,7 @@ void SimpleCameraControl::Interact(float deltaTime)
 
 		//UI Prompt
 		ShowInteract();
-	
+
 		if (glfwGetKey(_window, GLFW_KEY_E))
 		{
 			if (!isEPressed)

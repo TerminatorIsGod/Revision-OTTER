@@ -33,7 +33,9 @@ SceneSwapSystem::Sptr SceneSwapSystem::FromJson(const nlohmann::json & blob) {
 }
 
 void SceneSwapSystem::Update(float deltaTime) {
-
+	std::string hi = "demoscene";
+	if (glfwGetKey(_scene->Window, GLFW_KEY_R))
+		swapScene(hi);
 }
 
 void SceneSwapSystem::swapScene(std::string & path) {

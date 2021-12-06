@@ -360,6 +360,41 @@ int main() {
 		//Texture2D::Sptr    oxygenFillTex = ResourceManager::CreateAsset<Texture2D>("ui/OxygenFill.png");
 		//Texture2D::Sptr    interactTex = ResourceManager::CreateAsset<Texture2D>("ui/E.png");
 
+				// This shader handles our basic materials without reflections (cause they expensive)
+		//Shader::Sptr unlitShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
+		//	{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
+		//	{ ShaderPartType::Fragment, "shaders/frag_textured_unlit.glsl" }
+		//});
+		//Texture2D::Sptr    creditsTex = ResourceManager::CreateAsset<Texture2D>("textures/DemoCredits.png");
+
+		//Material::Sptr creditsMat = ResourceManager::CreateAsset<Material>();
+		//{
+		//	creditsMat->Name = "Credits";
+		//	creditsMat->MatShader = unlitShader;
+		//	creditsMat->Texture = creditsTex;
+		//	creditsMat->Shininess = 1.0f;
+		//}
+
+		//GameObject::Sptr creditsScreen = scene->CreateGameObject("creditsScreen");
+		//{
+		//	// Set position in the scene
+		//	creditsScreen->SetPostion(glm::vec3(10000, 10000, 10000));
+		//	creditsScreen->SetRotation(glm::vec3(90, 0, 0));
+		//	// Scale down the plane
+		//	//cock1->SetScale(glm::vec3(0.25f));
+
+		//	// Create and attach a render component
+		//	RenderComponent::Sptr renderer = creditsScreen->Add<RenderComponent>();
+		//	renderer->SetMesh(UIMesh);
+		//	renderer->SetMaterial(creditsMat);
+		//}
+
+		//GameObject::Sptr sceneSwapper = scene->CreateGameObject("sceneSwapper");
+		//{
+		//	SceneSwapSystem::Sptr swapper = sceneSwapper->Add<SceneSwapSystem>();
+		//	swapper->setScene(scene);
+		//}
+
 		Texture2D::Sptr    whiteTex = ResourceManager::CreateAsset<Texture2D>("textures/white.jpg");
 		Texture2D::Sptr    pinkTex = ResourceManager::CreateAsset<Texture2D>("textures/pink.jpg");
 		MeshResource::Sptr cockAltMesh = ResourceManager::CreateAsset<MeshResource>("Map/Cockroach.obj");
@@ -810,6 +845,14 @@ int main() {
 			interactMat->MatShader = unlitShader;
 			interactMat->Texture = interactTex;
 			interactMat->Shininess = 1.0f;
+		}
+
+		Material::Sptr creditsMat = ResourceManager::CreateAsset<Material>();
+		{
+			creditsMat->Name = "Credits";
+			creditsMat->MatShader = unlitShader;
+			creditsMat->Texture = creditsTex;
+			creditsMat->Shininess = 1.0f;
 		}
 
 		// Create some lights for our scene
