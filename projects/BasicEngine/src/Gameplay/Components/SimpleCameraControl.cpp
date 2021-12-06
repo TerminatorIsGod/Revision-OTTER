@@ -38,17 +38,7 @@ void SimpleCameraControl::Update(float deltaTime)
 	Movement(deltaTime);
 	SwitchState(deltaTime);
 	OxygenSystem(deltaTime);
-
-	if (glfwGetKey(_window, GLFW_KEY_E))
-	{
-		if (!isEPressed)
-		{
-			isEPressed = true;
-			Interact(deltaTime);
-		}
-	}
-	else
-		isEPressed = false;
+	Interact(deltaTime);
 
 	MoveUI(deltaTime);
 }
@@ -248,6 +238,7 @@ void SimpleCameraControl::SwitchState(float deltaTime)
 
 void SimpleCameraControl::Interact(float deltaTime)
 {
+
 	glm::vec3 viewDir = currentRot * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f);
 	btCollisionWorld::ClosestRayResultCallback hit(ToBt(GetGameObject()->GetPosition()), ToBt(GetGameObject()->GetPosition() + (viewDir * 5.0f)));
 	_scene->GetPhysicsWorld()->rayTest(ToBt(GetGameObject()->GetPosition()), ToBt(GetGameObject()->GetPosition() + (viewDir * 5.0f)), hit);
@@ -263,19 +254,44 @@ void SimpleCameraControl::Interact(float deltaTime)
 
 	for (int i = 0; i < _scene->soundEmmiters.size(); i++)
 	{
-		if (objectPos == _scene->soundEmmiters[i]->GetPosition())
+		if (objectPos != _scene->soundEmmiters[i]->GetPosition())
+			continue;
+
+		//Ui Prompt here
+		std::cout << "\n[E] Interact";
+		if (glfwGetKey(_window, GLFW_KEY_E))
 		{
-			_scene->soundEmmiters[i]->Get<SoundEmmiter>()->targetVolume = _scene->soundEmmiters[i]->Get<SoundEmmiter>()->distractionVolume;
-			_scene->soundEmmiters[i]->Get<SoundEmmiter>()->isDecaying = false;
-			_scene->soundEmmiters[i]->Get<SoundEmmiter>()->lerpSpeed = 4.0f;
+			if (!isEPressed)
+			{
+				_scene->soundEmmiters[i]->Get<SoundEmmiter>()->targetVolume = _scene->soundEmmiters[i]->Get<SoundEmmiter>()->distractionVolume;
+				_scene->soundEmmiters[i]->Get<SoundEmmiter>()->isDecaying = false;
+				_scene->soundEmmiters[i]->Get<SoundEmmiter>()->lerpSpeed = 4.0f;
+				isEPressed = true;
+			}
 		}
+		else
+			isEPressed = false;
+
 		//std::cout << "\nObject Pos: " << _scene->soundEmmiters[i]->GetPosition().y;
 	}
 
 	for (int i = 0; i < _scene->ladders.size(); i++)
 	{
-		if (objectPos == _scene->ladders[i]->GetPosition())
-			GetGameObject()->SetPostion(_scene->ladders[i]->Get<Ladder>()->teleportPos);
+		if (objectPos != _scene->ladders[i]->GetPosition())
+			continue;
+
+		//Ui Prompt here
+		std::cout << "\n[E] Interact";
+		if (glfwGetKey(_window, GLFW_KEY_E))
+		{
+			if (!isEPressed)
+			{
+				GetGameObject()->SetPostion(_scene->ladders[i]->Get<Ladder>()->teleportPos);
+				isEPressed = true;
+			}
+		}
+		else
+			isEPressed = false;
 	}
 }
 

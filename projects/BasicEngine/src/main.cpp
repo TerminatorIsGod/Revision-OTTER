@@ -368,6 +368,98 @@ int main() {
 		ResourceManager::LoadManifest("manifest.json");
 		scene = Scene::Load("demoscene.json");
 
+		////UI Textures & Mesh
+		//MeshResource::Sptr UIMesh = ResourceManager::CreateAsset<MeshResource>("ui/UIPlane.obj");
+		//Texture2D::Sptr    crosshairTex = ResourceManager::CreateAsset<Texture2D>("ui/Crosshair.png");
+		//Texture2D::Sptr    oxygenMeterTex = ResourceManager::CreateAsset<Texture2D>("ui/OxygenMeter.png");
+		//Texture2D::Sptr    oxygenFillTex = ResourceManager::CreateAsset<Texture2D>("ui/OxygenFill.png");
+		//Texture2D::Sptr    interactTex = ResourceManager::CreateAsset<Texture2D>("ui/E.png");
+
+		//Shader::Sptr unlitShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
+		//	{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
+		//	{ ShaderPartType::Fragment, "shaders/frag_textured_unlit.glsl" }
+		//});
+		//Material::Sptr crosshairMat = ResourceManager::CreateAsset<Material>();
+		//{
+		//	crosshairMat->Name = "Crosshair";
+		//	crosshairMat->MatShader = unlitShader;
+		//	crosshairMat->Texture = crosshairTex;
+		//	crosshairMat->Shininess = 1.0f;
+		//}
+
+		//Material::Sptr oxygenMeterMat = ResourceManager::CreateAsset<Material>();
+		//{
+		//	oxygenMeterMat->Name = "Oxygen Meter";
+		//	oxygenMeterMat->MatShader = unlitShader;
+		//	oxygenMeterMat->Texture = oxygenMeterTex;
+		//	oxygenMeterMat->Shininess = 1.0f;
+		//}
+
+		//Material::Sptr oxygenFillMat = ResourceManager::CreateAsset<Material>();
+		//{
+		//	oxygenFillMat->Name = "Oxygen Fill";
+		//	oxygenFillMat->MatShader = unlitShader;
+		//	oxygenFillMat->Texture = oxygenFillTex;
+		//	oxygenFillMat->Shininess = 1.0f;
+		//}
+
+		//Material::Sptr interactMat = ResourceManager::CreateAsset<Material>();
+		//{
+		//	interactMat->Name = "Interact";
+		//	interactMat->MatShader = unlitShader;
+		//	interactMat->Texture = interactTex;
+		//	interactMat->Shininess = 1.0f;
+		//}
+		//GameObject::Sptr uiCrosshair = scene->CreateGameObject("UI Crosshair");
+		//{
+		//	//uiCrosshair->SetPostion(glm::vec3(-5.0f, 15.0f, -12.0f));
+		//	uiCrosshair->SetScale(glm::vec3(0.002f));
+
+		//	RenderComponent::Sptr renderer = uiCrosshair->Add<RenderComponent>();
+		//	renderer->SetMesh(UIMesh);
+		//	renderer->SetMaterial(crosshairMat);
+
+		//	UIElement::Sptr ui = uiCrosshair->Add<UIElement>();
+		//	ui->posOffset = glm::vec3(0.0f, 0.0f, -0.25f);
+		//}
+
+		//GameObject::Sptr uiOxygenFill = scene->CreateGameObject("Oxygen Fill");
+		//{
+		//	//uiCrosshair->SetPostion(glm::vec3(-5.0f, 15.0f, -12.0f));
+		//	uiOxygenFill->SetScale(glm::vec3(0.015f));
+		//	RenderComponent::Sptr renderer = uiOxygenFill->Add<RenderComponent>();
+		//	renderer->SetMesh(UIMesh);
+		//	renderer->SetMaterial(oxygenFillMat);
+
+		//	UIElement::Sptr ui = uiOxygenFill->Add<UIElement>();
+		//	ui->posOffset = glm::vec3(0.38f, -0.17f, -0.25001f);
+		//}
+
+		//GameObject::Sptr uiOxygenMeter = scene->CreateGameObject("Oxygen Meter");
+		//{
+		//	//uiCrosshair->SetPostion(glm::vec3(-5.0f, 15.0f, -12.0f));
+		//	uiOxygenMeter->SetScale(glm::vec3(0.015f));
+		//	RenderComponent::Sptr renderer = uiOxygenMeter->Add<RenderComponent>();
+		//	renderer->SetMesh(UIMesh);
+		//	renderer->SetMaterial(oxygenMeterMat);
+
+		//	UIElement::Sptr ui = uiOxygenMeter->Add<UIElement>();
+		//	ui->posOffset = glm::vec3(0.38f, -0.17f, -0.25f);
+		//}
+
+		//GameObject::Sptr uiInteract = scene->CreateGameObject("E Interact");
+		//{
+		//	//uiCrosshair->SetPostion(glm::vec3(-5.0f, 15.0f, -12.0f));
+		//	uiInteract->SetScale(glm::vec3(0.008f));
+
+		//	RenderComponent::Sptr renderer = uiInteract->Add<RenderComponent>();
+		//	renderer->SetMesh(UIMesh);
+		//	renderer->SetMaterial(interactMat);
+
+		//	UIElement::Sptr ui = uiInteract->Add<UIElement>();
+		//	ui->posOffset = glm::vec3(0.0f, -0.03f, -0.25f);
+		//}
+
 		/*Texture2D::Sptr    whiteTex = ResourceManager::CreateAsset<Texture2D>("textures/white.jpg");
 
 
@@ -650,6 +742,7 @@ int main() {
 		Texture2D::Sptr    crosshairTex = ResourceManager::CreateAsset<Texture2D>("ui/Crosshair.png");
 		Texture2D::Sptr    oxygenMeterTex = ResourceManager::CreateAsset<Texture2D>("ui/OxygenMeter.png");
 		Texture2D::Sptr    oxygenFillTex = ResourceManager::CreateAsset<Texture2D>("ui/OxygenFill.png");
+		Texture2D::Sptr    interactTex = ResourceManager::CreateAsset<Texture2D>("ui/E.png");
 
 
 		// Here we'll load in the cubemap, as well as a special shader to handle drawing the skybox
@@ -761,6 +854,14 @@ int main() {
 			oxygenFillMat->MatShader = unlitShader;
 			oxygenFillMat->Texture = oxygenFillTex;
 			oxygenFillMat->Shininess = 1.0f;
+		}
+
+		Material::Sptr interactMat = ResourceManager::CreateAsset<Material>();
+		{
+			interactMat->Name = "Interact";
+			interactMat->MatShader = unlitShader;
+			interactMat->Texture = interactTex;
+			interactMat->Shininess = 1.0f;
 		}
 
 		// Create some lights for our scene
@@ -1027,7 +1128,18 @@ int main() {
 			ui->posOffset = glm::vec3(0.38f, -0.17f, -0.25f);
 		}
 
+		GameObject::Sptr uiInteract = scene->CreateGameObject("E Interact");
+		{
+			//uiCrosshair->SetPostion(glm::vec3(-5.0f, 15.0f, -12.0f));
+			uiInteract->SetScale(glm::vec3(0.008f));
 
+			RenderComponent::Sptr renderer = uiInteract->Add<RenderComponent>();
+			renderer->SetMesh(UIMesh);
+			renderer->SetMaterial(interactMat);
+
+			UIElement::Sptr ui = uiInteract->Add<UIElement>();
+			ui->posOffset = glm::vec3(0.0f, -0.03f, -0.25f);
+		}
 		//Generate Nodes
 		//for (int x = -2; x < 8; x++)
 		//{
