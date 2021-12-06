@@ -112,6 +112,7 @@ void InteractSystem::interact() {
 		
 		if (_iskey) {
 			_player->Get<InventorySystem>()->setKey(_requiredKey, true);
+			GetGameObject()->SetPostion(glm::vec3(0,0,-100));
 		}
 
 	}
