@@ -18,8 +18,11 @@ public:
 
 	virtual void Awake() override;
 	virtual void Update(float deltaTime) override;
+	glm::vec3 startingPos = glm::vec3(2.7, -8, 6);
+
 
 public:
+
 	virtual void RenderImGui() override;
 	MAKE_TYPENAME(SimpleCameraControl);
 	virtual nlohmann::json ToJson() const override;
@@ -63,7 +66,6 @@ protected:
 	};
 
 	PlayerState playerState = Idle;
-
 	float sneakSpeed = 4.0f;
 	float walkSpeed = 6.0f;
 	float runSpeed = 8.0f;
