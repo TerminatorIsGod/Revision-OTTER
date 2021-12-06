@@ -352,7 +352,7 @@ int main() {
 
 		ResourceManager::LoadManifest("manifest.json");
 		scene = Scene::Load("demoscene.json");
-		 
+
 		////UI Textures & Mesh
 		//MeshResource::Sptr UIMesh = ResourceManager::CreateAsset<MeshResource>("ui/UIPlane.obj");
 		//Texture2D::Sptr    crosshairTex = ResourceManager::CreateAsset<Texture2D>("ui/Crosshair.png");
@@ -381,7 +381,7 @@ int main() {
 		{
 			// Set position in the scene
 			cock1->SetPostion(glm::vec3(24.831f, 7.802f, -12.0f));
-			cock1->SetRotation(glm::vec3(90,0,0));
+			cock1->SetRotation(glm::vec3(90, 0, 0));
 			// Scale down the plane
 			cock1->SetScale(glm::vec3(0.25f));
 
@@ -664,14 +664,14 @@ int main() {
 
 		MeshResource::Sptr staticCrates = ResourceManager::CreateAsset<MeshResource>("map/assets/Static_Crates.obj");
 
-		 
+
 
 		MeshResource::Sptr mapCollidersMesh = ResourceManager::CreateAsset<MeshResource>("mapColliders.obj");
 		MeshResource::Sptr leaflingMesh = ResourceManager::CreateAsset<MeshResource>("Leafling_Ver3_-_Rigged.obj");
 
 		MeshResource::Sptr navNodeMesh = ResourceManager::CreateAsset<MeshResource>("Puck.obj");
 		MeshResource::Sptr soundRing = ResourceManager::CreateAsset<MeshResource>("soundRing.obj");
-		 
+
 
 		//Textures
 		Texture2D::Sptr    boxTexture = ResourceManager::CreateAsset<Texture2D>("textures/box-diffuse.png");
@@ -682,6 +682,8 @@ int main() {
 		Texture2D::Sptr    leaflingTex = ResourceManager::CreateAsset<Texture2D>("textures/Leafling-texture.png");
 		Texture2D::Sptr    floorTex = ResourceManager::CreateAsset<Texture2D>("map/textures/Floors_Base_color.png");
 		Texture2D::Sptr    floorRoughnessTex = ResourceManager::CreateAsset<Texture2D>("map/textures/Floors_Roughness.png");
+		Texture2D::Sptr    creditsTex = ResourceManager::CreateAsset<Texture2D>("textures/DemoCredits.png");
+
 
 		//UI Textures & Mesh
 		MeshResource::Sptr UIMesh = ResourceManager::CreateAsset<MeshResource>("ui/UIPlane.obj");
@@ -1209,7 +1211,7 @@ int main() {
 			}
 		}
 
-		
+
 		glfwPollEvents();
 		ImGuiHelper::StartFrame();
 

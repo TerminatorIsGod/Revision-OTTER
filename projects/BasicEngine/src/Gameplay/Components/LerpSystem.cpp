@@ -98,7 +98,7 @@ void LerpSystem::Update(float deltaTime) {
 					GetGameObject()->GetScene()->pathManager->Get<pathfindingManager>()->UpdateNbors();
 				}
 				//t = 0;
-			}
+			
 		}
 		else {
 			t += deltaTime;
@@ -112,7 +112,7 @@ void LerpSystem::Update(float deltaTime) {
 					GetGameObject()->GetScene()->pathManager->Get<pathfindingManager>()->UpdateNbors();
 				}
 				//t = 0;
-			}
+			 
 		}
 
 		//t += deltaTime;
