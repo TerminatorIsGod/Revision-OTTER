@@ -402,10 +402,20 @@ int main() {
 
 		Texture2D::Sptr    whiteTex = ResourceManager::CreateAsset<Texture2D>("textures/white.jpg");
 		Texture2D::Sptr    pinkTex = ResourceManager::CreateAsset<Texture2D>("textures/pink.jpg");
+		Texture2D::Sptr    clockTex = ResourceManager::CreateAsset<Texture2D>("textures/sendhelp/Clock_baseColor.png");
+
 		MeshResource::Sptr cockAltMesh = ResourceManager::CreateAsset<MeshResource>("Map/Cockroach.obj");
+		MeshResource::Sptr clock1mesh = ResourceManager::CreateAsset<MeshResource>("Map/Clock.obj");
+		MeshResource::Sptr clock2mesh = ResourceManager::CreateAsset<MeshResource>("Map/M_Hand.obj");
+		MeshResource::Sptr clock3mesh = ResourceManager::CreateAsset<MeshResource>("Map/H_Hand.obj");
 
 		animShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
 			{ ShaderPartType::Vertex, "shaders/vertex_animation.glsl" },
+			{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
+		});
+
+		Shader::Sptr basicShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
+			{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
 			{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
 		});
 
@@ -415,6 +425,14 @@ int main() {
 			WhiteMaterial->MatShader = animShader;
 			WhiteMaterial->Texture = whiteTex;
 			WhiteMaterial->Shininess = 1.0f;
+		}
+
+		Material::Sptr ClockMaterial = ResourceManager::CreateAsset<Material>();
+		{
+			ClockMaterial->Name = "CockClock";
+			ClockMaterial->MatShader = basicShader;
+			ClockMaterial->Texture = clockTex;
+			ClockMaterial->Shininess = 1.0f;
 		}
 
 		GameObject::Sptr cock1 = scene->CreateGameObject("Cockthing");
@@ -432,6 +450,76 @@ int main() {
 
 			//cock1->Add<CurveLerpSystem>();
 		}
+
+		GameObject::Sptr clock1 = scene->CreateGameObject("Clock1");
+		{
+			// Set position in the scene
+			clock1->SetPostion(glm::vec3(0.910f, 86.250f, 9.230f));
+			clock1->SetRotation(glm::vec3(90, 0, 0));
+			// Scale down the plane
+			clock1->SetScale(glm::vec3(1.0f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = clock1->Add<RenderComponent>();
+			renderer->SetMesh(clock1mesh);
+			renderer->SetMaterial(ClockMaterial);
+
+			//cock1->Add<CurveLerpSystem>();
+		}
+
+		GameObject::Sptr clock2 = scene->CreateGameObject("Clock1");
+		{
+			// Set position in the scene
+			clock2->SetPostion(glm::vec3(0.910f, 86.250f, 9.230f));
+			clock2->SetRotation(glm::vec3(90, 0, 0));
+			// Scale down the plane
+			clock2->SetScale(glm::vec3(1.0f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = clock2->Add<RenderComponent>();
+			renderer->SetMesh(clock2mesh);
+			renderer->SetMaterial(ClockMaterial);
+
+			//cock1->Add<CurveLerpSystem>();
+			clock2->Add<LerpSystem>();
+			clock2->Get<LerpSystem>()->tLength = 60;
+			clock2->Get<LerpSystem>()->startx = 90.0f;
+			clock2->Get<LerpSystem>()->starty = 0.0f;
+			clock2->Get<LerpSystem>()->startz = 0.0f;
+			clock2->Get<LerpSystem>()->endx = 90.0f;
+			clock2->Get<LerpSystem>()->endy = 360.0f;
+			clock2->Get<LerpSystem>()->endz = 0.0f;
+			clock2->Add<InteractSystem>();
+			clock2->Get<InteractSystem>()->_interactDistance = 1;
+			//clock2->Get<InteractSystem>()->_lerpS->beginLerp = true;
+		}
+
+		GameObject::Sptr clock3 = scene->CreateGameObject("Clock1");
+		{
+			// Set position in the scene
+			clock3->SetPostion(glm::vec3(0.910f, 86.250f, 9.230f));
+			clock3->SetRotation(glm::vec3(90, 0, 0));
+			// Scale down the plane
+			clock3->SetScale(glm::vec3(1.0f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = clock3->Add<RenderComponent>();
+			renderer->SetMesh(clock3mesh);
+			renderer->SetMaterial(ClockMaterial);
+
+			clock3->Add<LerpSystem>();
+			clock3->Get<LerpSystem>()->tLength = (60 * 60);
+			clock3->Get<LerpSystem>()->startx = 90.0f;
+			clock3->Get<LerpSystem>()->starty = 0.0f;
+			clock3->Get<LerpSystem>()->startz = 0.0f;
+			clock3->Get<LerpSystem>()->endx = 90.0f;
+			clock3->Get<LerpSystem>()->endy = 360.0f;
+			clock3->Get<LerpSystem>()->endz = 0.0f;
+			clock3->Add<InteractSystem>();
+			clock3->Get<InteractSystem>()->_interactDistance = 1;
+			//clock3->Get<InteractSystem>()->_lerpS->beginLerp = true;
+		}
+
 
 		/*GameObject::Sptr leafW1 = scene->CreateGameObject("LeafW1");
 		{
