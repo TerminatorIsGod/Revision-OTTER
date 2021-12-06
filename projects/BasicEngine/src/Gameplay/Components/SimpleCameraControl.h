@@ -66,18 +66,11 @@ protected:
 	};
 
 	PlayerState playerState = Idle;
-<<<<<<< HEAD
 
 	float sneakSpeed = 6.f; //
 	float walkSpeed = 8.f; //2
 	float runSpeed = 10.f; //3
 	float speedScale = 80.f; //scaled with volume of light //50
-=======
-	float sneakSpeed = 4.0f;
-	float walkSpeed = 6.0f;
-	float runSpeed = 8.0f;
-	float speedScale = 500.0f;
->>>>>>> main
 
 	float idleTimerDefault = 2.0f;
 	float idleTimer = idleTimerDefault;
