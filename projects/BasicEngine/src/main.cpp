@@ -282,6 +282,7 @@ void createMapAsset(MeshResource::Sptr mesh, Material::Sptr material, std::strin
 
 
 Shader::Sptr animShader;
+float delt;
 
 int main() {
 	Logger::Init(); // We'll borrow the logger from the toolkit, but we need to initialize it
@@ -341,18 +342,58 @@ int main() {
 	glCullFace(GL_BACK);
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
-
-	Shader::Sptr animationShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
-		{ ShaderPartType::Vertex, "shaders/vertex_animation_shader.glsl" },
-		{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
-	});
-
 	bool loadScene = true;
 	// For now we can use a toggle to generate our scene vs load from file
 	if (loadScene) {
 
 		ResourceManager::LoadManifest("manifest.json");
 		scene = Scene::Load("demoscene.json");
+
+		Texture2D::Sptr    whiteTex = ResourceManager::CreateAsset<Texture2D>("textures/white.jpg");
+		Texture2D::Sptr    pinkTex = ResourceManager::CreateAsset<Texture2D>("textures/pink.jpg");
+		MeshResource::Sptr cockAltMesh = ResourceManager::CreateAsset<MeshResource>("Map/Cockroach.obj");
+
+		animShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
+			{ ShaderPartType::Vertex, "shaders/vertex_animation.glsl" },
+			{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
+		});
+
+		Material::Sptr WhiteMaterial = ResourceManager::CreateAsset<Material>();
+		{
+			WhiteMaterial->Name = "White";
+			WhiteMaterial->MatShader = animShader;
+			WhiteMaterial->Texture = whiteTex;
+			WhiteMaterial->Shininess = 1.0f;
+		}
+
+		GameObject::Sptr cock1 = scene->CreateGameObject("Cockthing");
+		{
+			// Set position in the scene
+			cock1->SetPostion(glm::vec3(24.831f, 7.802f, -12.0f));
+			cock1->SetRotation(glm::vec3(90,0,0));
+			// Scale down the plane
+			cock1->SetScale(glm::vec3(0.25f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = cock1->Add<RenderComponent>();
+			renderer->SetMesh(cockAltMesh);
+			renderer->SetMaterial(WhiteMaterial);
+
+			//cock1->Add<CurveLerpSystem>();
+		}
+
+		/*GameObject::Sptr leafW1 = scene->CreateGameObject("LeafW1");
+		{
+			// Set position in the scene
+			leafW1->SetPostion(glm::vec3(0.0f, 0.0f, 2.0f));
+			// Scale down the plane
+			leafW1->SetScale(glm::vec3(1.0f));
+
+			// Create and attach a render component
+			RenderComponent::Sptr renderer = leafW1->Add<RenderComponent>();
+			renderer->SetMesh(leafW1Mesh);
+			renderer->SetMaterial(WhiteMaterial);
+		}*/
 
 		/*Texture2D::Sptr    whiteTex = ResourceManager::CreateAsset<Texture2D>("textures/white.jpg");
 
@@ -1002,10 +1043,7 @@ int main() {
 	MenuSystem::Sptr menuSys;
 	Camera::Sptr camera;
 
-
-
-	animShader = animationShader;
-	float delt = 0;
+	//float delt = 0;
 
 	///// Game loop /////
 	while (!glfwWindowShouldClose(window)) {
@@ -1067,7 +1105,7 @@ int main() {
 			}
 		}
 
-
+		
 		glfwPollEvents();
 		ImGuiHelper::StartFrame();
 
@@ -1075,7 +1113,15 @@ int main() {
 		double thisFrame = glfwGetTime();
 		float dt = static_cast<float>(thisFrame - lastFrame);
 		delt += dt;
-
+		if (delt > 1)
+			delt = 0;
+		float randomNum;
+		randomNum = ((float)(rand() % 2) + 1);
+		animShader->SetUniform("randomx", randomNum);
+		randomNum = ((float)(rand() % 2) + 1);
+		animShader->SetUniform("randomy", randomNum);
+		randomNum = ((float)(rand() % 2) + 1);
+		animShader->SetUniform("randomz", randomNum);
 		animShader->SetUniform("delta", delt);
 
 		// Showcasing how to use the imGui library!
