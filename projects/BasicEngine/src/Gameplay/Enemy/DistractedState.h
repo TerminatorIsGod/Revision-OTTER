@@ -15,8 +15,8 @@ public:
 
 	void SwitchIndex(Enemy* e, float deltaTime);
 	static EnemyState& getInstance();
-	const float distractedBackupTimerMax = 20.0f;
-	const float distractedTimerMax = 2.5f;
+	const float distractedBackupTimerMax = 15.0f; //20
+	const float distractedTimerMax = 4.f; //3
 
 private:
 	//Singleton Stuff

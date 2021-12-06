@@ -117,8 +117,8 @@ void SimpleCameraControl::Movement(float deltaTime)
 
 		if (glfwGetKey(_window, GLFW_KEY_LEFT_SHIFT))
 			playerState = Run;
-		else if (glfwGetKey(_window, GLFW_KEY_LEFT_CONTROL))
-			playerState = Sneak;
+		//else if (glfwGetKey(_window, GLFW_KEY_LEFT_CONTROL))
+			//playerState = Sneak;
 		else
 			playerState = Walk;
 
@@ -294,9 +294,9 @@ void SimpleCameraControl::IdleState(float deltaTime)
 	}
 
 	if (inhale)
-		soundEmmiter->targetVolume = 4.5f;
+		soundEmmiter->targetVolume = 7.f;
 	else
-		soundEmmiter->targetVolume = 5.5f;
+		soundEmmiter->targetVolume = 8.f;
 }
 
 void SimpleCameraControl::SneakState(float deltaTime)
@@ -319,7 +319,7 @@ void SimpleCameraControl::RunState(float deltaTime)
 
 void SimpleCameraControl::SetSpeed(float newSpeed)
 {
-	_moveSpeeds = glm::vec3(newSpeed * 300.0f);
+	_moveSpeeds = glm::vec3(newSpeed * speedScale);
 }
 
 

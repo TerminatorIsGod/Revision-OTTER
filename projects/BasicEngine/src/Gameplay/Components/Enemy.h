@@ -40,8 +40,8 @@ public:
 	float maxRotationSpeed = 0.1f;
 	glm::vec3 desiredVelocity;
 	glm::vec3 targetRotation;
-	float avoidanceRange = 2.5f; //3
-	float avoidanceStrength = 1000.0f; //2000 //1500 seems okay
+	float avoidanceRange = 2.5f; //2.5 is good
+	float avoidanceStrength = 1000.0f; //1000 is good, 750 seemed to increase odds of enemies getting stuck
 
 	//Listening Light
 	float listeningRadius = 3.0f;
@@ -64,11 +64,11 @@ public:
 	const float agroStationaryListeningRadius = 6.0f;
 	const float patrolListeningRadius = 4.0f; // this is normmally 4
 
-	float AgroVelocity = 8.0f;
-	float IdleVelocity = 4.0f;
+	float AgroVelocity = 11.0f;
+	float IdleVelocity = 6.0f;
 
 	float agroTimer = 5.0f;
-	float distractedBackupTimer = 20.0f, distractedTimer = 5.0f;
+	float distractedBackupTimer = 20.0f, distractedTimer = 5.0f; //dont use this
 
 	EnemyState* currentState;
 

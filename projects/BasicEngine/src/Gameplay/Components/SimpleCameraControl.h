@@ -64,23 +64,23 @@ protected:
 
 	PlayerState playerState = Idle;
 
-	float sneakSpeed = 4.0f;
-	float walkSpeed = 6.0f;
-	float runSpeed = 8.0f;
-	float speedScale = 500.0f;
+	float sneakSpeed = 6.f; //
+	float walkSpeed = 8.f; //2
+	float runSpeed = 10.f; //3
+	float speedScale = 80.f; //scaled with volume of light //50
 
 	float idleTimerDefault = 2.0f;
 	float idleTimer = idleTimerDefault;
 	bool inhale = false;
 
 	//Oxygen Stuff
-	float chokeVol = 12.0f;
-	float replenishVol = 10.0f;
-	float oxygenMeterMax = 120.0f;
+	float chokeVol = 15.0f;
+	float replenishVol = 12.0f;
+	float oxygenMeterMax = 150.0f;
 	float oxygenMeter = oxygenMeterMax;
 	float oxygenDecaySpeed = 1.0f;
-	float oxygenReplenishSpeed = 4.0f;
-	float breathHoldDecaySpeed = 2.0f;
+	float oxygenReplenishSpeed = 5.f;
+	float breathHoldDecaySpeed = 2.5f;
 
 	SoundEmmiter::Sptr soundEmmiter;
 };
