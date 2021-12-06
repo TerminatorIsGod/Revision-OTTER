@@ -66,7 +66,7 @@ protected:
 	};
 
 	PlayerState playerState = Idle;
-
+	 
 	float sneakSpeed = 6.f; //
 	float walkSpeed = 8.f; //2
 	float runSpeed = 10.f; //3

@@ -89,7 +89,7 @@ void SimpleCameraControl::Movement(float deltaTime)
 
 		_currentRot.x += static_cast<float>(xoffset) * _mouseSensitivity.x;  //_currentRot.x += static_cast<float>(currentMousePos.x - _prevMousePos.x) * _mouseSensitivity.x;
 		_currentRot.y += static_cast<float>(yoffset) * _mouseSensitivity.y;
-		std::cout << "\nY Rot: " << _currentRot.y;
+		//std::cout << "\nY Rot: " << _currentRot.y;
 		if (_currentRot.y > 172)
 			_currentRot.y = 172;
 		else if (_currentRot.y < 4.5)
