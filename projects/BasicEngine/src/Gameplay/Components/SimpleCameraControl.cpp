@@ -38,9 +38,10 @@ void SimpleCameraControl::Update(float deltaTime)
 	Movement(deltaTime);
 	SwitchState(deltaTime);
 	OxygenSystem(deltaTime);
+	MoveUI(deltaTime);
+
 	Interact(deltaTime);
 
-	MoveUI(deltaTime);
 }
 
 void SimpleCameraControl::Movement(float deltaTime)
@@ -257,8 +258,9 @@ void SimpleCameraControl::Interact(float deltaTime)
 		if (objectPos != _scene->soundEmmiters[i]->GetPosition())
 			continue;
 
-		//Ui Prompt here
-		std::cout << "\n[E] Interact";
+		//UI Prompt
+		ShowInteract();
+	
 		if (glfwGetKey(_window, GLFW_KEY_E))
 		{
 			if (!isEPressed)
@@ -280,8 +282,9 @@ void SimpleCameraControl::Interact(float deltaTime)
 		if (objectPos != _scene->ladders[i]->GetPosition())
 			continue;
 
-		//Ui Prompt here
-		std::cout << "\n[E] Interact";
+		//Ui Prompt
+		ShowInteract();
+
 		if (glfwGetKey(_window, GLFW_KEY_E))
 		{
 			if (!isEPressed)
@@ -293,6 +296,19 @@ void SimpleCameraControl::Interact(float deltaTime)
 		else
 			isEPressed = false;
 	}
+}
+
+void SimpleCameraControl::ShowInteract()
+{
+	glm::vec3 offset = _scene->uiImages[3]->Get<UIElement>()->posOffset;
+	glm::vec4 newOffset = glm::vec4(offset, 1.0);
+	glm::vec3 localOffset = glm::vec3(newOffset * GetGameObject()->GetInverseTransform());
+
+	glm::vec3 offset2 = glm::vec3(0, 0, 780);
+	glm::vec4 newOffset2 = glm::vec4(offset2, 1.0);
+	glm::vec3 localOffset2 = glm::vec3(newOffset2 * GetGameObject()->GetInverseTransform());
+	_scene->uiImages[3]->SetPostion(GetGameObject()->GetPosition() + localOffset);
+	_scene->uiImages[3]->LookAt(GetGameObject()->GetPosition() + localOffset2);
 }
 
 void SimpleCameraControl::IdleState(float deltaTime)
@@ -346,6 +362,15 @@ void SimpleCameraControl::MoveUI(float deltaTime)
 	glm::vec3 viewDir = currentRot * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f);
 	for (int i = 0; i < _scene->uiImages.size(); i++)
 	{
+
+		if (i == 3)
+		{
+			glm::vec3 offset = glm::vec3(5.0f);
+			glm::vec4 newOffset = glm::vec4(offset, 1.0);
+			glm::vec3 localOffset = glm::vec3(newOffset * GetGameObject()->GetInverseTransform());
+			_scene->uiImages[i]->SetPostion(GetGameObject()->GetPosition() + localOffset);
+			continue;
+		}
 
 		glm::vec3 offset = _scene->uiImages[i]->Get<UIElement>()->posOffset;
 		glm::vec4 newOffset = glm::vec4(offset, 1.0);

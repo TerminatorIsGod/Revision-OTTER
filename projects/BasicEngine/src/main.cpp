@@ -367,7 +367,7 @@ int main() {
 
 		ResourceManager::LoadManifest("manifest.json");
 		scene = Scene::Load("demoscene.json");
-
+		 
 		////UI Textures & Mesh
 		//MeshResource::Sptr UIMesh = ResourceManager::CreateAsset<MeshResource>("ui/UIPlane.obj");
 		//Texture2D::Sptr    crosshairTex = ResourceManager::CreateAsset<Texture2D>("ui/Crosshair.png");
@@ -386,7 +386,7 @@ int main() {
 		//	crosshairMat->Texture = crosshairTex;
 		//	crosshairMat->Shininess = 1.0f;
 		//}
-
+		 
 		//Material::Sptr oxygenMeterMat = ResourceManager::CreateAsset<Material>();
 		//{
 		//	oxygenMeterMat->Name = "Oxygen Meter";
@@ -394,7 +394,7 @@ int main() {
 		//	oxygenMeterMat->Texture = oxygenMeterTex;
 		//	oxygenMeterMat->Shininess = 1.0f;
 		//}
-
+		 
 		//Material::Sptr oxygenFillMat = ResourceManager::CreateAsset<Material>();
 		//{
 		//	oxygenFillMat->Name = "Oxygen Fill";
@@ -402,7 +402,7 @@ int main() {
 		//	oxygenFillMat->Texture = oxygenFillTex;
 		//	oxygenFillMat->Shininess = 1.0f;
 		//}
-
+		 
 		//Material::Sptr interactMat = ResourceManager::CreateAsset<Material>();
 		//{
 		//	interactMat->Name = "Interact";
@@ -418,7 +418,7 @@ int main() {
 		//	RenderComponent::Sptr renderer = uiCrosshair->Add<RenderComponent>();
 		//	renderer->SetMesh(UIMesh);
 		//	renderer->SetMaterial(crosshairMat);
-
+		  
 		//	UIElement::Sptr ui = uiCrosshair->Add<UIElement>();
 		//	ui->posOffset = glm::vec3(0.0f, 0.0f, -0.25f);
 		//}
@@ -718,14 +718,14 @@ int main() {
 
 		MeshResource::Sptr staticCrates = ResourceManager::CreateAsset<MeshResource>("map/assets/Static_Crates.obj");
 
-
+		 
 
 		MeshResource::Sptr mapCollidersMesh = ResourceManager::CreateAsset<MeshResource>("mapColliders.obj");
 		MeshResource::Sptr leaflingMesh = ResourceManager::CreateAsset<MeshResource>("Leafling_Ver3_-_Rigged.obj");
 
 		MeshResource::Sptr navNodeMesh = ResourceManager::CreateAsset<MeshResource>("Puck.obj");
 		MeshResource::Sptr soundRing = ResourceManager::CreateAsset<MeshResource>("soundRing.obj");
-
+		 
 
 		//Textures
 		Texture2D::Sptr    boxTexture = ResourceManager::CreateAsset<Texture2D>("textures/box-diffuse.png");

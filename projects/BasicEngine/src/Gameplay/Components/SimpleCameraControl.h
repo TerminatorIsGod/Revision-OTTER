@@ -29,7 +29,7 @@ public:
 	void OxygenSystem(float deltaTime);
 	void SwitchState(float deltaTime);
 	void Interact(float deltaTime);
-
+	void ShowInteract();
 
 	void IdleState(float deltaTime);
 	void SneakState(float deltaTime);
