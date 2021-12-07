@@ -1287,6 +1287,23 @@ int main() {
 
 	//float delt = 0;
 
+	if (!scene->IsPlaying) {
+		editorSceneState = scene->ToJson();
+	}
+
+	// Toggle state
+	scene->IsPlaying = !scene->IsPlaying;
+
+	// If we've gone from playing to not playing, restore the state from before we started playing
+	if (!scene->IsPlaying) {
+		scene = nullptr;
+		// We reload to scene from our cached state
+		scene = Scene::FromJson(editorSceneState);
+		// Don't forget to reset the scene's window and wake all the objects!
+		scene->Window = window;
+		scene->Awake();
+	}
+
 	///// Game loop /////
 	while (!glfwWindowShouldClose(window)) {
 
@@ -1367,6 +1384,8 @@ int main() {
 
 		// Showcasing how to use the imGui library!
 		bool isDebugWindowOpen = false;//ImGui::Begin("Debugging");
+		//scene->IsPlaying = true;
+		//editorSceneState = scene->ToJson();
 
 		if (isDebugWindowOpen)
 			ImGuiHelper::StartFrame();
@@ -1515,20 +1534,20 @@ int main() {
 
 			// Draw the object
 			renderable->GetMesh()->Draw();
-		});
+			});
 
 		// Use our cubemap to draw our skybox
 		scene->DrawSkybox();
 
 
 		// End our ImGui window
-		if(isDebugWindowOpen)
+		if (isDebugWindowOpen)
 			ImGui::End();
 
 		VertexArrayObject::Unbind();
 
 		lastFrame = thisFrame;
-		if(isDebugWindowOpen)
+		if (isDebugWindowOpen)
 			ImGuiHelper::EndFrame();
 		glfwSwapBuffers(window);
 	}
