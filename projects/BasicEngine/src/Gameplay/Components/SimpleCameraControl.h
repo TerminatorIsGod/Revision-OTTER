@@ -49,7 +49,7 @@ protected:
 	glm::vec2 _currentRot;
 	glm::quat currentRot;
 
-	bool _allowMouse = false;
+	bool _allowMouse = true;
 	bool isJPressed = false;
 	bool isEPressed = false;
 	bool freecam = false;

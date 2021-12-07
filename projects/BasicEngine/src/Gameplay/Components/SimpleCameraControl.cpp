@@ -57,17 +57,17 @@ void SimpleCameraControl::Movement(float deltaTime)
 	_isMousePressed = false;
 }*/
 
-	if (glfwGetKey(_window, GLFW_KEY_M) && _allowMouse == false) {
-		_isMousePressed = !_isMousePressed;
-		_allowMouse = true;
-		std::cout << "Chaning mouse tyhing\n";
+//if (glfwGetKey(_window, GLFW_KEY_M) && _allowMouse == false) {
+//	_isMousePressed = !_isMousePressed;
+//	_allowMouse = true;
+//	std::cout << "Chaning mouse tyhing\n";
 
-	}
-	else if (!glfwGetKey(_window, GLFW_KEY_M)) {
-		_allowMouse = false;
-	}
+//}
+//else if (!glfwGetKey(_window, GLFW_KEY_M)) {
+//	_allowMouse = false;
+//}
 
-	//_isMousePressed = true;
+	_isMousePressed = true;
 
 	if (_isMousePressed) {
 		glm::dvec2 currentMousePos;
