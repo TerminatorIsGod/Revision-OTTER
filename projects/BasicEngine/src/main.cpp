@@ -1349,7 +1349,6 @@ int main() {
 
 
 		glfwPollEvents();
-		ImGuiHelper::StartFrame();
 
 		// Calculate the time since our last frame (dt)
 		double thisFrame = glfwGetTime();
@@ -1367,8 +1366,10 @@ int main() {
 		animShader->SetUniform("delta", delt);
 
 		// Showcasing how to use the imGui library!
-		//bool isDebugWindowOpen = ImGui::Begin("Debugging");
-		bool isDebugWindowOpen = ImGui::Begin("Debugging");
+		bool isDebugWindowOpen = false;//ImGui::Begin("Debugging");
+
+		if (isDebugWindowOpen)
+			ImGuiHelper::StartFrame();
 
 		if (isDebugWindowOpen) {
 			// Draws a button to control whether or not the game is currently playing
@@ -1514,19 +1515,21 @@ int main() {
 
 			// Draw the object
 			renderable->GetMesh()->Draw();
-			});
+		});
 
 		// Use our cubemap to draw our skybox
 		scene->DrawSkybox();
 
 
 		// End our ImGui window
-		ImGui::End();
+		if(isDebugWindowOpen)
+			ImGui::End();
 
 		VertexArrayObject::Unbind();
 
 		lastFrame = thisFrame;
-		ImGuiHelper::EndFrame();
+		if(isDebugWindowOpen)
+			ImGuiHelper::EndFrame();
 		glfwSwapBuffers(window);
 	}
 
