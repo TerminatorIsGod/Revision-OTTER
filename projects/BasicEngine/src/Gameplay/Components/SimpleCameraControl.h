@@ -66,7 +66,7 @@ protected:
 	};
 
 	PlayerState playerState = Idle;
-	 
+
 	float sneakSpeed = 6.f; //
 	float walkSpeed = 8.f; //2
 	float runSpeed = 10.f; //3
@@ -79,7 +79,7 @@ protected:
 	//Oxygen Stuff
 	float chokeVol = 15.0f;
 	float replenishVol = 12.0f;
-	float oxygenMeterMax = 150.0f;
+	float oxygenMeterMax = 120.0f;
 	float oxygenMeter = oxygenMeterMax;
 	float oxygenDecaySpeed = 1.0f;
 	float oxygenReplenishSpeed = 5.f;
