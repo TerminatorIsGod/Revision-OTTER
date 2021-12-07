@@ -9,6 +9,11 @@ namespace Gameplay {
 			{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
 			{ ShaderPartType::Fragment, "shaders/frag_blinn_phong_textured.glsl" }
 		});
+		// This shader handles our basic materials without reflections (cause they expensive)
+		Shader::Sptr unlitShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
+			{ ShaderPartType::Vertex, "shaders/vertex_shader.glsl" },
+			{ ShaderPartType::Fragment, "shaders/frag_textured_unlit.glsl" }
+		});
 
 		Texture2D::Sptr    mainmenuTex = ResourceManager::CreateAsset<Texture2D>("textures/Resonace_title_screen.png");
 		Texture2D::Sptr    pausemenuTex = ResourceManager::CreateAsset<Texture2D>("textures/Pause_screen.png");
@@ -16,7 +21,7 @@ namespace Gameplay {
 		Gameplay::Material::Sptr mainmenuMaterial = ResourceManager::CreateAsset<Gameplay::Material>();
 		{
 			mainmenuMaterial->Name = "MainMenu";
-			mainmenuMaterial->MatShader = basicShader;
+			mainmenuMaterial->MatShader = unlitShader;
 			mainmenuMaterial->Texture = mainmenuTex;
 			mainmenuMaterial->Shininess = 0.1f;
 		}
@@ -24,7 +29,7 @@ namespace Gameplay {
 		Gameplay::Material::Sptr pausemenuMaterial = ResourceManager::CreateAsset<Gameplay::Material>();
 		{
 			pausemenuMaterial->Name = "PauseMenu";
-			pausemenuMaterial->MatShader = basicShader;
+			pausemenuMaterial->MatShader = unlitShader;
 			pausemenuMaterial->Texture = pausemenuTex;
 			pausemenuMaterial->Shininess = 0.1f;
 		}
@@ -43,7 +48,7 @@ namespace Gameplay {
 			}
 			else {
 				createCamera();
-			}			
+			}
 			GetGameObject()->Get<RenderComponent>()->SetMaterial(mainmenuMaterial);
 		}
 		else {
@@ -78,7 +83,7 @@ namespace Gameplay {
 	MenuSystem::MenuSystem() :
 		IComponent()//,
 		//_keys(0)
-	{ 
+	{
 	}
 
 	MenuSystem::~MenuSystem() = default;

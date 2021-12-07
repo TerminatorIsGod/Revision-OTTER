@@ -1367,7 +1367,9 @@ int main() {
 		animShader->SetUniform("delta", delt);
 
 		// Showcasing how to use the imGui library!
+		//bool isDebugWindowOpen = ImGui::Begin("Debugging");
 		bool isDebugWindowOpen = ImGui::Begin("Debugging");
+
 		if (isDebugWindowOpen) {
 			// Draws a button to control whether or not the game is currently playing
 			static char buttonLabel[64];

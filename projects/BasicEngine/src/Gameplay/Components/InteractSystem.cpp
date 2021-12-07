@@ -41,7 +41,7 @@ InteractSystem::InteractSystem() :
 
 InteractSystem::~InteractSystem() = default;
 
-InteractSystem::Sptr InteractSystem::FromJson(const nlohmann::json& blob) {
+InteractSystem::Sptr InteractSystem::FromJson(const nlohmann::json & blob) {
 	InteractSystem::Sptr result = std::make_shared<InteractSystem>();
 	result->_distance = blob["Distance"];
 	result->_interactDistance = blob["InteractDistance"];
@@ -61,7 +61,7 @@ void InteractSystem::Update(float deltaTime) {
 
 	if (_distance <= _interactDistance) {
 		if (_iskey || _player->Get<InventorySystem>()->getKey(_requiredKey))
-		_player->Get<SimpleCameraControl>()->ShowInteract();
+			_player->Get<SimpleCameraControl>()->ShowInteract();
 	}
 
 	if ((glfwGetKey(_window, GLFW_KEY_E) == GLFW_PRESS) && (isKeyPressed == false)) {
@@ -78,9 +78,9 @@ void InteractSystem::Update(float deltaTime) {
 			interact();
 			isOpen = !isOpen;
 		}
-					
+
 	}
-	else if((glfwGetKey(_window, GLFW_KEY_E) != GLFW_PRESS) && (isKeyPressed == true)){
+	else if ((glfwGetKey(_window, GLFW_KEY_E) != GLFW_PRESS) && (isKeyPressed == true)) {
 		isKeyPressed = false;
 	}
 
@@ -109,10 +109,10 @@ void InteractSystem::interact() {
 			_lerpS->lerpReverse = isOpen;
 			_lerpS->beginLerp = true;
 		}
-		
+
 		if (_iskey) {
 			_player->Get<InventorySystem>()->setKey(_requiredKey, true);
-			GetGameObject()->SetPostion(glm::vec3(0,0,-100));
+			GetGameObject()->SetPostion(glm::vec3(0, 0, -100000));
 		}
 
 	}
