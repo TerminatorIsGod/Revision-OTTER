@@ -9,23 +9,18 @@ void UIElement::Awake() {
 
 void UIElement::RenderImGui() {
 	LABEL_LEFT(ImGui::DragFloat3, "Position Offset", &posOffset.x);
-	LABEL_LEFT(ImGui::DragFloat3, "Rotation Offset", &rotOffset.x);
-
 }
 
 nlohmann::json UIElement::ToJson() const {
 	return {
 		{ "posOffset", GlmToJson(posOffset) },
-		{ "rotOffset", GlmToJson(rotOffset) }
-
-		//Eventually make it so it saves the nodes's nbor list. You could do this by saving the index of the node's nbors in the navNodes list.
+		{ "uiType", GlmToJson(glm::vec3(uiType)) }
 	};
 }
 
 UIElement::Sptr UIElement::FromJson(const nlohmann::json& data) {
 	UIElement::Sptr result = std::make_shared<UIElement>();
 	result->posOffset = ParseJsonVec3(data["posOffset"]);
-	result->rotOffset = ParseJsonVec3(data["rotOffset"]);
-
+	result->uiType = (Type)ParseJsonVec3(data["uiType"]).x;
 	return result;
 }

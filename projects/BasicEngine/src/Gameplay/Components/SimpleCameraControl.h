@@ -33,7 +33,13 @@ public:
 	void SwitchState(float deltaTime);
 	void Interact(float deltaTime);
 	void ShowInteract();
+	void ShowOpen();
+	void ShowClose();
+	void ShowClimb();
+	void ShowPickup();
+	void ShowDistract();
 
+	bool promptShown = false;
 	void IdleState(float deltaTime);
 	void SneakState(float deltaTime);
 	void WalkState(float deltaTime);

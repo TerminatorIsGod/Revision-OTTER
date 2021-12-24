@@ -111,19 +111,12 @@ void pathfindingManager::UpdateNbors()
 			if (dirLength <= nborRange && dirLength > 0)
 			{
 				btCollisionWorld::ClosestRayResultCallback hit(ToBt(navNodes[i]->GetPosition()), ToBt(navNodes[x]->GetPosition()));
-				//std::cout << "\n " << navNodes[i]->Name << " to " << navNodes[x]->Name;
-				//std::cout << "\n " << dirLength;
-
 				scene->GetPhysicsWorld()->rayTest(ToBt(navNodes[i]->GetPosition()), ToBt(navNodes[x]->GetPosition()), hit);
 
-				//Theres no layer mask like in unity, so enemies being in the way could intefere with raycasts!
 				if (!hit.hasHit())
-				{
 					navNodes[i]->Get<NavNode>()->neighbors.push_back(navNodes[x]);
-				}
 			}
 		}
-		//std::cout << "\n " << navNodes[i]->Get<NavNode>()->neighbors.size();
 	}
 	std::cout << "\n\nNavNode Neighbors Updated.";
 }
@@ -277,6 +270,7 @@ std::vector<glm::vec3> pathfindingManager::requestPath(glm::vec3 startPos, glm::
 	float distance;
 	pathSet.clear();
 
+	//Find Start Node
 	for (int i = 0; i < navNodes.size(); i++)
 	{
 		distance = glm::sqrt(SquareMagnitude(navNodes[i]->GetPosition() - startPos));
@@ -289,10 +283,10 @@ std::vector<glm::vec3> pathfindingManager::requestPath(glm::vec3 startPos, glm::
 	startNode = minNode;
 
 	minDistance = 999999;
+	//Find End Node
 	for (int i = 0; i < navNodes.size(); i++)
 	{
 		distance = glm::sqrt(SquareMagnitude(navNodes[i]->GetPosition() - targetPos));
-
 		if (navNodes[i] == startNode)
 			continue;
 

@@ -36,10 +36,6 @@ void SoundEmmiter::Update(float deltaTime)
 
 	scene->Lights[soundLight].Range = volume * volume * -1.20f;
 	scene->Lights[soundLight].Position = GetGameObject()->GetPosition();
-	//std::cout << "\nLight:" << " | " << soundLight->Position.y;
-
-	//soundLight->Color = colour;
-
 }
 
 void SoundEmmiter::RenderImGui() {

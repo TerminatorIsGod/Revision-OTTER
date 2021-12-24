@@ -57,17 +57,16 @@ void SimpleCameraControl::Movement(float deltaTime)
 	_isMousePressed = false;
 }*/
 
-//if (glfwGetKey(_window, GLFW_KEY_M) && _allowMouse == false) {
-//	_isMousePressed = !_isMousePressed;
-//	_allowMouse = true;
-//	std::cout << "Chaning mouse tyhing\n";
+	if (glfwGetKey(_window, GLFW_KEY_M) && _allowMouse == false) {
+		_isMousePressed = !_isMousePressed;
+		_allowMouse = true;
+		std::cout << "Chaning mouse tyhing\n";
+	}
+	else if (!glfwGetKey(_window, GLFW_KEY_M)) {
+		_allowMouse = false;
+	}
 
-//}
-//else if (!glfwGetKey(_window, GLFW_KEY_M)) {
-//	_allowMouse = false;
-//}
-
-	_isMousePressed = true;
+	//_isMousePressed = true;
 
 	if (_isMousePressed) {
 		glm::dvec2 currentMousePos;
@@ -139,7 +138,7 @@ void SimpleCameraControl::Movement(float deltaTime)
 			soundEmmiter->lerpSpeed = soundEmmiter->attackSpeed;
 		}
 
-		/*if (glfwGetKey(_window, GLFW_KEY_J))
+		if (glfwGetKey(_window, GLFW_KEY_J))
 		{
 			if (!isJPressed)
 			{
@@ -151,7 +150,7 @@ void SimpleCameraControl::Movement(float deltaTime)
 			}
 		}
 		else
-			isJPressed = false;*/
+			isJPressed = false;
 
 		input *= deltaTime;
 
@@ -260,19 +259,18 @@ void SimpleCameraControl::Interact(float deltaTime)
 	if (!hit.hasHit())
 		return;
 
-
 	glm::vec3 objectPos = ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
-
 	if (objectPos == glm::vec3(0))
 		return;
 
+	//Distraction Items
 	for (int i = 0; i < _scene->soundEmmiters.size(); i++)
 	{
 		if (objectPos != _scene->soundEmmiters[i]->GetPosition())
 			continue;
 
 		//UI Prompt
-		ShowInteract();
+		ShowDistract();
 
 		if (glfwGetKey(_window, GLFW_KEY_E))
 		{
@@ -286,17 +284,16 @@ void SimpleCameraControl::Interact(float deltaTime)
 		}
 		else
 			isEPressed = false;
-
-		//std::cout << "\nObject Pos: " << _scene->soundEmmiters[i]->GetPosition().y;
 	}
 
+	//Ladder
 	for (int i = 0; i < _scene->ladders.size(); i++)
 	{
 		if (objectPos != _scene->ladders[i]->GetPosition())
 			continue;
 
 		//Ui Prompt
-		ShowInteract();
+		ShowClimb();
 
 		if (glfwGetKey(_window, GLFW_KEY_E))
 		{
@@ -322,6 +319,77 @@ void SimpleCameraControl::ShowInteract()
 	glm::vec3 localOffset2 = glm::vec3(newOffset2 * GetGameObject()->GetInverseTransform());
 	_scene->uiImages[3]->SetPostion(GetGameObject()->GetPosition() + localOffset);
 	_scene->uiImages[3]->LookAt(GetGameObject()->GetPosition() + localOffset2);
+
+	promptShown = true;
+}
+
+void SimpleCameraControl::ShowOpen()
+{
+	glm::vec3 offset = _scene->uiImages[4]->Get<UIElement>()->posOffset;
+	glm::vec4 newOffset = glm::vec4(offset, 1.0);
+	glm::vec3 localOffset = glm::vec3(newOffset * GetGameObject()->GetInverseTransform());
+
+	glm::vec3 offset2 = glm::vec3(0, 0, 780);
+	glm::vec4 newOffset2 = glm::vec4(offset2, 1.0);
+	glm::vec3 localOffset2 = glm::vec3(newOffset2 * GetGameObject()->GetInverseTransform());
+	_scene->uiImages[4]->SetPostion(GetGameObject()->GetPosition() + localOffset);
+	_scene->uiImages[4]->LookAt(GetGameObject()->GetPosition() + localOffset2);
+}
+
+void SimpleCameraControl::ShowClose()
+{
+	glm::vec3 offset = _scene->uiImages[5]->Get<UIElement>()->posOffset;
+	glm::vec4 newOffset = glm::vec4(offset, 1.0);
+	glm::vec3 localOffset = glm::vec3(newOffset * GetGameObject()->GetInverseTransform());
+
+	glm::vec3 offset2 = glm::vec3(0, 0, 780);
+	glm::vec4 newOffset2 = glm::vec4(offset2, 1.0);
+	glm::vec3 localOffset2 = glm::vec3(newOffset2 * GetGameObject()->GetInverseTransform());
+	_scene->uiImages[5]->SetPostion(GetGameObject()->GetPosition() + localOffset);
+	_scene->uiImages[5]->LookAt(GetGameObject()->GetPosition() + localOffset2);
+}
+
+void SimpleCameraControl::ShowClimb()
+{
+	glm::vec3 offset = _scene->uiImages[6]->Get<UIElement>()->posOffset;
+	glm::vec4 newOffset = glm::vec4(offset, 1.0);
+	glm::vec3 localOffset = glm::vec3(newOffset * GetGameObject()->GetInverseTransform());
+
+	glm::vec3 offset2 = glm::vec3(0, 0, 780);
+	glm::vec4 newOffset2 = glm::vec4(offset2, 1.0);
+	glm::vec3 localOffset2 = glm::vec3(newOffset2 * GetGameObject()->GetInverseTransform());
+	_scene->uiImages[6]->SetPostion(GetGameObject()->GetPosition() + localOffset);
+	_scene->uiImages[6]->LookAt(GetGameObject()->GetPosition() + localOffset2);
+
+	promptShown = true;
+}
+
+void SimpleCameraControl::ShowPickup()
+{
+	glm::vec3 offset = _scene->uiImages[7]->Get<UIElement>()->posOffset;
+	glm::vec4 newOffset = glm::vec4(offset, 1.0);
+	glm::vec3 localOffset = glm::vec3(newOffset * GetGameObject()->GetInverseTransform());
+
+	glm::vec3 offset2 = glm::vec3(0, 0, 780);
+	glm::vec4 newOffset2 = glm::vec4(offset2, 1.0);
+	glm::vec3 localOffset2 = glm::vec3(newOffset2 * GetGameObject()->GetInverseTransform());
+	_scene->uiImages[7]->SetPostion(GetGameObject()->GetPosition() + localOffset);
+	_scene->uiImages[7]->LookAt(GetGameObject()->GetPosition() + localOffset2);
+}
+
+void SimpleCameraControl::ShowDistract()
+{
+	glm::vec3 offset = _scene->uiImages[8]->Get<UIElement>()->posOffset;
+	glm::vec4 newOffset = glm::vec4(offset, 1.0);
+	glm::vec3 localOffset = glm::vec3(newOffset * GetGameObject()->GetInverseTransform());
+
+	glm::vec3 offset2 = glm::vec3(0, 0, 780);
+	glm::vec4 newOffset2 = glm::vec4(offset2, 1.0);
+	glm::vec3 localOffset2 = glm::vec3(newOffset2 * GetGameObject()->GetInverseTransform());
+	_scene->uiImages[8]->SetPostion(GetGameObject()->GetPosition() + localOffset);
+	_scene->uiImages[8]->LookAt(GetGameObject()->GetPosition() + localOffset2);
+
+	promptShown = true;
 }
 
 void SimpleCameraControl::IdleState(float deltaTime)
@@ -375,8 +443,8 @@ void SimpleCameraControl::MoveUI(float deltaTime)
 	glm::vec3 viewDir = currentRot * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f);
 	for (int i = 0; i < _scene->uiImages.size(); i++)
 	{
-
-		if (i == 3)
+		//Interact Prompt
+		if (_scene->uiImages[i]->Get<UIElement>()->uiType == _scene->uiImages[i]->Get<UIElement>()->Prompt)
 		{
 			glm::vec3 offset = glm::vec3(5.0f);
 			glm::vec4 newOffset = glm::vec4(offset, 1.0);
@@ -395,7 +463,8 @@ void SimpleCameraControl::MoveUI(float deltaTime)
 		_scene->uiImages[i]->SetPostion(GetGameObject()->GetPosition() + localOffset);
 		_scene->uiImages[i]->LookAt(GetGameObject()->GetPosition() + localOffset2);
 
-		if (i == 1)
+		//Oxygen Meter
+		if (_scene->uiImages[i]->Get<UIElement>()->uiType == _scene->uiImages[i]->Get<UIElement>()->Meter)
 		{
 			float meterPercent = oxygenMeter / oxygenMeterMax;
 			_scene->uiImages[i]->SetScale(glm::vec3(_scene->uiImages[i]->GetScale().x, 0.015f * meterPercent, _scene->uiImages[i]->GetScale().z));
@@ -407,6 +476,7 @@ void SimpleCameraControl::MoveUI(float deltaTime)
 		}
 	}
 
+	promptShown = false;
 }
 
 

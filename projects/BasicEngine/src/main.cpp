@@ -1287,22 +1287,22 @@ int main() {
 
 	//float delt = 0;
 
-	if (!scene->IsPlaying) {
-		editorSceneState = scene->ToJson();
-	}
+	//if (!scene->IsPlaying) {
+	//	editorSceneState = scene->ToJson();
+	//}
 
-	// Toggle state
-	scene->IsPlaying = !scene->IsPlaying;
+	//// Toggle state
+	//scene->IsPlaying = !scene->IsPlaying;
 
-	// If we've gone from playing to not playing, restore the state from before we started playing
-	if (!scene->IsPlaying) {
-		scene = nullptr;
-		// We reload to scene from our cached state
-		scene = Scene::FromJson(editorSceneState);
-		// Don't forget to reset the scene's window and wake all the objects!
-		scene->Window = window;
-		scene->Awake();
-	}
+	//// If we've gone from playing to not playing, restore the state from before we started playing
+	//if (!scene->IsPlaying) {
+	//	scene = nullptr;
+	//	// We reload to scene from our cached state
+	//	scene = Scene::FromJson(editorSceneState);
+	//	// Don't forget to reset the scene's window and wake all the objects!
+	//	scene->Window = window;
+	//	scene->Awake();
+	//}
 
 	///// Game loop /////
 	while (!glfwWindowShouldClose(window)) {
@@ -1382,13 +1382,14 @@ int main() {
 		animShader->SetUniform("randomz", randomNum);
 		animShader->SetUniform("delta", delt);
 
-		// Showcasing how to use the imGui library!
-		bool isDebugWindowOpen = false;//ImGui::Begin("Debugging");
-		//scene->IsPlaying = true;
-		//editorSceneState = scene->ToJson();
+		bool isDebugWindowOpen = true;
 
 		if (isDebugWindowOpen)
+		{
 			ImGuiHelper::StartFrame();
+			ImGui::Begin("Debugging");
+		}
+
 
 		if (isDebugWindowOpen) {
 			// Draws a button to control whether or not the game is currently playing

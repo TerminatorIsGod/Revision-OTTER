@@ -59,9 +59,13 @@ void InteractSystem::Update(float deltaTime) {
 	glm::vec3 tpos = ppos - opos;
 	_distance = sqrt(pow(tpos.x, 2) + pow(tpos.y, 2) + pow(tpos.z, 2));
 
-	if (_distance <= _interactDistance) {
-		if (_iskey || _player->Get<InventorySystem>()->getKey(_requiredKey))
-			_player->Get<SimpleCameraControl>()->ShowInteract();
+	if (_distance <= _interactDistance && !_player->Get<SimpleCameraControl>()->promptShown) {
+		if (_iskey)
+			_player->Get<SimpleCameraControl>()->ShowPickup();
+		else if (_player->Get<InventorySystem>()->getKey(_requiredKey) && !isOpen)
+			_player->Get<SimpleCameraControl>()->ShowOpen();
+		else if (_player->Get<InventorySystem>()->getKey(_requiredKey) && isOpen)
+			_player->Get<SimpleCameraControl>()->ShowClose();
 	}
 
 	if ((glfwGetKey(_window, GLFW_KEY_E) == GLFW_PRESS) && (isKeyPressed == false)) {

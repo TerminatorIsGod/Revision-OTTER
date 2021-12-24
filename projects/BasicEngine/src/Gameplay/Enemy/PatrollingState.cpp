@@ -99,12 +99,15 @@ void SwitchIndex(Enemy* e)
 
 void PatrollingState::Pathfind(Enemy* e, float deltaTime)
 {
+	//If the enemy has no patrol points, just stay where you are.
 	if (e->patrolPoints.size() < 1)
 	{
 		e->target = e->startPos;
 		return;
 	}
 
+	//If the enemy has a direct line of sight to a patrol point, 
+	// just steer toward it directly, no need for pathfinding
 	glm::vec3 enemyPos = e->GetGameObject()->GetPosition();
 	glm::vec3 patrolPos = e->patrolPoints[e->pIndex];
 
@@ -122,17 +125,19 @@ void PatrollingState::Pathfind(Enemy* e, float deltaTime)
 		}
 	}
 
+	//Request a path, and set indexes
 	if (!e->pathRequested)
 	{
 		e->pathSet.clear();
 		std::cout << "\nCalculated Path to: " << patrolPos.x << ", " << patrolPos.y << ", " << patrolPos.z;
 		e->pathSet = e->pathManager->Get<pathfindingManager>()->requestPath(enemyPos, patrolPos);
+
+		//This if statement runs if a path could not be found
 		if (e->pathSet[0] == glm::vec3(69420.0f, 69420.0f, 69420.0f))
 		{
 			//Hmm I wonder what should happen if the enemy can't find a path while patrolling? 
-			//This isn't something that should ever happen in this state tho.
-			//Oooh it should prob just switch index and go towards the next patrol point
-			//e->pathSet[0] = e->GetGameObject()->GetPosition();
+			//This isn't something that should ever happen in this state, or level though.
+			//It should prob just switch index and go towards the next patrol point
 		}
 
 		e->nIndex = e->pathSet.size() - 1;
@@ -143,9 +148,6 @@ void PatrollingState::Pathfind(Enemy* e, float deltaTime)
 
 	if (glm::length(e->GetGameObject()->GetPosition() - e->pathSet[e->nIndex]) < 3.f) //3
 		SwitchIndex(e);
-
-
-
 }
 
 void PatrollingState::Move(Enemy* e, float  deltaTime)

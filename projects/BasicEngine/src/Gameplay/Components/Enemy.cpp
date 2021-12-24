@@ -127,8 +127,9 @@ void Enemy::Move(float deltaTime)
 
 	AvoidanceReflect(body->GetLinearVelocity(), deltaTime);
 
-	glm::vec3 leftDir = glm::vec3(-body->GetLinearVelocity().y + body->GetLinearVelocity().x, body->GetLinearVelocity().x + body->GetLinearVelocity().y, 0.0f) / 2.0f;
-	glm::vec3 rightDir = glm::vec3(body->GetLinearVelocity().y + body->GetLinearVelocity().x, -body->GetLinearVelocity().x + body->GetLinearVelocity().y, 0.0f) / 2.0f;
+	glm::vec3 vel = body->GetLinearVelocity();
+	glm::vec3 leftDir = glm::vec3(-vel.y + vel.x, vel.x + vel.y, 0.0f) / 2.0f;
+	glm::vec3 rightDir = glm::vec3(vel.y + vel.x, -vel.x + vel.y, 0.0f) / 2.0f;
 
 	Avoidance(leftDir, deltaTime);
 	Avoidance(rightDir, deltaTime);
@@ -140,9 +141,6 @@ void Enemy::Move(float deltaTime)
 
 void Enemy::Steering(float deltaTime)
 {
-
-	//glm::vec3 dir = player->GetPosition() - GetGameObject()->GetPosition();
-	//body->SetLinearVelocity(dir);
 	glm::vec3 newVel = body->GetLinearVelocity();
 
 	if (target == glm::vec3(0.0f))
@@ -151,18 +149,15 @@ void Enemy::Steering(float deltaTime)
 	//Steering
 	desiredVelocity = target - GetGameObject()->GetPosition();
 	targetRotation = desiredVelocity - body->GetLinearVelocity();
-
 	if (Magnitude(targetRotation) > maxRotationSpeed)
 		targetRotation = (targetRotation / Magnitude(targetRotation)) * maxRotationSpeed;
 
 	//Velocity
 	newVel += targetRotation * 100.0f * deltaTime;
-
 	if (Magnitude(newVel) > maxVelocity)
 		newVel = glm::normalize(newVel) * maxVelocity;
 
 	body->SetLinearVelocity(glm::vec3(newVel.x, newVel.y, 0.0f));
-
 }
 
 void Enemy::AvoidanceReflect(glm::vec3 dir, float deltaTime)
@@ -176,7 +171,6 @@ void Enemy::AvoidanceReflect(glm::vec3 dir, float deltaTime)
 	//Perform Raycast
 	const glm::vec3 startPoint = GetGameObject()->GetPosition();
 	const glm::vec3 endPoint = GetGameObject()->GetPosition() + (dir * avoidanceRange);
-
 	btCollisionWorld::ClosestRayResultCallback hit(ToBt(startPoint), ToBt(endPoint));
 	scene->GetPhysicsWorld()->rayTest(ToBt(startPoint), ToBt(endPoint), hit);
 

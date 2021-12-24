@@ -14,7 +14,15 @@ public:
 	UIElement() = default;
 
 	glm::vec3 posOffset = glm::vec3(0.0f);
-	glm::vec3 rotOffset = glm::vec3(0.0f);
+
+	enum Type
+	{
+		General,
+		Prompt,
+		Meter
+	};
+
+	Type uiType = General;
 
 	virtual void Awake() override;
 
