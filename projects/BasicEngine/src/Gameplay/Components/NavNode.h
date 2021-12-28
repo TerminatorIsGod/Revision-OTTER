@@ -17,7 +17,10 @@ public:
 	~NavNode()
 	{
 		neighbors.clear();
+		parent = nullptr;
+		//scene = nullptr;
 	}
+
 	//Properties
 	std::vector <GameObject::Sptr> neighbors;
 	GameObject::Sptr parent = NULL; //Check if parent index > 0 to see if a node actually has a parent or not

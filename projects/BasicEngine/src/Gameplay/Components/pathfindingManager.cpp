@@ -22,11 +22,6 @@ void pathfindingManager::Awake() {
 
 pathfindingManager::~pathfindingManager()
 {
-	for (int i = 0; i < navNodes.size(); i++)
-	{
-		navNodes[i]->Get<NavNode>()->neighbors.clear();
-	}
-
 	navNodes.clear();
 	openSet.clear();
 	closedSet.clear();

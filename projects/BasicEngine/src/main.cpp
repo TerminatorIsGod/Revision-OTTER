@@ -355,7 +355,7 @@ int main() {
 	// For now we can use a toggle to generate our scene vs load from file
 	if (loadScene) {
 
-		ResourceManager::LoadManifest("manifest.json");
+		ResourceManager::LoadManifest("demoscene-manifest.json");
 		scene = Scene::Load("demoscene.json");
 
 		////UI Textures & Mesh
