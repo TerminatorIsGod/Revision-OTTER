@@ -280,7 +280,6 @@ void createMapAsset(MeshResource::Sptr mesh, Material::Sptr material, std::strin
 	}
 }
 
-
 Shader::Sptr animShader;
 float delt;
 
