@@ -81,7 +81,9 @@ public:
 
 	void MoveListeningLight();
 	void Move(float deltaTime);
+	void MoveChase(float deltaTime);
 	void Steering(float deltaTime);
+	void Chase(float deltaTime);
 	void AvoidanceReflect(glm::vec3 dir, float deltaTime);
 	void Avoidance(glm::vec3 dir, float deltaTime);
 	void IsPlayerDead();

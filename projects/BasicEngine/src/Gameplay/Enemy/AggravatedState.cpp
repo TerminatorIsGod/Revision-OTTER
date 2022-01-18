@@ -125,6 +125,6 @@ void AggravatedState::Pathfind(Enemy* e, float deltaTime)
 
 void AggravatedState::Move(Enemy* e, float  deltaTime)
 {
-	e->Move(deltaTime);
+	e->MoveChase(deltaTime);
 }
 

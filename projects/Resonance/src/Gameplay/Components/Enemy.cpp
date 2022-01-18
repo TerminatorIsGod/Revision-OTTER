@@ -147,6 +147,24 @@ void Enemy::Move(float deltaTime)
 	GetGameObject()->LookAt(GetGameObject()->GetPosition() + body->GetLinearVelocity() * -1.0f);
 }
 
+void Enemy::MoveChase(float deltaTime)
+{
+	Chase(deltaTime);
+
+	AvoidanceReflect(body->GetLinearVelocity(), deltaTime);
+
+	glm::vec3 vel = body->GetLinearVelocity();
+	glm::vec3 leftDir = glm::vec3(-vel.y + vel.x, vel.x + vel.y, 0.0f) / 2.0f;
+	glm::vec3 rightDir = glm::vec3(vel.y + vel.x, -vel.x + vel.y, 0.0f) / 2.0f;
+
+	Avoidance(leftDir, deltaTime);
+	Avoidance(rightDir, deltaTime);
+	Avoidance(glm::vec3(-body->GetLinearVelocity().y, body->GetLinearVelocity().x, 0.0f), deltaTime);
+	Avoidance(glm::vec3(body->GetLinearVelocity().y, -body->GetLinearVelocity().x, 0.0f), deltaTime);
+
+	GetGameObject()->LookAt(GetGameObject()->GetPosition() + body->GetLinearVelocity() * -1.0f);
+}
+
 void Enemy::Steering(float deltaTime)
 {
 	glm::vec3 newVel = body->GetLinearVelocity();
@@ -164,6 +182,26 @@ void Enemy::Steering(float deltaTime)
 	newVel += targetRotation * 100.0f * deltaTime;
 	if (Magnitude(newVel) > maxVelocity)
 		newVel = glm::normalize(newVel) * maxVelocity;
+
+	body->SetLinearVelocity(glm::vec3(newVel.x, newVel.y, 0.0f));
+}
+
+void Enemy::Chase(float deltaTime)
+{
+	glm::vec3 newVel = body->GetLinearVelocity();
+
+	if (target == glm::vec3(0.0f))
+		return;
+
+	//Steering
+	desiredVelocity = target - GetGameObject()->GetPosition();
+	targetRotation = desiredVelocity - body->GetLinearVelocity();
+	if (Magnitude(targetRotation) > maxRotationSpeed)
+		targetRotation = (targetRotation / Magnitude(targetRotation));
+
+	//Velocity
+	newVel += targetRotation * 100.0f * deltaTime;
+	newVel = glm::normalize(newVel) * maxVelocity;
 
 	body->SetLinearVelocity(glm::vec3(newVel.x, newVel.y, 0.0f));
 }

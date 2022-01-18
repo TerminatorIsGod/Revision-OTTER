@@ -34,7 +34,7 @@ namespace Gameplay {
 	public:
 		typedef std::shared_ptr<Scene> Sptr;
 
-		static const int MAX_LIGHTS = 10;
+		static const int MAX_LIGHTS = 15;
 		static const int LIGHT_UBO_BINDING = 2;
 
 		// Stores all the lights in our scene

@@ -10,7 +10,7 @@
 */
 
 // The maximum number of lights the shader supports, increasing this will lower performance!
-#define MAX_LIGHTS 10
+#define MAX_LIGHTS 15
 
 // Represents a single light source
 struct Light {
@@ -100,8 +100,9 @@ vec3 CalcAllLightContribution(vec3 worldPos, vec3 normal, vec3 camPos, float shi
 	for(int ix = 0; ix < AmbientColAndNumLights.w && ix < MAX_LIGHTS; ix++) {
 		// Additive lighting model
 		lightAccumulation += CalcPointLightContribution(worldPos, normal, viewDir, Lights[ix], shininess);
-		//lightAccumulation = round(lightAccumulation); //Cool toon like thing
 	}
 
+	//return round(lightAccumulation) * lightAccumulation; //Cool noir toon lighting thing
 	return lightAccumulation;
+
 }

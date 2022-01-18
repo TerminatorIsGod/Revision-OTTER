@@ -2,17 +2,17 @@
 #include <iostream> 
 
 #include <glad/glad.h> 
-#include <GLFW/glfw3.h> 
+#include <GLFW/glfw3.h>  
 
 #include <filesystem>
 #include <json.hpp>
-#include <fstream>
+#include <fstream>  
 #include <sstream> 
 #include <typeindex>
 #include <optional>
-#include <string>
+#include <string>  
 
-// GLM math library
+// GLM math library  
 #include <GLM/glm.hpp>
 #include <GLM/gtc/matrix_transform.hpp>
 #include <GLM/gtc/type_ptr.hpp> 
@@ -75,19 +75,19 @@
 #include "Graphics/DebugDraw.h"
 #include "Gameplay/Components/TriggerVolumeEnterBehaviour.h"
 #include "Gameplay/Components/SimpleCameraControl.h"
-#include "Gameplay/Physics/Colliders/CylinderCollider.h"
+#include "Gameplay/Physics/Colliders/CylinderCollider.h" 
 
 #include <Gameplay/Components/MenuSystem.h>
-#include <Gameplay/Components/InteractSystem.h>
-#include <Gameplay/Components/LerpSystem.h>
+#include <Gameplay/Components/InteractSystem.h> 
+#include <Gameplay/Components/LerpSystem.h> 
 #include <Gameplay/Components/CurveLerpSystem.h>
-// GUI
+// GUI 
 #include "Gameplay/Components/GUI/RectTransform.h"
 #include "Gameplay/Components/GUI/GuiPanel.h"
 #include "Gameplay/Components/GUI/GuiText.h"
 #include "Gameplay/InputEngine.h"
 
-//#define LOG_GL_NOTIFICATIONS 
+//#define LOG_GL_NOTIFICATIONS  
 
 /*
 	Handles debug messages from OpenGL
