@@ -7,7 +7,7 @@ Aedyn Timm-Bradley - 100787911 <br>
 Christian Moncada - 100787491
 <br> <br>
 Elevator Pitch: <br> 
-    -Video: [URL] <br>
+    -Video: https://youtu.be/Sh47UtDTcSs <br>
     -Slides: https://docs.google.com/presentation/d/17DnpO5wR66XLewXQn0y2eI7gnq56UJrB1LeRU-RwuWk/edit?usp=sharing <br>
 <br>
 Trello: https://trello.com/b/8EALSXMv
