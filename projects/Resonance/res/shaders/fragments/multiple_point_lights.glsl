@@ -102,7 +102,7 @@ vec3 CalcAllLightContribution(vec3 worldPos, vec3 normal, vec3 camPos, float shi
 		lightAccumulation += CalcPointLightContribution(worldPos, normal, viewDir, Lights[ix], shininess);
 	}
 
-	//return round(lightAccumulation) * lightAccumulation; //Cool noir toon lighting thing
-	return lightAccumulation;
+	return round(lightAccumulation) * lightAccumulation; //Cool noir toon lighting thing
+	//return lightAccumulation; 
 
 }

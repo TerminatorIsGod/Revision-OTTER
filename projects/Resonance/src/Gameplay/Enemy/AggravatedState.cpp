@@ -51,8 +51,13 @@ void AggravatedState::Listen(Enemy* e, float deltaTime)
 	if (dist >= totalRadius)
 		return;
 
-	if (dist < 7.0f)
-		e->player->SetPostion(e->player->Get<SimpleCameraControl>()->startingPos);
+	if (dist < 7.0f) //Kill player
+	{
+		e->player->Get<SimpleCameraControl>()->ShowGameOver();
+		e->GetGameObject()->GetScene()->requestSceneReload = true;
+		e->scene->IsPlaying = false;
+	}
+	//e->player->SetPostion(e->player->Get<SimpleCameraControl>()->startingPos);
 
 	//Raycasting toward heard sound to determine state change
 	btCollisionWorld::ClosestRayResultCallback hit(ToBt(e->GetGameObject()->GetPosition()), ToBt(e->player->GetPosition()));

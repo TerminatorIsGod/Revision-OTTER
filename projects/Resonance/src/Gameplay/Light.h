@@ -19,7 +19,7 @@ namespace Gameplay {
 		/// The approximate range of our light in world units (meters)
 		/// </summary>
 		float Range = 4.0f;
-
+		bool isGenerated = false;
 		/// <summary>
 		/// Loads a light from a JSON blob
 		/// </summary>

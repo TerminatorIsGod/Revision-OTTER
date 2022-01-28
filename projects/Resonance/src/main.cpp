@@ -147,7 +147,7 @@ void GlfwWindowResizedCallback(GLFWwindow* window, int width, int height) {
 	GuiBatcher::SetWindowSize({ width, height });
 }
 
-/// <summary>
+/// <summary> 
 /// Handles intializing GLFW, should be called before initGLAD, but after Logger::Init()
 /// Also handles creating the GLFW window
 /// </summary>
@@ -186,7 +186,7 @@ bool initGLAD() {
 	return true;
 }
 
-/// <summary>
+/// <summary> 
 /// Draws a widget for saving or loading our scene
 /// </summary>
 /// <param name="scene">Reference to scene pointer</param>
@@ -260,7 +260,7 @@ void DrawMaterialsWindow() {
 
 /// <summary> 
 /// handles creating or loading the scene
-/// </summary>  
+/// </summary>   
 void CreateScene() {
 	bool loadScene = true;
 	// For now we can use a toggle to generate our scene vs load from file
@@ -918,6 +918,16 @@ int main() {
 				isGameStarted = true;
 				isGamePaused = false;
 			}
+		}
+
+		if (scene->requestSceneReload && glfwGetKey(window, GLFW_KEY_E)) {
+			scene = nullptr;
+			// We reload to scene from our cached state
+			scene = Scene::FromJson(editorSceneState);
+			// Don't forget to reset the scene's window and wake all the objects!
+			scene->Window = window;
+			scene->Awake();
+			scene->IsPlaying = true;
 		}
 
 		glfwPollEvents();

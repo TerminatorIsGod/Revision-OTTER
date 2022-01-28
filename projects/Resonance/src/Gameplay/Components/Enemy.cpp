@@ -28,10 +28,14 @@ void Enemy::Awake()
 	body->SetAngularDamping(100.0f);
 	//body->SetLinearDamping(0.2f);
 	GetGameObject()->SetPostion(startPos);
+
 	scene->Lights.push_back(Light());
 	soundLight = scene->Lights.size() - 1;
+	scene->Lights[soundLight].isGenerated = true;
+
 	scene->Lights[soundLight].Range = -listeningRadius * 8.0f;;
 	scene->Lights[soundLight].Color = blue;
+
 	player = scene->MainCamera->GetGameObject();
 	pathManager = scene->pathManager;
 	//patrolPoints.push_back(glm::vec3(20));

@@ -38,6 +38,7 @@ public:
 	void ShowClimb();
 	void ShowPickup();
 	void ShowDistract();
+	void ShowGameOver();
 
 	bool promptShown = false;
 	void IdleState(float deltaTime);
@@ -59,7 +60,7 @@ protected:
 	bool isJPressed = false;
 	bool isEPressed = false;
 	bool freecam = false;
-	bool _isMousePressed = false;
+	bool _isMousePressed = true;
 	GLFWwindow* _window;
 	Scene* _scene;
 	//Player State Stuff

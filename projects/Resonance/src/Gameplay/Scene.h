@@ -58,6 +58,7 @@ namespace Gameplay {
 		std::vector<GameObject*> ladders;
 		std::vector<GameObject*> uiImages;
 
+		bool requestSceneReload = false;
 		Scene();
 		~Scene();
 

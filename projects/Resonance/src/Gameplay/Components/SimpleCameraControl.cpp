@@ -17,7 +17,7 @@ SimpleCameraControl::SimpleCameraControl() :
 	_moveSpeeds(glm::vec3(1600.0f)),
 	_shiftMultipler(2.0f),
 	_currentRot(glm::vec2(0.0f)),
-	_isMousePressed(false)
+	_isMousePressed(true)
 { }
 
 SimpleCameraControl::~SimpleCameraControl() = default;
@@ -391,6 +391,23 @@ void SimpleCameraControl::ShowDistract()
 
 	promptShown = true;
 }
+
+void SimpleCameraControl::ShowGameOver()
+{
+	glm::vec3 offset = _scene->uiImages[9]->Get<UIElement>()->posOffset;
+	glm::vec4 newOffset = glm::vec4(offset, 1.0);
+	glm::vec3 localOffset = glm::vec3(newOffset * GetGameObject()->GetInverseTransform());
+
+	glm::vec3 offset2 = glm::vec3(0, 0, 780);
+	glm::vec4 newOffset2 = glm::vec4(offset2, 1.0);
+	glm::vec3 localOffset2 = glm::vec3(newOffset2 * GetGameObject()->GetInverseTransform());
+	_scene->uiImages[9]->SetPostion(GetGameObject()->GetPosition() + localOffset);
+	_scene->uiImages[9]->LookAt(GetGameObject()->GetPosition() + localOffset2);
+
+	promptShown = true;
+}
+
+
 
 void SimpleCameraControl::IdleState(float deltaTime)
 {

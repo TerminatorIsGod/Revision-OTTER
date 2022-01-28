@@ -11,9 +11,9 @@ void SoundEmmiter::Awake()
 
 	scene->Lights.push_back(Light());
 	soundLight = scene->Lights.size() - 1;
-	scene->SetupShaderAndLights();
-
+	scene->Lights[soundLight].isGenerated = true;
 	scene->soundEmmiters.push_back(GetGameObject());
+
 
 	colour = defaultColour;
 	scene->Lights[soundLight].Color = colour;
@@ -22,17 +22,20 @@ void SoundEmmiter::Awake()
 
 void SoundEmmiter::Update(float deltaTime)
 {
-	if (isDecaying)
-	{
-		if (muteAtZero && volume < 0.1f)
-			volume = -1.0f;
-		else
-			Decay(deltaTime);
-	}
-	else
-	{
+	//if (isDecaying)
+	//{
+	//	if (muteAtZero && volume < 0.1f)
+	//		volume = -1.0f;
+	//	else
+	//		Decay(deltaTime);
+	//}
+	//else
+	//{
+	//	Attack(deltaTime);
+	//}
+
+	if (!isDecaying)
 		Attack(deltaTime);
-	}
 
 	scene->Lights[soundLight].Range = volume * volume * -1.20f;
 	scene->Lights[soundLight].Position = GetGameObject()->GetPosition();
@@ -76,6 +79,14 @@ void SoundEmmiter::Attack(float deltaTime)
 {
 	volume = glm::mix(volume, targetVolume, lerpSpeed * deltaTime);
 
-	if (muteAtZero && targetVolume - volume < 1.0f)
+	if (!muteAtZero)
+		return;
+
+	scene->Lights[soundLight].Color = glm::vec3(defaultColour * (1.0f - (volume / targetVolume)));
+
+	if (targetVolume - volume < 0.001f)
+	{
 		isDecaying = true;
+		volume = -1.0;
+	}
 }

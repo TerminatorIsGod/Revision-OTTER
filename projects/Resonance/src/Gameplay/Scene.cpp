@@ -29,7 +29,7 @@ namespace Gameplay {
 		_skyboxMesh(nullptr),
 		_skyboxTexture(nullptr),
 		_skyboxRotation(glm::mat3(1.0f)),
-		_gravity(glm::vec3(0.0f, 0.0f, -9.8f))
+		_gravity(glm::vec3(0.0f, 0.0f, 0.0f))
 	{
 		_lightingUbo = std::make_shared<UniformBuffer<LightingUboStruct>>();
 		_lightingUbo->GetData().AmbientCol = glm::vec3(0.1f);
@@ -292,9 +292,15 @@ namespace Gameplay {
 		// Save lights
 		std::vector<nlohmann::json> lights;
 		lights.resize(Lights.size());
+		int LCount = 0;
 		for (int ix = 0; ix < Lights.size(); ix++) {
-			lights[ix] = Lights[ix].ToJson();
+			if (Lights[ix].isGenerated)
+				continue;
+
+			lights[LCount] = Lights[ix].ToJson();
+			LCount++;
 		}
+		lights.resize(LCount);
 		blob["lights"] = lights;
 
 		// Save camera info
