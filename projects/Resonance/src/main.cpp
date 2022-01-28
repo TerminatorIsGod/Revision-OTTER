@@ -81,7 +81,8 @@
 #include <Gameplay/Components/InteractSystem.h> 
 #include <Gameplay/Components/LerpSystem.h> 
 #include <Gameplay/Components/CurveLerpSystem.h>
-// GUI 
+#include <Gameplay/Components/MenuSystemNewAndImproved.h>
+// GUI
 #include "Gameplay/Components/GUI/RectTransform.h"
 #include "Gameplay/Components/GUI/GuiPanel.h"
 #include "Gameplay/Components/GUI/GuiText.h"
@@ -128,8 +129,8 @@ glm::ivec2 windowSize = glm::ivec2(1920, 1080);
 // The title of our GLFW window
 std::string windowTitle = "Resonance";
 
-bool isGamePaused = true;
-bool isGameStarted = false;
+bool isGamePaused = false;
+bool isGameStarted = true;
 
 // using namespace should generally be avoided, and if used, make sure it's ONLY in cpp files
 using namespace Gameplay;
@@ -265,8 +266,8 @@ void CreateScene() {
 	bool loadScene = true;
 	// For now we can use a toggle to generate our scene vs load from file
 	if (loadScene) {
-		ResourceManager::LoadManifest("level1-manifest.json");
-		scene = Scene::Load("level1.json");
+		ResourceManager::LoadManifest("levelMenu-manifest.json");
+		scene = Scene::Load("levelMenu.json");
 
 		// Call scene awake to start up all of our components
 		scene->Window = window;
@@ -789,6 +790,7 @@ int main() {
 	ComponentManager::RegisterType<LerpSystem>();
 	ComponentManager::RegisterType<SceneSwapSystem>();
 	ComponentManager::RegisterType<CurveLerpSystem>();
+	ComponentManager::RegisterType<MenuSystemNewAndImproved>();
 
 	ComponentManager::RegisterType<RectTransform>();
 	ComponentManager::RegisterType<GuiPanel>();
@@ -872,6 +874,20 @@ int main() {
 		//	menuSys = menuPlane->Get<MenuSystem>();
 		//}
 
+		if (scene->FindObjectByName("PauseScreen") != nullptr) {
+			auto menuobj = scene->FindObjectByName("PauseScreen");
+			auto menusystem = menuobj->Get<MenuSystemNewAndImproved>();
+
+			if (isGamePaused) {
+				menusystem->isToggled = true;
+				menusystem->ToggleMenu();
+			}
+			else {
+				menusystem->isToggled = false;
+				menusystem->ToggleMenu();
+			}
+		}
+
 		////A bunch of checks to make sure it doesn't crash in the case the menus are missing
 
 		//if (scene->FindObjectByName("MenuPlane") != nullptr) {
@@ -914,10 +930,11 @@ int main() {
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-			if (!isGameStarted) {
-				isGameStarted = true;
-				isGamePaused = false;
-			}
+			//if (!isGameStarted) {
+			//	isGameStarted = true;
+			//	isGamePaused = false;
+			//}
+			//swap scenes here
 		}
 
 		if (scene->requestSceneReload && glfwGetKey(window, GLFW_KEY_E)) {
