@@ -259,15 +259,15 @@ void DrawMaterialsWindow() {
 	ImGui::End();
 }
 
-/// <summary> 
+/// <summary>  
 /// handles creating or loading the scene
-/// </summary>   
+/// </summary>    
 void CreateScene() {
 	bool loadScene = true;
 	// For now we can use a toggle to generate our scene vs load from file
 	if (loadScene) {
-		ResourceManager::LoadManifest("levelMenu-manifest.json");
-		scene = Scene::Load("levelMenu.json");
+		ResourceManager::LoadManifest("level1-manifest.json");
+		scene = Scene::Load("level1.json");
 
 		// Call scene awake to start up all of our components
 		scene->Window = window;
