@@ -215,6 +215,20 @@ void Application::_Run()
 			isEscapePressed = false;
 		}
 
+		if (_currentScene->FindObjectByName("PauseScreen") != nullptr) {
+			auto menuobj = _currentScene->FindObjectByName("PauseScreen");
+			auto menusystem = menuobj->Get<MenuSystemNewAndImproved>();
+
+			if (isGamePaused) {
+				menusystem->isToggled = true;
+				menusystem->ToggleMenu();
+			}
+			else {
+				menusystem->isToggled = false;
+				menusystem->ToggleMenu();
+			}
+		}
+
 		// Receive events like input and window position/size changes from GLFW
 		glfwPollEvents();
 
