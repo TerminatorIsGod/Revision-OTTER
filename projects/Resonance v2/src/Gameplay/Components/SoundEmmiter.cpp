@@ -17,7 +17,6 @@ void SoundEmmiter::Awake()
 
 	colour = defaultColour;
 	scene->Lights[soundLight].Color = colour;
-
 }
 
 void SoundEmmiter::Update(float deltaTime)
@@ -38,7 +37,8 @@ void SoundEmmiter::Update(float deltaTime)
 		Attack(deltaTime);
 
 	scene->Lights[soundLight].Range = volume * volume * -1.20f;
-	scene->Lights[soundLight].Position = GetGameObject()->GetPosition();
+	if (!isPlayerLight)
+		scene->Lights[soundLight].Position = GetGameObject()->GetPosition();
 }
 
 void SoundEmmiter::RenderImGui() {
@@ -77,16 +77,31 @@ void SoundEmmiter::Decay(float deltaTime)
 
 void SoundEmmiter::Attack(float deltaTime)
 {
-	volume = glm::mix(volume, targetVolume, lerpSpeed * deltaTime);
+	if (linearLerp)
+	{
+		volume = glm::mix(volume, targetVolume, t);
+		t += deltaTime * (lerpSpeed / 10);
+	}
+	else
+	{
+		volume = glm::mix(volume, targetVolume, lerpSpeed * deltaTime);
+	}
 
 	if (!muteAtZero)
 		return;
 
 	scene->Lights[soundLight].Color = glm::vec3(defaultColour * (1.0f - (volume / targetVolume)));
 
-	if (targetVolume - volume < 0.001f)
+	if (targetVolume - volume < 0.001f || t >= 1.0)
 	{
+		t = 0.0f;
 		isDecaying = true;
 		volume = -1.0;
 	}
+}
+
+void SoundEmmiter::MoveToPlayer()
+{
+	GetGameObject()->SetPostion(scene->MainCamera->GetGameObject()->GetPosition() + soundLightOffset);
+	scene->Lights[soundLight].Position = scene->MainCamera->GetGameObject()->GetPosition() + soundLightOffset;
 }

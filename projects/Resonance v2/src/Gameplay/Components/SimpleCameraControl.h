@@ -48,6 +48,8 @@ public:
 
 	void SetSpeed(float newSpeed);
 	void MoveUI(float deltaTime);
+	SoundEmmiter::Sptr GetRecentEmmiter();
+
 protected:
 	float _shiftMultipler;
 	glm::vec2 _mouseSensitivity;
@@ -92,5 +94,8 @@ protected:
 	float oxygenReplenishSpeed = 5.f;
 	float breathHoldDecaySpeed = 2.5f;
 
-	SoundEmmiter::Sptr soundEmmiter;
+	std::vector<SoundEmmiter::Sptr> playerEmmiters;
+	int playerEmmiterIndex = 0;
+	float playerPulseTimer;
+	int playerEmmiterCount = 3;
 };

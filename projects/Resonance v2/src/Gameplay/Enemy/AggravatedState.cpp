@@ -42,39 +42,43 @@ void AggravatedState::Listen(Enemy* e, float deltaTime)
 	else
 		e->SetState(PatrollingState::getInstance());
 
+	for each (GameObject * s in e->scene->soundEmmiters)
+	{
+		if (!s->Get<SoundEmmiter>()->isPlayerLight)
+			continue;
 
-	//Checking if any sounds are in listening Radius
-	glm::vec3 dir = e->player->GetPosition() - e->GetGameObject()->GetPosition();
-	float dist = glm::length(dir);
-	float totalRadius = e->player->Get<SoundEmmiter>()->volume + e->listeningRadius;
+		//Checking if any sounds are in listening Radius
+		glm::vec3 dir = s->GetPosition() - e->GetGameObject()->GetPosition();
+		float dist = glm::length(dir);
+		float totalRadius = s->Get<SoundEmmiter>()->volume + e->listeningRadius;
 
-	if (dist >= totalRadius)
-		return;
+		if (dist >= totalRadius)
+			continue;
 
-	if (dist < 7.0f) //Kill player
+		//Raycasting toward heard sound to determine state change
+		btCollisionWorld::ClosestRayResultCallback hit(ToBt(e->GetGameObject()->GetPosition()), ToBt(e->player->GetPosition()));
+		e->scene->GetPhysicsWorld()->rayTest(ToBt(e->GetGameObject()->GetPosition()), ToBt(e->player->GetPosition()), hit);
+
+		if (!hit.hasHit())
+			return;
+
+		if (hit.m_collisionObject->isStaticObject())
+			return;
+
+		//std::cout << "\nMADE IT BRU";
+
+		std::cout << "\nIM AGRO AGAIN!!";
+		e->agroTimer = agroTimerMax;
+
+		e->pathRequested = false;
+	}
+
+	if (glm::length(e->player->GetPosition() - e->GetGameObject()->GetPosition()) < 7.0f) //Kill player
 	{
 		e->player->Get<SimpleCameraControl>()->ShowGameOver();
 		e->GetGameObject()->GetScene()->requestSceneReload = true;
 		e->scene->IsPlaying = false;
 	}
-	//e->player->SetPostion(e->player->Get<SimpleCameraControl>()->startingPos);
-
-	//Raycasting toward heard sound to determine state change
-	btCollisionWorld::ClosestRayResultCallback hit(ToBt(e->GetGameObject()->GetPosition()), ToBt(e->player->GetPosition()));
-	e->scene->GetPhysicsWorld()->rayTest(ToBt(e->GetGameObject()->GetPosition()), ToBt(e->player->GetPosition()), hit);
-
-	if (!hit.hasHit())
-		return;
-
-	if (hit.m_collisionObject->isStaticObject())
-		return;
-
-	//std::cout << "\nMADE IT BRU";
-
-	std::cout << "\nIM AGRO AGAIN!!";
-	e->agroTimer = agroTimerMax;
-
-	e->pathRequested = false;
 }
 
 void AggravatedState::SwitchIndex(Enemy* e, float deltaTime)

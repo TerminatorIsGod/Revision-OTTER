@@ -4,6 +4,8 @@
 #include "Utils\GlmBulletConversions.h"
 #include "Gameplay/Enemy/PatrollingState.h"
 #include "Gameplay/Enemy/AggravatedState.h"
+#include "Gameplay/Enemy/AggravatedState.h"
+#include "Gameplay/Components/SimpleCameraControl.h"
 
 
 EnemyState& DistractedState::getInstance()
@@ -83,8 +85,8 @@ void DistractedState::Listen(Enemy* e, float deltaTime)
 		e->pathRequested = false;
 
 		//Determining State Change
-		glm::vec3 objectPos = ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
-		if (objectPos == e->player->GetPosition())
+
+		if (s->Get<SoundEmmiter>() == e->player->Get<SimpleCameraControl>()->GetRecentEmmiter())
 		{
 			std::cout << "\nIM AGRO!!";
 			e->SetState(AggravatedState::getInstance());

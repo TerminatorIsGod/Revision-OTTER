@@ -10,7 +10,7 @@
 */
 
 // The maximum number of lights the shader supports, increasing this will lower performance!
-#define MAX_LIGHTS 15
+#define MAX_LIGHTS 20
 
 // Represents a single light source
 struct Light {
@@ -80,7 +80,7 @@ vec3 CalcPointLightContribution(vec3 worldPos, vec3 normal, vec3 viewDir, Light 
 	// We'll use a modified distance squared attenuation factor to keep it simple
 	// We add the one to prevent divide by zero errors
 	float attenuation = 1.0 / (1.0 + light.ColorAttenuation.w * pow(dist, 2));
-	if (light.ColorAttenuation.w > 0.0)
+	if (light.ColorAttenuation.w >= 0.0)
 	{
 		attenuation = attenuation * attenuation;
 	}

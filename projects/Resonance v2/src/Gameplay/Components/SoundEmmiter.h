@@ -29,13 +29,16 @@ public:
 
 	bool isDecaying = true;
 	bool muteAtZero = false;
+	bool isPlayerLight = false;
+	bool linearLerp = false;
+
 	glm::vec3 defaultColour = glm::vec3(0.03f, 0.03f, 0.03f);
 	glm::vec3 colour = defaultColour;
-
+	float t = 0.0f;
 	//Functions
 	void Decay(float deltaTime);
 	void Attack(float deltaTime);
-
+	void MoveToPlayer();
 	//Generic Functions
 	glm::vec3 speed = glm::vec3(0.0f);
 

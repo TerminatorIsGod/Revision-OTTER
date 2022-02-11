@@ -6,11 +6,14 @@
 #include <Gameplay/Components/InventorySystem.h>
 #include "Gameplay/Components/SimpleCameraControl.h"
 #include "Gameplay/InputEngine.h"
+#include "Application/Application.h"
 
 void InteractSystem::Awake()
 {
 	_player = GetGameObject()->GetScene()->FindObjectByName("Main Camera");
 	_lerpS = GetGameObject()->Get<LerpSystem>();
+	Application& app = Application::Get();
+	_window = app.GetWindow();
 }
 
 void InteractSystem::RenderImGui() {
@@ -69,20 +72,29 @@ void InteractSystem::Update(float deltaTime) {
 			_player->Get<SimpleCameraControl>()->ShowClose();
 	}
 
-	if (InputEngine::GetKeyState(GLFW_KEY_E) == ButtonState::Down) {
-		if (_requiresKey) {
+	if (glfwGetKey(_window, GLFW_KEY_E)) {
+		if (!isKeyPressed)
+		{
+			if (_requiresKey) {
 
-			if (_player->Get<InventorySystem>()->getKey(_requiredKey)) {
+				if (_player->Get<InventorySystem>()->getKey(_requiredKey)) {
+					interact();
+					isOpen = !isOpen;
+				}
+
+			}
+			else {
 				interact();
 				isOpen = !isOpen;
 			}
-
-		}
-		else {
-			interact();
-			isOpen = !isOpen;
+			isKeyPressed = true;
 		}
 	}
+	else
+	{
+		isKeyPressed = false;
+	}
+
 
 }
 

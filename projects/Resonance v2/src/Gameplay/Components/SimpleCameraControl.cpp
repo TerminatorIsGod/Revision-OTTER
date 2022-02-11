@@ -29,9 +29,24 @@ void SimpleCameraControl::Awake() {
 	_window = app.GetWindow();
 	GetGameObject()->SetPostion(startingPos);
 
-	soundEmmiter = GetComponent<SoundEmmiter>();
-	soundEmmiter->isDecaying = false;
-	soundEmmiter->soundLightOffset = glm::vec3(0, 0, -3.0f);
+	for (int i = 0; i < playerEmmiterCount; i++)
+	{
+		GameObject::Sptr soundEmmiter = _scene->CreateGameObject("playerEmmiter");
+		{
+			SoundEmmiter::Sptr emmiter = soundEmmiter->Add<SoundEmmiter>();
+			soundEmmiter->Awake();
+			emmiter->isDecaying = false;
+			emmiter->muteAtZero = true;
+			emmiter->isPlayerLight = true;
+			emmiter->linearLerp = true;
+			//emmiter->soundLightOffset = glm::vec3(0, 0, -4.0f);
+			playerEmmiters.push_back(emmiter);
+		}
+	}
+
+
+
+
 	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
@@ -45,6 +60,18 @@ void SimpleCameraControl::Update(float deltaTime)
 
 	Interact(deltaTime);
 
+	if (playerPulseTimer <= 0.f)
+	{
+		playerPulseTimer = 1.0f;
+
+		if (playerEmmiterIndex < playerEmmiterCount - 1)
+			playerEmmiterIndex++;
+		else
+			playerEmmiterIndex = 0;
+
+		playerEmmiters[playerEmmiterIndex]->isDecaying = false;
+		playerEmmiters[playerEmmiterIndex]->MoveToPlayer();
+	}
 }
 
 void SimpleCameraControl::Movement(float deltaTime)
@@ -137,7 +164,7 @@ void SimpleCameraControl::Movement(float deltaTime)
 		}
 		else
 		{
-			soundEmmiter->lerpSpeed = soundEmmiter->attackSpeed;
+			playerEmmiters[playerEmmiterIndex]->lerpSpeed = playerEmmiters[playerEmmiterIndex]->attackSpeed;
 		}
 
 		if (glfwGetKey(_window, GLFW_KEY_J))
@@ -191,7 +218,7 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 		if (oxygenMeter < oxygenMeterMax)
 		{
 			oxygenMeter += oxygenReplenishSpeed * deltaTime;
-			soundEmmiter->targetVolume = replenishVol;
+			playerEmmiters[playerEmmiterIndex]->targetVolume = replenishVol;
 		}
 		else
 		{
@@ -208,7 +235,7 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 		else
 		{
 			oxygenMeter = 0;
-			soundEmmiter->targetVolume = chokeVol;
+			playerEmmiters[playerEmmiterIndex]->targetVolume = chokeVol;
 		}
 	}
 
@@ -219,7 +246,7 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 		if (oxygenMeter > 0)
 		{
 			oxygenMeter -= breathHoldDecaySpeed * deltaTime;
-			soundEmmiter->targetVolume = 0.0f;
+			playerEmmiters[playerEmmiterIndex]->targetVolume = 0.0f;
 		}
 		else
 		{
@@ -414,11 +441,10 @@ void SimpleCameraControl::ShowGameOver()
 void SimpleCameraControl::IdleState(float deltaTime)
 {
 	SetSpeed(walkSpeed);
-
 	idleTimer -= deltaTime;
 	if (idleTimer <= 0.0f)
 	{
-		soundEmmiter->lerpSpeed = 1.0f;
+		playerEmmiters[playerEmmiterIndex]->lerpSpeed = 1.0f;
 
 		if (inhale)
 			inhale = false;
@@ -429,27 +455,34 @@ void SimpleCameraControl::IdleState(float deltaTime)
 	}
 
 	if (inhale)
-		soundEmmiter->targetVolume = 7.f;
+		playerEmmiters[playerEmmiterIndex]->targetVolume = 7.f;
 	else
-		soundEmmiter->targetVolume = 8.f;
+		playerEmmiters[playerEmmiterIndex]->targetVolume = 8.f;
 }
 
 void SimpleCameraControl::SneakState(float deltaTime)
 {
 	SetSpeed(sneakSpeed);
-	soundEmmiter->targetVolume = sneakSpeed;
+	playerEmmiters[playerEmmiterIndex]->targetVolume = sneakSpeed;
+	playerEmmiters[playerEmmiterIndex]->lerpSpeed = 1.0f;
 }
 
 void SimpleCameraControl::WalkState(float deltaTime)
 {
 	SetSpeed(walkSpeed);
-	soundEmmiter->targetVolume = walkSpeed;
+	playerPulseTimer -= deltaTime * 2.0f;
+
+	playerEmmiters[playerEmmiterIndex]->targetVolume = walkSpeed;
+	playerEmmiters[playerEmmiterIndex]->lerpSpeed = 2.0f;
 }
 
 void SimpleCameraControl::RunState(float deltaTime)
 {
 	SetSpeed(runSpeed);
-	soundEmmiter->targetVolume = runSpeed;
+	playerPulseTimer -= deltaTime * 3.0f;
+
+	playerEmmiters[playerEmmiterIndex]->targetVolume = runSpeed;
+	playerEmmiters[playerEmmiterIndex]->lerpSpeed = 3.0f;
 }
 
 void SimpleCameraControl::SetSpeed(float newSpeed)
@@ -496,6 +529,11 @@ void SimpleCameraControl::MoveUI(float deltaTime)
 	}
 
 	promptShown = false;
+}
+
+SoundEmmiter::Sptr SimpleCameraControl::GetRecentEmmiter()
+{
+	return playerEmmiters[playerEmmiterIndex];
 }
 
 

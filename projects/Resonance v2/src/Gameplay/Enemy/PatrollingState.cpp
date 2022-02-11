@@ -65,12 +65,11 @@ void PatrollingState::Listen(Enemy* e, float deltaTime)
 		e->lastHeardSounds.insert(e->lastHeardSounds.begin(), s);
 		e->lastHeardPositions.insert(e->lastHeardPositions.begin(), s->GetPosition());
 
-		//Determining State Change
-		glm::vec3 objectPos = ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
-		if (objectPos == e->player->GetPosition())
-			e->SetState(AggravatedState::getInstance());
-		else
-			e->SetState(DistractedState::getInstance());
+		////Determining State Change
+		//if (s->Get<SoundEmmiter>()->isPlayerLight)
+		//	e->SetState(AggravatedState::getInstance());
+		//else
+		e->SetState(DistractedState::getInstance());
 
 	}
 }

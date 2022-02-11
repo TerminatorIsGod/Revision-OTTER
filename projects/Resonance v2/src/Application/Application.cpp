@@ -74,7 +74,7 @@
 #include "Layers/ParticleLayer.h"
 
 Application* Application::_singleton = nullptr;
-std::string Application::_applicationName = "INFR-2350U - DEMO";
+std::string Application::_applicationName = "Resonance";
 
 #define DEFAULT_WINDOW_WIDTH 1920
 #define DEFAULT_WINDOW_HEIGHT 1080
