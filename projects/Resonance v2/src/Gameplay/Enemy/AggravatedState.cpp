@@ -59,15 +59,13 @@ void AggravatedState::Listen(Enemy* e, float deltaTime)
 		btCollisionWorld::ClosestRayResultCallback hit(ToBt(e->GetGameObject()->GetPosition()), ToBt(e->player->GetPosition()));
 		e->scene->GetPhysicsWorld()->rayTest(ToBt(e->GetGameObject()->GetPosition()), ToBt(e->player->GetPosition()), hit);
 
-		if (!hit.hasHit())
-			return;
 
-		if (hit.m_collisionObject->isStaticObject())
-			return;
+		if (hit.hasHit() && hit.m_collisionObject->isStaticObject())
+			continue;
 
 		//std::cout << "\nMADE IT BRU";
 
-		std::cout << "\nIM AGRO AGAIN!!";
+		//std::cout << "\nIM AGRO AGAIN!!";
 		e->agroTimer = agroTimerMax;
 
 		e->pathRequested = false;

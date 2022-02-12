@@ -63,10 +63,7 @@ void DistractedState::Listen(Enemy* e, float deltaTime)
 		btCollisionWorld::ClosestRayResultCallback hit(ToBt(e->GetGameObject()->GetPosition()), ToBt(s->GetPosition()));
 		e->scene->GetPhysicsWorld()->rayTest(ToBt(e->GetGameObject()->GetPosition()), ToBt(s->GetPosition()), hit);
 
-		if (!hit.hasHit())
-			continue;
-
-		if (hit.m_collisionObject->isStaticObject())
+		if (hit.hasHit() && hit.m_collisionObject->isStaticObject())
 			continue;
 
 		//Adding the heard sound to our lists (removing them if already there)
@@ -80,7 +77,12 @@ void DistractedState::Listen(Enemy* e, float deltaTime)
 		}
 
 		e->lastHeardSounds.insert(e->lastHeardSounds.begin(), s);
-		e->lastHeardPositions.insert(e->lastHeardPositions.begin(), s->GetPosition());
+
+		if (!s->Get<SoundEmmiter>()->isPlayerLight)
+			e->lastHeardPositions.insert(e->lastHeardPositions.begin(), s->GetPosition());
+		else
+			e->lastHeardPositions.insert(e->lastHeardPositions.begin(), e->player->GetPosition()); //If player's sound, go directly to them instead of their sound
+
 
 		e->pathRequested = false;
 

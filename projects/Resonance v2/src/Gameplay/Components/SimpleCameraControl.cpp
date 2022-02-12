@@ -5,7 +5,7 @@
 
 #include "Gameplay/GameObject.h"
 #include "Gameplay/Scene.h"
-#include "Utils/JsonGlmHelpers.h"
+#include "Utils/JsonGlmHelpers.h" 
 #include "Utils/ImGuiHelper.h"
 #include "Utils\GlmBulletConversions.h"
 #include "Gameplay/Components/Ladder.h"
@@ -39,7 +39,8 @@ void SimpleCameraControl::Awake() {
 			emmiter->muteAtZero = true;
 			emmiter->isPlayerLight = true;
 			emmiter->linearLerp = true;
-			//emmiter->soundLightOffset = glm::vec3(0, 0, -4.0f);
+			emmiter->defaultColour = glm::vec3(0.25, 0.25, 0.25);
+			emmiter->soundLightOffset = glm::vec3(0, 0, -3.0f);
 			playerEmmiters.push_back(emmiter);
 		}
 	}
@@ -64,14 +65,17 @@ void SimpleCameraControl::Update(float deltaTime)
 	{
 		playerPulseTimer = 1.0f;
 
+		playerEmmiters[playerEmmiterIndex]->isDecaying = false;
+		playerEmmiters[playerEmmiterIndex]->MoveToPlayer();
+
 		if (playerEmmiterIndex < playerEmmiterCount - 1)
 			playerEmmiterIndex++;
 		else
 			playerEmmiterIndex = 0;
 
-		playerEmmiters[playerEmmiterIndex]->isDecaying = false;
-		playerEmmiters[playerEmmiterIndex]->MoveToPlayer();
 	}
+
+	//std::cout << "\nPulse Timer: " << playerPulseTimer;
 }
 
 void SimpleCameraControl::Movement(float deltaTime)
@@ -161,6 +165,7 @@ void SimpleCameraControl::Movement(float deltaTime)
 		if (velocityMagnitude < 0.5f)
 		{
 			playerState = Idle;
+
 		}
 		else
 		{
@@ -442,6 +447,9 @@ void SimpleCameraControl::IdleState(float deltaTime)
 {
 	SetSpeed(walkSpeed);
 	idleTimer -= deltaTime;
+	playerPulseTimer = 0.00001f;
+	//playerPulseTimer -= deltaTime * 2.0f;
+
 	if (idleTimer <= 0.0f)
 	{
 		playerEmmiters[playerEmmiterIndex]->lerpSpeed = 1.0f;
@@ -470,19 +478,19 @@ void SimpleCameraControl::SneakState(float deltaTime)
 void SimpleCameraControl::WalkState(float deltaTime)
 {
 	SetSpeed(walkSpeed);
-	playerPulseTimer -= deltaTime * 2.0f;
+	playerPulseTimer -= deltaTime * 1.5f;
 
 	playerEmmiters[playerEmmiterIndex]->targetVolume = walkSpeed;
-	playerEmmiters[playerEmmiterIndex]->lerpSpeed = 2.0f;
+	playerEmmiters[playerEmmiterIndex]->lerpSpeed = 1.5f;
 }
 
 void SimpleCameraControl::RunState(float deltaTime)
 {
 	SetSpeed(runSpeed);
-	playerPulseTimer -= deltaTime * 3.0f;
+	playerPulseTimer -= deltaTime * 2.5f;
 
 	playerEmmiters[playerEmmiterIndex]->targetVolume = runSpeed;
-	playerEmmiters[playerEmmiterIndex]->lerpSpeed = 3.0f;
+	playerEmmiters[playerEmmiterIndex]->lerpSpeed = 2.5f;
 }
 
 void SimpleCameraControl::SetSpeed(float newSpeed)

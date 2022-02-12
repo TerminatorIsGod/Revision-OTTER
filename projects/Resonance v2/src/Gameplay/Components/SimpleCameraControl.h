@@ -96,6 +96,6 @@ protected:
 
 	std::vector<SoundEmmiter::Sptr> playerEmmiters;
 	int playerEmmiterIndex = 0;
-	float playerPulseTimer;
+	float playerPulseTimer = 0;
 	int playerEmmiterCount = 3;
 };
