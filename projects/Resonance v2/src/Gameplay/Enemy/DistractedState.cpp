@@ -88,10 +88,17 @@ void DistractedState::Listen(Enemy* e, float deltaTime)
 
 		//Determining State Change
 
-		if (s->Get<SoundEmmiter>() == e->player->Get<SimpleCameraControl>()->GetRecentEmmiter())
+		if (s->Get<SoundEmmiter>()->isPlayerLight)
 		{
-			std::cout << "\nIM AGRO!!";
-			e->SetState(AggravatedState::getInstance());
+			btCollisionWorld::ClosestRayResultCallback hit2(ToBt(e->GetGameObject()->GetPosition()), ToBt(e->player->GetPosition()));
+			e->scene->GetPhysicsWorld()->rayTest(ToBt(e->GetGameObject()->GetPosition()), ToBt(e->player->GetPosition()), hit2);
+
+			glm::vec3 objectPos = ToGlm(hit2.m_collisionObject->getWorldTransform().getOrigin());
+			if (objectPos == e->player->GetPosition())
+			{
+				std::cout << "\nIM AGRO!!";
+				e->SetState(AggravatedState::getInstance());
+			}
 		}
 	}
 }
