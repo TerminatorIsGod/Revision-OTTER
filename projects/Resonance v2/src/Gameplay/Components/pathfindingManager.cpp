@@ -17,8 +17,8 @@ void pathfindingManager::Awake() {
 	scene = GetGameObject()->GetScene();
 	UpdateNbors();
 
-	GameObject::Sptr myself = std::make_shared<GameObject>(*GetGameObject());
-	scene->pathManager = myself;
+	//GameObject::Sptr myself = std::make_shared<GameObject>(*GetGameObject());
+	scene->pathManager = GetGameObject();
 }
 
 pathfindingManager::~pathfindingManager()
@@ -128,19 +128,19 @@ bool pathfindingManager::StartAndEndCheck()
 	return true;
 }
 
-float pathfindingManager::g(GameObject::Sptr n, GameObject::Sptr p)
+float pathfindingManager::g(GameObject* n, GameObject* p)
 {
 	glm::vec3 dir = n->GetPosition() - p->GetPosition();
 	return SquareMagnitude(dir) + p->Get<NavNode>()->gCost;
 }
 
-void pathfindingManager::h(GameObject::Sptr n1)
+void pathfindingManager::h(GameObject* n1)
 {
 	glm::vec3 dir = n1->GetPosition() - endNode->GetPosition();
 	n1->Get<NavNode>()->hCost = SquareMagnitude(dir);
 }
 
-void pathfindingManager::f(GameObject::Sptr n1)
+void pathfindingManager::f(GameObject* n1)
 {
 	NavNode::Sptr node = n1->Get<NavNode>();
 	node->fCost = node->gCost + node->hCost;
@@ -200,7 +200,7 @@ void pathfindingManager::CalculateFCosts(int nbor)
 {
 	//Variables storing indexs for the navNodes list
 
-	GameObject::Sptr nborObj = closedSet[cIndex]->Get<NavNode>()->neighbors[nbor];
+	GameObject* nborObj = closedSet[cIndex]->Get<NavNode>()->neighbors[nbor];
 
 	if (nborObj->Get<NavNode>()->gCost <= 0 || g(nborObj, closedSet[cIndex]) < nborObj->Get<NavNode>()->gCost)
 	{
@@ -216,7 +216,7 @@ void pathfindingManager::CalculateFCosts(int nbor)
 
 void pathfindingManager::CheckIfEnd(int nbor)
 {
-	GameObject::Sptr nborObj = closedSet[cIndex]->Get<NavNode>()->neighbors[nbor];
+	GameObject* nborObj = closedSet[cIndex]->Get<NavNode>()->neighbors[nbor];
 
 	if (nborObj == endNode)
 	{
@@ -228,7 +228,7 @@ void pathfindingManager::CheckIfEnd(int nbor)
 
 void pathfindingManager::OpenNbors(int nbor)
 {
-	GameObject::Sptr nborObj = closedSet[cIndex]->Get<NavNode>()->neighbors[nbor];
+	GameObject* nborObj = closedSet[cIndex]->Get<NavNode>()->neighbors[nbor];
 
 	if (nborObj->Get<NavNode>()->NodeType == nborObj->Get<NavNode>()->blank)
 	{
@@ -241,7 +241,7 @@ void pathfindingManager::SequencePath()
 {
 	pathSet.push_back(endNode->GetPosition());
 
-	GameObject::Sptr current = endNode;
+	GameObject* current = endNode;
 	current = current->Get<NavNode>()->parent;
 
 	while (true)
@@ -262,7 +262,7 @@ void pathfindingManager::SequencePath()
 std::vector<glm::vec3> pathfindingManager::requestPath(glm::vec3 startPos, glm::vec3 targetPos)
 {
 	float minDistance = 999999;
-	GameObject::Sptr minNode = navNodes[0];
+	GameObject* minNode = navNodes[0];
 	float distance;
 	pathSet.clear();
 

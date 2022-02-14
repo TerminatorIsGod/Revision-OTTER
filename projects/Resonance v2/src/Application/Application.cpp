@@ -129,6 +129,9 @@ void Application::Quit() {
 
 bool Application::LoadScene(const std::string & path) {
 	if (std::filesystem::exists(path)) {
+		isEscapePressed = false;
+		isGamePaused = false;
+		isGameStarted = true;
 
 		std::string manifestPath = std::filesystem::path(path).stem().string() + "-manifest.json";
 		if (std::filesystem::exists(manifestPath)) {

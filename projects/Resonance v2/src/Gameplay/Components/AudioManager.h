@@ -13,6 +13,8 @@ public:
 
 	float volume = 1.0f;
 
+	AudioManager() = default;
+	~AudioManager();
 	virtual void Update(float deltaTime) override;
 	virtual void Awake() override;
 

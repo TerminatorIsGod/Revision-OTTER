@@ -49,7 +49,7 @@ public:
 
 	//Pathfinding
 	bool pathRequested = false;
-	GameObject::Sptr pathManager;
+	GameObject* pathManager;
 
 	std::vector<glm::vec3> patrolPoints;
 	int pIndex = 0;

@@ -6,9 +6,14 @@ void AudioManager::Awake() {
 	FMOD::System_Create(&system);
 	system->init(32, FMOD_INIT_NORMAL, nullptr);
 
-	LoadSound("L1_Ambiance", "Audio/Music/Infested_Engines.wav", true);
+	LoadSound("L1_Ambiance", "Audio/Music/Infested_Engines.wav", true, true);
 
 	PlaySoundByName("L1_Ambiance");
+}
+
+AudioManager::~AudioManager()
+{
+	system->release();
 }
 
 void AudioManager::Update(float deltaTime) {

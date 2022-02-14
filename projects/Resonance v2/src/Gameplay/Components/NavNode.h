@@ -21,8 +21,8 @@ public:
 	}
 
 	//Properties
-	std::vector <GameObject::Sptr> neighbors;
-	GameObject::Sptr parent = NULL; //Check if parent index > 0 to see if a node actually has a parent or not
+	std::vector <GameObject*> neighbors;
+	GameObject* parent = NULL; //Check if parent index > 0 to see if a node actually has a parent or not
 	float hCost = 0, gCost = 0, fCost = 0;
 	enum type
 	{

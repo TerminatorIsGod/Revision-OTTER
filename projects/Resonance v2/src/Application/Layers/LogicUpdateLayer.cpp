@@ -17,7 +17,7 @@ void LogicUpdateLayer::OnUpdate()
 {
 	Application& app = Application::Get();
 
-	if (app.isGamePaused)
+	if (!app.isGamePaused)
 	{
 		// Perform updates for all components
 		app.CurrentScene()->Update(Timing::Current().DeltaTime());

@@ -4,9 +4,8 @@
 #include "Utils/JsonGlmHelpers.h"
 
 void NavNode::Awake() {
-	//GameObject::Sptr myself(GetGameObject());
-	GameObject::Sptr myself = std::make_shared<GameObject>(*GetGameObject());
-	GetGameObject()->GetScene()->navNodes.push_back(myself);
+
+	GetGameObject()->GetScene()->navNodes.push_back(GetGameObject());
 }
 
 void NavNode::Reset() {

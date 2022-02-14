@@ -51,10 +51,10 @@ namespace Gameplay {
 		// Whether the application is in "play mode", lets us leverage editors!
 		bool                       IsPlaying;
 
-		std::vector<GameObject::Sptr> navNodes;
+		std::vector<GameObject*> navNodes;
 
 		std::vector<GameObject*> soundEmmiters;
-		GameObject::Sptr pathManager;
+		GameObject* pathManager;
 
 		std::vector<GameObject*> ladders;
 		std::vector<GameObject*> uiImages;

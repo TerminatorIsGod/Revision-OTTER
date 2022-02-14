@@ -16,10 +16,13 @@ public:
 	~pathfindingManager();
 
 	//Properties
-	std::vector<GameObject::Sptr> navNodes;
-	std::vector<GameObject::Sptr> openSet, closedSet;
+	std::vector<GameObject*> navNodes;
+	std::vector<GameObject*> openSet;
+	std::vector<GameObject*> closedSet;
+
 	std::vector<glm::vec3> pathSet;
-	GameObject::Sptr startNode, endNode;
+	GameObject* startNode;
+	GameObject* endNode;
 
 	glm::vec3 speed = glm::vec3(0.0f);
 	float nborRange = 15.0f;
@@ -35,9 +38,9 @@ public:
 	bool StartAndEndCheck();
 	void RunPathfind(); //just merge the ClearPathCalculations() and pathfinding operations
 	void CompareOpen();
-	float g(GameObject::Sptr n, GameObject::Sptr p);
-	void h(GameObject::Sptr n1);
-	void f(GameObject::Sptr n1);
+	float g(GameObject* n, GameObject* p);
+	void h(GameObject* n1);
+	void f(GameObject* n1);
 	void CalculateFCosts(int nbor);
 	void CheckIfEnd(int nbor);
 	void OpenNbors(int nbor);
