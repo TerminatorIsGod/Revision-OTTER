@@ -57,6 +57,8 @@
 #include <Gameplay/Components/LerpSystem.h> 
 #include <Gameplay/Components/CurveLerpSystem.h>
 #include <Gameplay/Components/MenuSystemNewAndImproved.h>
+#include <Gameplay/Components/AudioManager.h>
+
 
 // GUI
 #include "Gameplay/Components/GUI/RectTransform.h"
@@ -325,6 +327,8 @@ void Application::_RegisterClasses()
 	ComponentManager::RegisterType<SceneSwapSystem>();
 	ComponentManager::RegisterType<CurveLerpSystem>();
 	ComponentManager::RegisterType<MenuSystemNewAndImproved>();
+	ComponentManager::RegisterType<AudioManager>();
+
 }
 
 void Application::_Load() {
