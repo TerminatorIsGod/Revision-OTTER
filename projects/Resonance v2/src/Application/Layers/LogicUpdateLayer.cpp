@@ -25,4 +25,6 @@ void LogicUpdateLayer::OnUpdate()
 		// Update our worlds physics!
 		app.CurrentScene()->DoPhysics(Timing::Current().DeltaTime());
 	}
+
+
 }

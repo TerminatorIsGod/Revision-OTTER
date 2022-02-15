@@ -306,17 +306,29 @@ namespace Gameplay {
 		// Save renderables
 		std::vector<nlohmann::json> objects;
 		objects.resize(_objects.size());
+		int OCount = 0;
 		for (int ix = 0; ix < _objects.size(); ix++) {
-			objects[ix] = _objects[ix]->ToJson();
+			if (_objects[ix]->isGenerated)
+				continue;
+
+			objects[OCount] = _objects[ix]->ToJson();
+			OCount++;
 		}
+		objects.resize(OCount);
 		blob["objects"] = objects;
 
 		// Save lights
 		std::vector<nlohmann::json> lights;
 		lights.resize(Lights.size());
+		int LCount = 0;
 		for (int ix = 0; ix < Lights.size(); ix++) {
-			lights[ix] = Lights[ix].ToJson();
+			if (Lights[ix].isGenerated)
+				continue;
+
+			lights[LCount] = Lights[ix].ToJson();
+			LCount++;
 		}
+		lights.resize(LCount);
 		blob["lights"] = lights;
 
 		// Save camera info

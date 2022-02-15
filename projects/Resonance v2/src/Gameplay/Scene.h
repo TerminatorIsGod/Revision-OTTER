@@ -61,6 +61,7 @@ namespace Gameplay {
 
 		bool requestSceneReload = false;
 
+
 		Scene();
 		~Scene();
 

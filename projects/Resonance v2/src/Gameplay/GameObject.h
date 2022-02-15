@@ -17,7 +17,7 @@ class InspectorWindow;
 class HierarchyWindow;
 
 namespace Gameplay {
-// Predeclaration for Scene
+	// Predeclaration for Scene
 	class Scene;
 
 	namespace Physics {
@@ -84,6 +84,7 @@ namespace Gameplay {
 			/// <returns>True if this reference does not point to the given object</returns>
 			bool operator !=(const GameObject::Sptr& other);
 
+
 			/// <summary>
 			/// Allows us to use the arrow operator on this weak reference, note that you 
 			/// should check to ensure that the resource is alive before doing any operations!
@@ -131,11 +132,13 @@ namespace Gameplay {
 			/// Resets this reference to it's default state (basically setting to null)
 			/// </summary>
 			void Reset();
+
 		};
 
 		// Human readable name for the object
 		std::string             Name;
 
+		bool isGenerated = false;
 		// Hack to hide instances from the hierarchy (like when adding lots of instances)
 		bool HideInHierarchy = false;
 
@@ -227,7 +230,7 @@ namespace Gameplay {
 		/// <summary>
 		/// Allows components to render GUI elements to the screen
 		/// </summary>
-		void RenderGUI(); 
+		void RenderGUI();
 
 		/// <summary>
 		/// Returns a pointer to the scene that this GameObject belongs to

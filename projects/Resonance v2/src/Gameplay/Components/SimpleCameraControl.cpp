@@ -33,6 +33,8 @@ void SimpleCameraControl::Awake() {
 	{
 		GameObject::Sptr soundEmmiter = _scene->CreateGameObject("playerEmmiter");
 		{
+			soundEmmiter->isGenerated = true;
+
 			SoundEmmiter::Sptr emmiter = soundEmmiter->Add<SoundEmmiter>();
 			soundEmmiter->Awake();
 			emmiter->isDecaying = false;
