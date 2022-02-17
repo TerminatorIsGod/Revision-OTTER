@@ -222,15 +222,15 @@ void Application::_Run()
 
 		if (_currentScene->FindObjectByName("PauseScreen") != nullptr) {
 			auto menuobj = _currentScene->FindObjectByName("PauseScreen");
-			auto menusystem = menuobj->Get<MenuSystemNewAndImproved>();
+			//auto menusystem = menuobj->Get<MenuSystemNewAndImproved>();
+			auto menuenablething = menuobj->Get<GuiPanel>();
+			
 
 			if (isGamePaused) {
-				menusystem->isToggled = true;
-				menusystem->ToggleMenu();
+				menuenablething->IsEnabled = true;
 			}
 			else {
-				menusystem->isToggled = false;
-				menusystem->ToggleMenu();
+				menuenablething->IsEnabled = false;
 			}
 		}
 
