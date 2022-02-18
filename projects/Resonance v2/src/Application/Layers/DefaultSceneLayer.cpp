@@ -48,7 +48,6 @@
 #include "Gameplay/Components/SimpleCameraControl.h"
 
 #include "Gameplay/Components/InventorySystem.h"
-#include "Gameplay/Components/SceneSwapSystem.h"
 
 #include "Gameplay/Components/NavNode.h"
 #include "Gameplay/Components/pathfindingManager.h"
@@ -104,7 +103,7 @@ void DefaultSceneLayer::_CreateScene()
 	bool loadScene = true;
 	// For now we can use a toggle to generate our scene vs load from file
 	if (loadScene && std::filesystem::exists("levelMenu.json")) {
-		app.LoadScene("level1.json");
+		app.LoadScene("levelMenu.json");
 
 	}
 	else {
