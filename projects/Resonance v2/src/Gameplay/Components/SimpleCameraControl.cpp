@@ -11,6 +11,9 @@
 #include "Gameplay/Components/Ladder.h"
 #include "Gameplay/Components/UIElement.h"
 #include "Application/Application.h"
+#include "Gameplay/Components/GUI/RectTransform.h"
+#include "Gameplay/Components/GUI/GuiPanel.h"
+
 
 SimpleCameraControl::SimpleCameraControl() :
 	IComponent(),
@@ -46,10 +49,6 @@ void SimpleCameraControl::Awake() {
 			playerEmmiters.push_back(emmiter);
 		}
 	}
-
-
-
-
 	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
@@ -60,7 +59,6 @@ void SimpleCameraControl::Update(float deltaTime)
 	SwitchState(deltaTime);
 	OxygenSystem(deltaTime);
 	MoveUI(deltaTime);
-
 	Interact(deltaTime);
 
 	if (playerPulseTimer <= 0.f)
@@ -344,102 +342,44 @@ void SimpleCameraControl::Interact(float deltaTime)
 	}
 }
 
-void SimpleCameraControl::ShowInteract()
-{
-	glm::vec3 offset = _scene->uiImages[3]->Get<UIElement>()->posOffset;
-	glm::vec4 newOffset = glm::vec4(offset, 1.0);
-	glm::vec3 localOffset = glm::vec3(newOffset * GetGameObject()->GetInverseTransform());
-
-	glm::vec3 offset2 = glm::vec3(0, 0, 780);
-	glm::vec4 newOffset2 = glm::vec4(offset2, 1.0);
-	glm::vec3 localOffset2 = glm::vec3(newOffset2 * GetGameObject()->GetInverseTransform());
-	_scene->uiImages[3]->SetPostion(GetGameObject()->GetPosition() + localOffset);
-	_scene->uiImages[3]->LookAt(GetGameObject()->GetPosition() + localOffset2);
-
-	promptShown = true;
-}
-
 void SimpleCameraControl::ShowOpen()
 {
-	glm::vec3 offset = _scene->uiImages[4]->Get<UIElement>()->posOffset;
-	glm::vec4 newOffset = glm::vec4(offset, 1.0);
-	glm::vec3 localOffset = glm::vec3(newOffset * GetGameObject()->GetInverseTransform());
-
-	glm::vec3 offset2 = glm::vec3(0, 0, 780);
-	glm::vec4 newOffset2 = glm::vec4(offset2, 1.0);
-	glm::vec3 localOffset2 = glm::vec3(newOffset2 * GetGameObject()->GetInverseTransform());
-	_scene->uiImages[4]->SetPostion(GetGameObject()->GetPosition() + localOffset);
-	_scene->uiImages[4]->LookAt(GetGameObject()->GetPosition() + localOffset2);
+	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
+	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(p_Open);
+	promptShown = true;
 }
 
 void SimpleCameraControl::ShowClose()
 {
-	glm::vec3 offset = _scene->uiImages[5]->Get<UIElement>()->posOffset;
-	glm::vec4 newOffset = glm::vec4(offset, 1.0);
-	glm::vec3 localOffset = glm::vec3(newOffset * GetGameObject()->GetInverseTransform());
-
-	glm::vec3 offset2 = glm::vec3(0, 0, 780);
-	glm::vec4 newOffset2 = glm::vec4(offset2, 1.0);
-	glm::vec3 localOffset2 = glm::vec3(newOffset2 * GetGameObject()->GetInverseTransform());
-	_scene->uiImages[5]->SetPostion(GetGameObject()->GetPosition() + localOffset);
-	_scene->uiImages[5]->LookAt(GetGameObject()->GetPosition() + localOffset2);
+	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
+	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(p_Close);
+	promptShown = true;
 }
 
 void SimpleCameraControl::ShowClimb()
 {
-	glm::vec3 offset = _scene->uiImages[6]->Get<UIElement>()->posOffset;
-	glm::vec4 newOffset = glm::vec4(offset, 1.0);
-	glm::vec3 localOffset = glm::vec3(newOffset * GetGameObject()->GetInverseTransform());
-
-	glm::vec3 offset2 = glm::vec3(0, 0, 780);
-	glm::vec4 newOffset2 = glm::vec4(offset2, 1.0);
-	glm::vec3 localOffset2 = glm::vec3(newOffset2 * GetGameObject()->GetInverseTransform());
-	_scene->uiImages[6]->SetPostion(GetGameObject()->GetPosition() + localOffset);
-	_scene->uiImages[6]->LookAt(GetGameObject()->GetPosition() + localOffset2);
-
+	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
+	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(p_Climb);
 	promptShown = true;
 }
 
 void SimpleCameraControl::ShowPickup()
 {
-	glm::vec3 offset = _scene->uiImages[7]->Get<UIElement>()->posOffset;
-	glm::vec4 newOffset = glm::vec4(offset, 1.0);
-	glm::vec3 localOffset = glm::vec3(newOffset * GetGameObject()->GetInverseTransform());
-
-	glm::vec3 offset2 = glm::vec3(0, 0, 780);
-	glm::vec4 newOffset2 = glm::vec4(offset2, 1.0);
-	glm::vec3 localOffset2 = glm::vec3(newOffset2 * GetGameObject()->GetInverseTransform());
-	_scene->uiImages[7]->SetPostion(GetGameObject()->GetPosition() + localOffset);
-	_scene->uiImages[7]->LookAt(GetGameObject()->GetPosition() + localOffset2);
+	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
+	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(p_PickUp);
+	promptShown = true;
 }
 
 void SimpleCameraControl::ShowDistract()
 {
-	glm::vec3 offset = _scene->uiImages[8]->Get<UIElement>()->posOffset;
-	glm::vec4 newOffset = glm::vec4(offset, 1.0);
-	glm::vec3 localOffset = glm::vec3(newOffset * GetGameObject()->GetInverseTransform());
-
-	glm::vec3 offset2 = glm::vec3(0, 0, 780);
-	glm::vec4 newOffset2 = glm::vec4(offset2, 1.0);
-	glm::vec3 localOffset2 = glm::vec3(newOffset2 * GetGameObject()->GetInverseTransform());
-	_scene->uiImages[8]->SetPostion(GetGameObject()->GetPosition() + localOffset);
-	_scene->uiImages[8]->LookAt(GetGameObject()->GetPosition() + localOffset2);
-
+	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
+	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(p_Distract);
 	promptShown = true;
 }
 
 void SimpleCameraControl::ShowGameOver()
 {
-	glm::vec3 offset = _scene->uiImages[9]->Get<UIElement>()->posOffset;
-	glm::vec4 newOffset = glm::vec4(offset, 1.0);
-	glm::vec3 localOffset = glm::vec3(newOffset * GetGameObject()->GetInverseTransform());
-
-	glm::vec3 offset2 = glm::vec3(0, 0, 780);
-	glm::vec4 newOffset2 = glm::vec4(offset2, 1.0);
-	glm::vec3 localOffset2 = glm::vec3(newOffset2 * GetGameObject()->GetInverseTransform());
-	_scene->uiImages[9]->SetPostion(GetGameObject()->GetPosition() + localOffset);
-	_scene->uiImages[9]->LookAt(GetGameObject()->GetPosition() + localOffset2);
-
+	_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
 	promptShown = true;
 }
 
@@ -502,43 +442,34 @@ void SimpleCameraControl::SetSpeed(float newSpeed)
 
 void SimpleCameraControl::MoveUI(float deltaTime)
 {
-	glm::vec3 viewDir = currentRot * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f);
-	for (int i = 0; i < _scene->uiImages.size(); i++)
-	{
-		//Interact Prompt
-		if (_scene->uiImages[i]->Get<UIElement>()->uiType == _scene->uiImages[i]->Get<UIElement>()->Prompt)
-		{
-			glm::vec3 offset = glm::vec3(5.0f);
-			glm::vec4 newOffset = glm::vec4(offset, 1.0);
-			glm::vec3 localOffset = glm::vec3(newOffset * GetGameObject()->GetInverseTransform());
-			_scene->uiImages[i]->SetPostion(GetGameObject()->GetPosition() + localOffset);
-			continue;
-		}
+	glfwGetWindowSize(_window, &windx, &windy);
+	centerPos.x = windx / 2;
+	centerPos.y = windy / 2;
 
-		glm::vec3 offset = _scene->uiImages[i]->Get<UIElement>()->posOffset;
-		glm::vec4 newOffset = glm::vec4(offset, 1.0);
-		glm::vec3 localOffset = glm::vec3(newOffset * GetGameObject()->GetInverseTransform());
+	PlaceUI(0, 10, 10); // Crosshair
+	PlaceUI(1, 60, 60, 16, 7, 16, 7); //Oxygen Meter
+	PlaceUI(2, 60, 60.0f * (oxygenMeter / oxygenMeterMax), 16, 7, 16, 7); //Oxygen Fill
+	PlaceUI(3, 30, 30, 1, 0, 12, 1); // Interaction Prompt
+	PlaceUI(4, windx / 4.0f, windy / 4.0f, 1, 0, 2, 1); // Game Over Screen
 
-		glm::vec3 offset2 = glm::vec3(0, 0, 780);
-		glm::vec4 newOffset2 = glm::vec4(offset2, 1.0);
-		glm::vec3 localOffset2 = glm::vec3(newOffset2 * GetGameObject()->GetInverseTransform());
-		_scene->uiImages[i]->SetPostion(GetGameObject()->GetPosition() + localOffset);
-		_scene->uiImages[i]->LookAt(GetGameObject()->GetPosition() + localOffset2);
 
-		//Oxygen Meter
-		if (_scene->uiImages[i]->Get<UIElement>()->uiType == _scene->uiImages[i]->Get<UIElement>()->Meter)
-		{
-			float meterPercent = oxygenMeter / oxygenMeterMax;
-			_scene->uiImages[i]->SetScale(glm::vec3(_scene->uiImages[i]->GetScale().x, 0.015f * meterPercent, _scene->uiImages[i]->GetScale().z));
-
-			glm::vec3 offset = _scene->uiImages[i]->Get<UIElement>()->posOffset - glm::vec3(0.0f, 0.065f * (1 - meterPercent), 0.0f);
-			glm::vec4 newOffset = glm::vec4(offset, 1.0);
-			glm::vec3 localOffset = glm::vec3(newOffset * GetGameObject()->GetInverseTransform());
-			_scene->uiImages[i]->SetPostion(GetGameObject()->GetPosition() + localOffset);
-		}
-	}
+	if (!promptShown)
+		_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(0.0f));
 
 	promptShown = false;
+}
+
+void SimpleCameraControl::PlaceUI(int index, float xSize, float ySize, float xRatio, float xMultiplier, float yRatio, float yMultiplier)
+{
+	_scene->uiImages[index]->Get<RectTransform>()->SetSize(glm::vec2(0.0f, 0.0f));
+	_scene->uiImages[index]->GetChildren()[0]->Get<RectTransform>()->SetSize(glm::vec2(xSize, ySize));
+	auto crosshairUI = _scene->uiImages[index]->Get<RectTransform>();
+	glm::vec2 uiSize = _scene->uiImages[index]->GetChildren()[0]->Get<RectTransform>()->GetSize();
+
+	glm::vec2 sizeAdj = -glm::vec2(uiSize.x, uiSize.y * 2.0f) / 2.0f;
+	glm::vec2 posAdj = glm::vec2((windx / xRatio) * xMultiplier, (windy / yRatio) * yMultiplier);
+
+	crosshairUI->SetPosition(centerPos + sizeAdj + posAdj);
 }
 
 SoundEmmiter::Sptr SimpleCameraControl::GetRecentEmmiter()

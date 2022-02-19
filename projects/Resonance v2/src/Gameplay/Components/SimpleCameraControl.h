@@ -32,7 +32,6 @@ public:
 	void OxygenSystem(float deltaTime);
 	void SwitchState(float deltaTime);
 	void Interact(float deltaTime);
-	void ShowInteract();
 	void ShowOpen();
 	void ShowClose();
 	void ShowClimb();
@@ -48,9 +47,14 @@ public:
 
 	void SetSpeed(float newSpeed);
 	void MoveUI(float deltaTime);
+	void PlaceUI(int index, float xSize, float ySize, float xRatio = 1, float xMultiplier = 0, float yRatio = 1, float yMultiplier = 0);
+
 	SoundEmmiter::Sptr GetRecentEmmiter();
 
 protected:
+	glm::vec2 centerPos;
+	int windx, windy;
+
 	float _shiftMultipler;
 	glm::vec2 _mouseSensitivity;
 	glm::vec3 _moveSpeeds;
@@ -98,4 +102,15 @@ protected:
 	int playerEmmiterIndex = 0;
 	float playerPulseTimer = 0;
 	int playerEmmiterCount = 3;
+
+	//Prompt Textures
+	Texture2D::Sptr p_PickUp = ResourceManager::CreateAsset<Texture2D>("textures/ui/PickupPrompt.png");
+	Texture2D::Sptr p_Climb = ResourceManager::CreateAsset<Texture2D>("textures/ui/ClimbPrompt.png");
+	Texture2D::Sptr p_Close = ResourceManager::CreateAsset<Texture2D>("textures/ui/ClosePrompt.png");
+	Texture2D::Sptr p_Open = ResourceManager::CreateAsset<Texture2D>("textures/ui/OpenPrompt.png");
+	Texture2D::Sptr p_Distract = ResourceManager::CreateAsset<Texture2D>("textures/ui/DistractPrompt.png");
+
+
+
+
 };

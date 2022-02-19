@@ -8,7 +8,7 @@ void AudioManager::Awake() {
 
 	LoadSound("L1_Ambiance", "Audio/Music/Infested_Engines.wav", true, true);
 
-	PlaySoundByName("L1_Ambiance");
+	//PlaySoundByName("L1_Ambiance");
 }
 
 AudioManager::~AudioManager()
