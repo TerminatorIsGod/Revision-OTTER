@@ -6,7 +6,6 @@
 
 void SceneSwapSystem::Awake()
 {
-
 }
 
 void SceneSwapSystem::RenderImGui() {
@@ -27,14 +26,14 @@ SceneSwapSystem::SceneSwapSystem() :
 SceneSwapSystem::~SceneSwapSystem() = default;
 
 SceneSwapSystem::Sptr SceneSwapSystem::FromJson(const nlohmann::json & blob) {
-	//SceneSwapSystem::Sptr result = std::make_shared<SceneSwapSystem>();
+	SceneSwapSystem::Sptr result = std::make_shared<SceneSwapSystem>();
 	//result->_scene = blob["scene"];
-	return 0;//result;
+	return result;
 }
 
 void SceneSwapSystem::Update(float deltaTime) {
-	std::string hi = "demoscene";
-	if (glfwGetKey(_scene->Window, GLFW_KEY_R))
+	std::string hi = "level1";
+	if (glfwGetKey(_scene->Window, GLFW_KEY_SPACE))
 		swapScene(hi);
 }
 
@@ -43,13 +42,19 @@ void SceneSwapSystem::swapScene(std::string & path) {
 	_scene = nullptr;
 
 	std::string newFilename = std::filesystem::path(path).stem().string() + "-manifest.json";
-	ResourceManager::LoadManifest(newFilename);
-	_scene = Gameplay::Scene::Load(path);
+	//ResourceManager::LoadManifest(newFilename);
+	_scene = Gameplay::Scene::FromJson(path+".json");
+	_scene->Window = _window;
+	_scene->Awake();
 }
 
 void SceneSwapSystem::setScene(Gameplay::Scene::Sptr scene) {
 	//_scene->navNodes.clear();
 	_scene = scene;
+}
+
+void SceneSwapSystem::setWindow(GLFWwindow* window) {
+	_window = window;
 }
 
 Gameplay::Scene::Sptr SceneSwapSystem::getScene() {

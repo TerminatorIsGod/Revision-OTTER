@@ -42,7 +42,6 @@
 #include "Gameplay/Components/ParticleSystem.h"
 
 #include "Gameplay/Components/InventorySystem.h"
-#include "Gameplay/Components/SceneSwapSystem.h"
 
 #include "Gameplay/Components/NavNode.h"
 #include "Gameplay/Components/pathfindingManager.h"
@@ -201,11 +200,29 @@ void Application::_Run()
 	// Done loading, app is now running! 
 	_isRunning = true;
 
+	bool isSwappingScenesCur = false; //used in order to update UI for loading screen
+
 	// Infinite loop as long as the application is running
 	while (_isRunning) {
 		// Handle scene switching
 		if (_targetScene != nullptr) {
 			_HandleSceneChange();
+		}
+
+		//if (_currentScene->FindObjectByName("LoadingScreen")) {
+		//	_currentScene->FindObjectByName("LoadingScreen")->Get<GuiPanel>()->IsEnabled = false;
+		//}
+
+		if ((_currentScene->FindObjectByName("MainMenuScreen") && glfwGetKey(_window, GLFW_KEY_SPACE) == GLFW_PRESS) || isSwappingScenesCur) {
+			//_currentScene->FindObjectByName("MainMenuScreen")->Get<GuiPanel>()->IsEnabled = false;
+			//_currentScene->FindObjectByName("LoadingScreen")->Get<GuiPanel>()->IsEnabled = true;
+			if (isSwappingScenesCur) { //makes sure loading screen is showing before actually loading
+				isSwappingScenesCur = false;
+				LoadScene("level1.json");
+			}
+			else {
+				isSwappingScenesCur = true;
+			}
 		}
 
 		//Check to see if pause game
@@ -222,15 +239,15 @@ void Application::_Run()
 
 		if (_currentScene->FindObjectByName("PauseScreen") != nullptr) {
 			auto menuobj = _currentScene->FindObjectByName("PauseScreen");
-			auto menusystem = menuobj->Get<MenuSystemNewAndImproved>();
+			//auto menusystem = menuobj->Get<MenuSystemNewAndImproved>();
+			auto menuenablething = menuobj->Get<GuiPanel>();
+			
 
 			if (isGamePaused) {
-				menusystem->isToggled = true;
-				menusystem->ToggleMenu();
+				menuenablething->IsEnabled = true;
 			}
 			else {
-				menusystem->isToggled = false;
-				menusystem->ToggleMenu();
+				menuenablething->IsEnabled = false;
 			}
 		}
 
@@ -327,7 +344,6 @@ void Application::_RegisterClasses()
 	ComponentManager::RegisterType<InventorySystem>();
 	ComponentManager::RegisterType<InteractSystem>();
 	ComponentManager::RegisterType<LerpSystem>();
-	ComponentManager::RegisterType<SceneSwapSystem>();
 	ComponentManager::RegisterType<CurveLerpSystem>();
 	ComponentManager::RegisterType<MenuSystemNewAndImproved>();
 	ComponentManager::RegisterType<AudioManager>();

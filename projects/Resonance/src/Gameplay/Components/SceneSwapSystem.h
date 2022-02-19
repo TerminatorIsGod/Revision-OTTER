@@ -21,6 +21,7 @@ public:
 	void swapScene(std::string& path);
 
 	void setScene(Gameplay::Scene::Sptr scene);
+	void setWindow(GLFWwindow* window);
 
 	Gameplay::Scene::Sptr getScene();
 
@@ -33,4 +34,5 @@ public:
 protected:
 
 	Gameplay::Scene::Sptr _scene;
+	GLFWwindow* _window;
 };

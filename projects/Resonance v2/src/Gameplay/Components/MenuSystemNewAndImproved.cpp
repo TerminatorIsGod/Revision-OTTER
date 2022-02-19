@@ -21,7 +21,7 @@ void MenuSystemNewAndImproved::Awake()
 
 	auto _ui = GetGameObject()->Get<RectTransform>();
 	_ui->SetSize(glm::vec2((windx / 4.0), (windy / 4.0)));
-
+	
 	offscreenPos = glm::vec2(10000, 10000);
 
 	_ui->SetPosition(offscreenPos);

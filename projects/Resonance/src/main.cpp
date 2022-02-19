@@ -866,6 +866,13 @@ int main() {
 	GameObject::Sptr menuPlane;
 	MenuSystem::Sptr menuSys;
 	Camera::Sptr camera;
+
+	if (scene->FindObjectByName("Main Camera")) {
+		auto swapsystem = scene->FindObjectByName("Main Camera")->Get<SceneSwapSystem>();
+		swapsystem->setScene(scene);
+		swapsystem->setWindow(window);
+	}
+
 	///// Game loop /////
 	while (!glfwWindowShouldClose(window)) {
 
