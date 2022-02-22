@@ -101,7 +101,7 @@ protected:
 	std::vector<SoundEmmiter::Sptr> playerEmmiters;
 	int playerEmmiterIndex = 0;
 	float playerPulseTimer = 0;
-	int playerEmmiterCount = 3;
+	int playerEmmiterCount = 5;
 
 	//Prompt Textures
 	Texture2D::Sptr p_PickUp = ResourceManager::CreateAsset<Texture2D>("textures/ui/PickupPrompt.png");

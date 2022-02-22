@@ -18,8 +18,8 @@ public:
 	//~SoundEmmiter(); 
 
 	//Properties
-	float volume = 0;
-	float targetVolume = 0;
+	float volume = 0.0f;
+	float targetVolume = 0.0f;
 	float distractionVolume = 100;
 	float decaySpeed = 1;
 	float attackSpeed = 4;

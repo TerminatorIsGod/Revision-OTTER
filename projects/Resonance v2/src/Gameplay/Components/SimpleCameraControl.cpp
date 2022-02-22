@@ -40,12 +40,11 @@ void SimpleCameraControl::Awake() {
 
 			SoundEmmiter::Sptr emmiter = soundEmmiter->Add<SoundEmmiter>();
 			soundEmmiter->Awake();
-			emmiter->isDecaying = false;
 			emmiter->muteAtZero = true;
 			emmiter->isPlayerLight = true;
 			emmiter->linearLerp = true;
-			emmiter->defaultColour = glm::vec3(0.25, 0.25, 0.25);
-			emmiter->soundLightOffset = glm::vec3(0, 0, -3.0f);
+			emmiter->defaultColour = glm::vec3(0.45, 0.45, 0.45);
+			emmiter->soundLightOffset = glm::vec3(0, 0, -6.0f);
 			playerEmmiters.push_back(emmiter);
 		}
 	}
@@ -72,7 +71,6 @@ void SimpleCameraControl::Update(float deltaTime)
 			playerEmmiterIndex++;
 		else
 			playerEmmiterIndex = 0;
-
 	}
 
 	//std::cout << "\nPulse Timer: " << playerPulseTimer;
@@ -218,7 +216,9 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 {
 	//std::cout << "\nO2: " << oxygenMeter;
 	//Fill Oxygen
-	if (glfwGetKey(_window, GLFW_KEY_F) && !glfwGetKey(_window, GLFW_KEY_C))
+	glm::vec4 curCol = _scene->uiImages[2]->GetChildren()[0]->Get<GuiPanel>()->GetColor();
+
+	if (glfwGetKey(_window, GLFW_KEY_SPACE) && !glfwGetKey(_window, GLFW_KEY_LEFT_CONTROL))
 	{
 		if (oxygenMeter < oxygenMeterMax)
 		{
@@ -229,34 +229,43 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 		{
 			oxygenMeter = oxygenMeterMax;
 		}
+
+		glm::vec4 newCol = glm::mix(curCol, glm::vec4(0.0f, 0.5f, 1.0f, 0.6f), 3.0f * deltaTime);
+		_scene->uiImages[2]->GetChildren()[0]->Get<GuiPanel>()->SetColor(newCol);
 	}
 	//Oxygen Decay
 	else
 	{
-		if (oxygenMeter > 0)
+		if (oxygenMeter > 0.01f)
 		{
 			oxygenMeter -= oxygenDecaySpeed * deltaTime;
 		}
 		else
 		{
-			oxygenMeter = 0;
+			oxygenMeter = 0.01f;
 			playerEmmiters[playerEmmiterIndex]->targetVolume = chokeVol;
 		}
+
+		glm::vec4 newCol = glm::mix(curCol, glm::vec4(0.0f, 0.4f, 0.8f, 0.6f), 2.0f * deltaTime);
+		_scene->uiImages[2]->GetChildren()[0]->Get<GuiPanel>()->SetColor(newCol);
 	}
 
-	if (glfwGetKey(_window, GLFW_KEY_C))//Hold Breath
+	if (glfwGetKey(_window, GLFW_KEY_LEFT_CONTROL))//Hold Breath
 	{
 		SetSpeed(1.0f);
 
-		if (oxygenMeter > 0)
+		if (oxygenMeter > 0.01f)
 		{
 			oxygenMeter -= breathHoldDecaySpeed * deltaTime;
-			playerEmmiters[playerEmmiterIndex]->targetVolume = 0.0f;
+			playerEmmiters[playerEmmiterIndex]->targetVolume = 0.01f;
 		}
 		else
 		{
-			oxygenMeter = 0.0f;
+			oxygenMeter = 0.01f;
 		}
+
+		glm::vec4 newCol = glm::mix(curCol, glm::vec4(0.0f, 0.3f, 0.6f, 0.6f), 3.0f * deltaTime);
+		_scene->uiImages[2]->GetChildren()[0]->Get<GuiPanel>()->SetColor(newCol);
 	}
 
 	//I tested out having the oxygen level affect the sound ring colour, I don't think it's noticible enough to replace the UI.
@@ -420,10 +429,10 @@ void SimpleCameraControl::SneakState(float deltaTime)
 void SimpleCameraControl::WalkState(float deltaTime)
 {
 	SetSpeed(walkSpeed);
-	playerPulseTimer -= deltaTime * 1.5f;
+	playerPulseTimer -= deltaTime * 2.0f;
 
 	playerEmmiters[playerEmmiterIndex]->targetVolume = walkSpeed;
-	playerEmmiters[playerEmmiterIndex]->lerpSpeed = 1.5f;
+	playerEmmiters[playerEmmiterIndex]->lerpSpeed = 2.0f;
 }
 
 void SimpleCameraControl::RunState(float deltaTime)

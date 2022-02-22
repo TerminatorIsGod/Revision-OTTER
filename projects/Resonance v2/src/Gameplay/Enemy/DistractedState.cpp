@@ -86,7 +86,12 @@ void DistractedState::Listen(Enemy* e, float deltaTime)
 
 		e->pathRequested = false;
 
-		//Determining State Change
+		//Switch to agro when super close to player
+		if (glm::length(e->player->GetPosition() - e->GetGameObject()->GetPosition()) < 7.0f)
+		{
+			//std::cout << "\nIM AGRO!!";
+			e->SetState(AggravatedState::getInstance());
+		}
 
 		if (s->Get<SoundEmmiter>()->isPlayerLight)
 		{
@@ -96,7 +101,7 @@ void DistractedState::Listen(Enemy* e, float deltaTime)
 			glm::vec3 objectPos = ToGlm(hit2.m_collisionObject->getWorldTransform().getOrigin());
 			if (objectPos == e->player->GetPosition())
 			{
-				std::cout << "\nIM AGRO!!";
+				//std::cout << "\nIM AGRO!!";
 				e->SetState(AggravatedState::getInstance());
 			}
 		}
