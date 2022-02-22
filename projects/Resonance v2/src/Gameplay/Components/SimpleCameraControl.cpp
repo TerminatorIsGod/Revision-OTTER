@@ -91,9 +91,16 @@ void SimpleCameraControl::Movement(float deltaTime)
 	if (glfwGetKey(_window, GLFW_KEY_M) && _allowMouse == false) {
 		_isMousePressed = !_isMousePressed;
 		_allowMouse = true;
-		std::cout << "Chaning mouse tyhing\n";
+		/*if (_isMousePressed) {
+			glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		}
+		else {
+			glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		}*/
+
+		std::cout << "Chaning mouse thing\n";
 	}
-	else if (!glfwGetKey(_window, GLFW_KEY_M)) {
+	else if (!glfwGetKey(_window, GLFW_KEY_M)) {	
 		_allowMouse = false;
 	}
 
@@ -205,9 +212,11 @@ void SimpleCameraControl::Movement(float deltaTime)
 		}
 
 		_body->SetLinearVelocity(glm::vec3(physicsMovement));
+
+		glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	}
 	else {
-
+		glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 
 }
