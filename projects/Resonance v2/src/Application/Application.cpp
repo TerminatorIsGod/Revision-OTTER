@@ -363,7 +363,7 @@ void Application::_Load() {
 			layer->OnAppLoad(_appSettings);
 		}
 	}
-	glfwSwapInterval(1);//Locks framerate to monitors refresh rate
+	//glfwSwapInterval(1);//Locks framerate to monitors refresh rate
 
 	// Pass the window to the input engine and let it initialize itself
 	InputEngine::Init(_window);

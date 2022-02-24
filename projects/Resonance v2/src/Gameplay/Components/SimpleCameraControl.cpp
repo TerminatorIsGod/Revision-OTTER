@@ -16,11 +16,11 @@
 
 
 SimpleCameraControl::SimpleCameraControl() :
-	IComponent(),
+	IComponent(), 
 	_mouseSensitivity({ 0.5f, 0.3f }),
 	_moveSpeeds(glm::vec3(1600.0f)),
 	_shiftMultipler(2.0f),
-	_currentRot(glm::vec2(0.0f)),
+	_currentRot(glm::vec2(0.0f)), 
 	_isMousePressed(true)
 { }
 
@@ -142,8 +142,8 @@ void SimpleCameraControl::Movement(float deltaTime)
 		glfwSetCursorPos(_window, centerx, centery);
 
 
-		_currentRot.x += static_cast<float>(xoffset) * _mouseSensitivity.x;  //_currentRot.x += static_cast<float>(currentMousePos.x - _prevMousePos.x) * _mouseSensitivity.x;
-		_currentRot.y += static_cast<float>(yoffset) * _mouseSensitivity.y;
+		_currentRot.x += static_cast<float>(xoffset) * deltaTime * _mouseSensitivity.x;  //_currentRot.x += static_cast<float>(currentMousePos.x - _prevMousePos.x) * _mouseSensitivity.x;
+		_currentRot.y += static_cast<float>(yoffset) * deltaTime * _mouseSensitivity.y;
 		//std::cout << "\nY Rot: " << _currentRot.y;
 		if (_currentRot.y > 172)
 			_currentRot.y = 172;
@@ -209,7 +209,7 @@ void SimpleCameraControl::Movement(float deltaTime)
 		else
 			isJPressed = false;
 
-		input *= deltaTime;
+		//input *= deltaTime;
 
 		glm::vec3 worldMovement = currentRot * glm::vec4(input, 1.0f);
 
