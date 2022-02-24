@@ -8,13 +8,13 @@
 #include <GLM/gtx/common.hpp> // for fmod (floating modulus)
 
 #include <filesystem> 
-
+ 
 // Graphics
 #include "Graphics/Buffers/IndexBuffer.h"
 #include "Graphics/Buffers/VertexBuffer.h"
 #include "Graphics/VertexArrayObject.h"
 #include "Graphics/ShaderProgram.h"
-#include "Graphics/Texture2D.h"
+#include "Graphics/Texture2D.h" 
 #include "Graphics/TextureCube.h"
 #include "Graphics/VertexTypes.h"
 #include "Graphics/Font.h"
