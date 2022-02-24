@@ -6,9 +6,9 @@ void AudioManager::Awake() {
 	FMOD::System_Create(&system);
 	system->init(32, FMOD_INIT_NORMAL, nullptr);
 
-	LoadSound("L1_Ambiance", "Audio/Music/Infested_Engines.wav", true, true);
-
-	//PlaySoundByName("L1_Ambiance");
+	LoadSound("L1_Ambiance", "Audio/Music/Infested_Engines.wav", false, true);
+	LoadSound("Title", "Audio/Music/Resonance.wav", false, true);
+	PlaySoundByName(track);
 }
 
 AudioManager::~AudioManager()
@@ -22,18 +22,28 @@ void AudioManager::Update(float deltaTime) {
 }
 
 void AudioManager::RenderImGui() {
-	LABEL_LEFT(ImGui::DragFloat, "Ambiance Volume", &volume);
+	LABEL_LEFT(ImGui::DragFloat, "Volume", &volume);
+	ImGui::Text("Track");
+	// Draw a textbox for our track name
+	static char nameBuff[256];
+	memcpy(nameBuff, track.c_str(), track.size());
+	nameBuff[track.size()] = '\0';
+	if (ImGui::InputText("", nameBuff, 256)) {
+		track = nameBuff;
+	}
 }
 
 nlohmann::json AudioManager::ToJson() const {
 	return {
-		{ "volume", volume }
+		{ "volume", volume },
+		{ "track", track }
 	};
 }
 
 AudioManager::Sptr AudioManager::FromJson(const nlohmann::json& blob) {
 	AudioManager::Sptr result = std::make_shared<AudioManager>();
 	result->volume = JsonGet(blob, "volume", result->volume);
+	result->track = JsonGet(blob, "track", result->track);
 	return result;
 }
 

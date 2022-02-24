@@ -26,7 +26,7 @@ SimpleCameraControl::SimpleCameraControl() :
 
 SimpleCameraControl::~SimpleCameraControl()
 {
-	//Prompt Textures
+	//Destroy Textures
 	p_PickUp->~Texture2D();
 	p_Climb->~Texture2D();
 	p_Close->~Texture2D();
@@ -109,12 +109,12 @@ void SimpleCameraControl::Movement(float deltaTime)
 	if (glfwGetKey(_window, GLFW_KEY_M) && _allowMouse == false) {
 		_isMousePressed = !_isMousePressed;
 		_allowMouse = true;
-		/*if (_isMousePressed) {
-			glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-		}
-		else {
-			glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-		}*/
+		//if (_isMousePressed) {
+		//	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		//}
+		//else {
+		//	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		//}
 
 		std::cout << "Chaning mouse thing\n";
 	}

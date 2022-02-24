@@ -12,7 +12,7 @@ public:
 	typedef std::shared_ptr<AudioManager> Sptr;
 
 	float volume = 1.0f;
-
+	std::string track = "L1_Ambiance";
 	AudioManager() = default;
 	~AudioManager();
 	virtual void Update(float deltaTime) override;
