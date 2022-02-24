@@ -284,14 +284,6 @@ void ImGuiDebugLayer::_RenderGameWindow()
 			app.LoadScene(scene);
 		}
 	}
-	//This obviously has to move out of this ImGui layer at some point (cuz this layer will be commented out at release!)
-	if (scene->requestSceneReload && glfwGetKey(app.GetWindow(), GLFW_KEY_E)) {
-		scene = nullptr;
-		// We reload to scene from our cached state
-		scene = Scene::FromJson(_backupState);
-		app.LoadScene(scene);
-		scene->IsPlaying = true;
-	}
 
 	ImGui::SameLine();
 

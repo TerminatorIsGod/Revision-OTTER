@@ -97,7 +97,7 @@ Application& Application::Get() {
 	LOG_ASSERT(_singleton != nullptr, "Failed to get application! Get was called before the application was started!");
 	return *_singleton;
 }
-
+ 
 void Application::Start(int argCount, char** arguments) {
 	LOG_ASSERT(_singleton == nullptr, "Application has already been started!");
 	_singleton = new Application();
@@ -141,6 +141,8 @@ bool Application::LoadScene(const std::string & path) {
 		Gameplay::Scene::Sptr scene = Gameplay::Scene::Load(path);
 		LoadScene(scene);
 		return scene != nullptr;
+
+		_backupState = scene->ToJson();
 	}
 	return false;
 }
@@ -249,6 +251,11 @@ void Application::_Run()
 			else {
 				menuenablething->IsEnabled = false;
 			}
+		}
+
+		if (_currentScene->requestSceneReload && glfwGetKey(GetWindow(), GLFW_KEY_E)) {
+			LoadScene("Level1.json");
+			_currentScene->IsPlaying = true;
 		}
 
 		// Receive events like input and window position/size changes from GLFW

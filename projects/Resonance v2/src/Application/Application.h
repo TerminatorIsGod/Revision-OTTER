@@ -111,7 +111,7 @@ public:
 	bool isEscapePressed = false;
 	bool isGamePaused = false;
 	bool isGameStarted = true;
-
+	nlohmann::json _backupState;
 protected:
 	// The GL driver layer is a special friend that can access our protected members (mainly window info)
 	friend class GLAppLayer;
