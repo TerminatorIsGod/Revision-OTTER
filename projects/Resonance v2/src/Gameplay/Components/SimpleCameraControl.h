@@ -69,7 +69,7 @@ protected:
 	bool _isMousePressed = true;
 	GLFWwindow* _window;
 	Scene* _scene;
-	//Player State Stuff
+	//Player State Stuff 
 	enum PlayerState
 	{
 		Idle,
@@ -79,6 +79,8 @@ protected:
 	};
 
 	PlayerState playerState = Idle;
+	PlayerState prevState = Idle;
+
 
 	float sneakSpeed = 6.f; //
 	float walkSpeed = 8.f; //2
@@ -104,11 +106,11 @@ protected:
 	int playerEmmiterCount = 5;
 
 	//Prompt Textures
-	Texture2D::Sptr p_PickUp = ResourceManager::CreateAsset<Texture2D>("textures/ui/PickupPrompt.png");
-	Texture2D::Sptr p_Climb = ResourceManager::CreateAsset<Texture2D>("textures/ui/ClimbPrompt.png");
-	Texture2D::Sptr p_Close = ResourceManager::CreateAsset<Texture2D>("textures/ui/ClosePrompt.png");
-	Texture2D::Sptr p_Open = ResourceManager::CreateAsset<Texture2D>("textures/ui/OpenPrompt.png");
-	Texture2D::Sptr p_Distract = ResourceManager::CreateAsset<Texture2D>("textures/ui/DistractPrompt.png");
+	Texture2D::Sptr p_PickUp;
+	Texture2D::Sptr p_Climb;
+	Texture2D::Sptr p_Close;
+	Texture2D::Sptr p_Open;
+	Texture2D::Sptr p_Distract;
 
 
 

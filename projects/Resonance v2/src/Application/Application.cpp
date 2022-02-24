@@ -241,7 +241,7 @@ void Application::_Run()
 			auto menuobj = _currentScene->FindObjectByName("PauseScreen");
 			//auto menusystem = menuobj->Get<MenuSystemNewAndImproved>();
 			auto menuenablething = menuobj->Get<GuiPanel>();
-			
+
 
 			if (isGamePaused) {
 				menuenablething->IsEnabled = true;

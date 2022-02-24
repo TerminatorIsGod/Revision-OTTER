@@ -86,11 +86,12 @@ void DistractedState::Listen(Enemy* e, float deltaTime)
 
 		e->pathRequested = false;
 
-		//Switch to agro when super close to player
+		//Switch to agro when super close to player? Turned this off for now, 
+		//I find it interesting for the enemies to slowly follow you while you hold ur breath.
 		if (glm::length(e->player->GetPosition() - e->GetGameObject()->GetPosition()) < 7.0f)
 		{
 			//std::cout << "\nIM AGRO!!";
-			e->SetState(AggravatedState::getInstance());
+			//e->SetState(AggravatedState::getInstance());
 		}
 
 		if (s->Get<SoundEmmiter>()->isPlayerLight)

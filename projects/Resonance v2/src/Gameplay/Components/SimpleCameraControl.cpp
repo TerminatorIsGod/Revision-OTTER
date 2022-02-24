@@ -24,7 +24,15 @@ SimpleCameraControl::SimpleCameraControl() :
 	_isMousePressed(true)
 { }
 
-SimpleCameraControl::~SimpleCameraControl() = default;
+SimpleCameraControl::~SimpleCameraControl()
+{
+	//Prompt Textures
+	p_PickUp->~Texture2D();
+	p_Climb->~Texture2D();
+	p_Close->~Texture2D();
+	p_Open->~Texture2D();
+	p_Distract->~Texture2D();
+}
 
 void SimpleCameraControl::Awake() {
 	_scene = GetGameObject()->GetScene();
@@ -32,6 +40,15 @@ void SimpleCameraControl::Awake() {
 	_window = app.GetWindow();
 	GetGameObject()->SetPostion(startingPos);
 
+	//Prompt Textures
+	if (p_PickUp == nullptr)
+	{
+		p_PickUp = ResourceManager::CreateAsset<Texture2D>("textures/ui/PickupPrompt.png");
+		p_Climb = ResourceManager::CreateAsset<Texture2D>("textures/ui/ClimbPrompt.png");
+		p_Close = ResourceManager::CreateAsset<Texture2D>("textures/ui/ClosePrompt.png");
+		p_Open = ResourceManager::CreateAsset<Texture2D>("textures/ui/OpenPrompt.png");
+		p_Distract = ResourceManager::CreateAsset<Texture2D>("textures/ui/DistractPrompt.png");
+	}
 	for (int i = 0; i < playerEmmiterCount; i++)
 	{
 		GameObject::Sptr soundEmmiter = _scene->CreateGameObject("playerEmmiter");
@@ -73,6 +90,7 @@ void SimpleCameraControl::Update(float deltaTime)
 			playerEmmiterIndex = 0;
 	}
 
+	prevState = playerState;
 	//std::cout << "\nPulse Timer: " << playerPulseTimer;
 }
 
@@ -100,7 +118,7 @@ void SimpleCameraControl::Movement(float deltaTime)
 
 		std::cout << "Chaning mouse thing\n";
 	}
-	else if (!glfwGetKey(_window, GLFW_KEY_M)) {	
+	else if (!glfwGetKey(_window, GLFW_KEY_M)) {
 		_allowMouse = false;
 	}
 
@@ -233,6 +251,7 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 		{
 			oxygenMeter += oxygenReplenishSpeed * deltaTime;
 			playerEmmiters[playerEmmiterIndex]->targetVolume = replenishVol;
+			playerPulseTimer -= deltaTime * 0.5f;
 		}
 		else
 		{
@@ -284,6 +303,9 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 
 void SimpleCameraControl::SwitchState(float deltaTime)
 {
+	if (playerState != prevState)
+		playerPulseTimer = 0.0001f;
+
 	switch (playerState)
 	{
 	case 0:
@@ -407,12 +429,12 @@ void SimpleCameraControl::IdleState(float deltaTime)
 {
 	SetSpeed(walkSpeed);
 	idleTimer -= deltaTime;
-	playerPulseTimer = 0.00001f;
+	playerPulseTimer -= deltaTime * 0.5f;
 	//playerPulseTimer -= deltaTime * 2.0f;
 
 	if (idleTimer <= 0.0f)
 	{
-		playerEmmiters[playerEmmiterIndex]->lerpSpeed = 1.0f;
+		playerEmmiters[playerEmmiterIndex]->lerpSpeed = 0.5f;
 
 		if (inhale)
 			inhale = false;
@@ -423,9 +445,9 @@ void SimpleCameraControl::IdleState(float deltaTime)
 	}
 
 	if (inhale)
-		playerEmmiters[playerEmmiterIndex]->targetVolume = 7.f;
+		playerEmmiters[playerEmmiterIndex]->targetVolume = 5.f;
 	else
-		playerEmmiters[playerEmmiterIndex]->targetVolume = 8.f;
+		playerEmmiters[playerEmmiterIndex]->targetVolume = 6.f;
 }
 
 void SimpleCameraControl::SneakState(float deltaTime)
@@ -512,7 +534,7 @@ nlohmann::json SimpleCameraControl::ToJson() const {
 	};
 }
 
-SimpleCameraControl::Sptr SimpleCameraControl::FromJson(const nlohmann::json & blob) {
+SimpleCameraControl::Sptr SimpleCameraControl::FromJson(const nlohmann::json& blob) {
 	SimpleCameraControl::Sptr result = std::make_shared<SimpleCameraControl>();
 	result->_mouseSensitivity = JsonGet(blob, "mouse_sensitivity", result->_mouseSensitivity);
 	result->_moveSpeeds = JsonGet(blob, "move_speed", result->_moveSpeeds);
