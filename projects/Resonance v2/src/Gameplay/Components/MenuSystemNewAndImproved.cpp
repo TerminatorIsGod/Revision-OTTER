@@ -25,6 +25,8 @@ void MenuSystemNewAndImproved::Awake()
 	offscreenPos = glm::vec2(10000, 10000);
 
 	_ui->SetPosition(offscreenPos);
+
+	lastWindowSize = glm::vec2(windx, windy);
 }
 
 void MenuSystemNewAndImproved::RenderImGui() {
@@ -52,13 +54,60 @@ MenuSystemNewAndImproved::Sptr MenuSystemNewAndImproved::FromJson(const nlohmann
 
 void MenuSystemNewAndImproved::Update(float deltaTime) {
 
+
+	isPauseScreen();
+
 	if ((glfwGetKey(_window, key) == GLFW_PRESS) && (isKeyPressed == false)) {
 		isKeyPressed = true;
 		isToggled = !isToggled;
+
+		int windx, windy;
+		glfwGetWindowSize(_window, &windx, &windy);
+
+		if (lastWindowSize != glm::vec2(windx, windy)) {
+
+			centerPos.x = windx / 2;
+			centerPos.y = windy / 2;
+
+			auto _ui = GetGameObject()->Get<RectTransform>();
+			_ui->SetSize(glm::vec2((windx / 4.0), (windy / 4.0)));
+
+			offscreenPos = glm::vec2(10000, 10000);
+
+			_ui->SetPosition(offscreenPos);
+
+			lastWindowSize = glm::vec2(windx, windy);
+
+		}
+
 		ToggleMenu();
 	}
 	else if ((glfwGetKey(_window, key) != GLFW_PRESS) && (isKeyPressed == true)) {
 		isKeyPressed = false;
+	}
+}
+
+void MenuSystemNewAndImproved::isPauseScreen() {
+	if (GetGameObject()->Name == "PauseScreen") { // || GetGameObject()->Get<GuiPanel>()->IsEnabled
+
+		int windx, windy;
+		glfwGetWindowSize(_window, &windx, &windy);
+
+		if (lastWindowSize != glm::vec2(windx, windy)) {
+
+			centerPos.x = windx / 2;
+			centerPos.y = windy / 2;
+
+			auto _ui = GetGameObject()->Get<RectTransform>();
+			_ui->SetSize(glm::vec2((windx / 4.0), (windy / 4.0)));
+
+			offscreenPos = glm::vec2(10000, 10000);
+
+			_ui->SetPosition(offscreenPos);
+
+			lastWindowSize = glm::vec2(windx, windy);
+
+		}
 	}
 }
 
