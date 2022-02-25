@@ -231,7 +231,6 @@ void Application::_Run()
 		if (glfwGetKey(_window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 			if (!isEscapePressed && isGameStarted) {
 				isGamePaused = !isGamePaused;
-
 			}
 			isEscapePressed = true;
 		}

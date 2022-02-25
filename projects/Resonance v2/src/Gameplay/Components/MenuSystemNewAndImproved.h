@@ -3,6 +3,7 @@
 #include "Gameplay/Physics/RigidBody.h"
 #include "Gameplay/GameObject.h"
 #include "Gameplay/Components/LerpSystem.h"
+#include "Gameplay/Components/GUI/GuiPanel.h"
 
 struct GLFWwindow;
 
@@ -21,6 +22,7 @@ public:
 	virtual void Update(float deltaTime) override;
 
 	void ToggleMenu();
+	void isPauseScreen();
 
 
 public:
@@ -33,6 +35,8 @@ public:
 	Gameplay::Scene* _scene;
 	glm::vec2 centerPos;
 	glm::vec2 offscreenPos;
+
+	glm::vec2 lastWindowSize;
 	
 	int key;
 
