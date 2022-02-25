@@ -284,7 +284,7 @@ void ImGuiDebugLayer::_RenderGameWindow()
 			app.LoadScene(scene);
 		}
 	}
-
+	 
 	ImGui::SameLine();
 
 	// Draw pause button
@@ -294,7 +294,11 @@ void ImGuiDebugLayer::_RenderGameWindow()
 		Timing::SetTimeScale(newScale);
 	}
 
+	ImGui::SameLine();
+
 	ImGui::PopStyleVar();
+
+	ImGui::Text("FPS: %.*0f", 3, 1.0f / Timing::Current().DeltaTime());
 
 	// Determine the relative position of the window
 	ImVec2 subPos = ImGui::GetWindowPos();

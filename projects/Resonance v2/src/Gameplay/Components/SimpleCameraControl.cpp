@@ -92,6 +92,7 @@ void SimpleCameraControl::Update(float deltaTime)
 
 	prevState = playerState;
 	//std::cout << "\nPulse Timer: " << playerPulseTimer;
+
 }
 
 void SimpleCameraControl::Movement(float deltaTime)
@@ -185,6 +186,7 @@ void SimpleCameraControl::Movement(float deltaTime)
 			playerState = Walk;
 
 		float velocityMagnitude = glm::sqrt((_body->GetLinearVelocity().x * _body->GetLinearVelocity().x) + (_body->GetLinearVelocity().y * _body->GetLinearVelocity().y));
+
 		if (velocityMagnitude < 0.5f)
 		{
 			playerState = Idle;
