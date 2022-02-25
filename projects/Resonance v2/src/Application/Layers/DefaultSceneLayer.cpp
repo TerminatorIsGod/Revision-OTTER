@@ -6,9 +6,9 @@
 #include <GLM/gtc/type_ptr.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <GLM/gtx/common.hpp> // for fmod (floating modulus)
-
-#include <filesystem> 
  
+#include <filesystem> 
+   
 // Graphics
 #include "Graphics/Buffers/IndexBuffer.h"
 #include "Graphics/Buffers/VertexBuffer.h"
@@ -20,8 +20,8 @@
 #include "Graphics/Font.h"
 #include "Graphics/GuiBatcher.h"
 #include "Graphics/Framebuffer.h"
- 
-// Utilities
+  
+// Utilities 
 #include "Utils/MeshBuilder.h"
 #include "Utils/MeshFactory.h"
 #include "Utils/ObjLoader.h"

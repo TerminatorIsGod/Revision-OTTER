@@ -8,7 +8,10 @@ void AudioManager::Awake() {
 
 	LoadSound("L1_Ambiance", "Audio/Music/Infested_Engines.wav", false, true);
 	LoadSound("Title", "Audio/Music/Resonance.wav", false, true);
+	LoadSound("Test", "Audio/Music/Dead Quarters.wav", false, true);
+
 	PlaySoundByName(track);
+	//PlaySoundByName("Test");
 }
 
 AudioManager::~AudioManager()

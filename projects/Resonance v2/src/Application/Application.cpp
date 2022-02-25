@@ -141,7 +141,7 @@ bool Application::LoadScene(const std::string & path) {
 		Gameplay::Scene::Sptr scene = Gameplay::Scene::Load(path);
 		LoadScene(scene);
 		return scene != nullptr;
-
+		scene->IsPlaying = true;
 		_backupState = scene->ToJson();
 	}
 	return false;
