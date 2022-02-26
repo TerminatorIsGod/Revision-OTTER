@@ -84,7 +84,7 @@ Application::Application() :
 	_window(nullptr),
 	_windowSize({ DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT }),
 	_isRunning(false),
-	_isEditor(true),
+	_isEditor(false),
 	_windowTitle("Resonance"),
 	_currentScene(nullptr),
 	_targetScene(nullptr),
@@ -97,7 +97,7 @@ Application& Application::Get() {
 	LOG_ASSERT(_singleton != nullptr, "Failed to get application! Get was called before the application was started!");
 	return *_singleton;
 }
- 
+
 void Application::Start(int argCount, char** arguments) {
 	LOG_ASSERT(_singleton == nullptr, "Application has already been started!");
 	_singleton = new Application();

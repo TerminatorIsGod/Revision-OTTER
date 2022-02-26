@@ -16,15 +16,14 @@
 #include "Gameplay/Components/AudioManager.h"
 
 
-
 SimpleCameraControl::SimpleCameraControl() :
-	IComponent(), 
+	IComponent(),
 	_mouseSensitivity({ 0.5f, 0.3f }),
 	_moveSpeeds(glm::vec3(1600.0f)),
 	_shiftMultipler(2.0f),
-	_currentRot(glm::vec2(0.0f)), 
+	_currentRot(glm::vec2(0.0f)),
 	_isMousePressed(true)
-{ } 
+{ }
 
 SimpleCameraControl::~SimpleCameraControl()
 {
@@ -69,18 +68,18 @@ void SimpleCameraControl::Awake() {
 	}
 	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
- 
+
 void SimpleCameraControl::Update(float deltaTime)
 {
 
 	Movement(deltaTime);
 	SwitchState(deltaTime);
 	OxygenSystem(deltaTime);
-	MoveUI(deltaTime); 
+	MoveUI(deltaTime);
 	Interact(deltaTime);
-	  
+
 	if (playerPulseTimer <= 0.f)
-	{		 
+	{
 		playerPulseTimer = 1.0f;
 
 		playerEmmiters[playerEmmiterIndex]->isDecaying = false;
@@ -88,7 +87,7 @@ void SimpleCameraControl::Update(float deltaTime)
 
 		if (!startedRefill)
 			_scene->audioManager->Get<AudioManager>()->PlayFootstepSound(GetGameObject()->GetPosition());
-		
+
 		if (playerEmmiterIndex < playerEmmiterCount - 1)
 			playerEmmiterIndex++;
 		else
@@ -258,8 +257,7 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 		{
 			if (!startedRefill)
 			{
-				_scene->audioManager->Get<AudioManager>()->LoadSound("OxygenRefill", "Audio/Sounds/replenishOxygen.wav", false, true);
-				_scene->audioManager->Get<AudioManager>()->PlaySoundByName("OxygenRefill");
+				oxygenChannel = _scene->audioManager->Get<AudioManager>()->PlaySoundByName("OxygenRefill", 0.6f);
 				startedRefill = true;
 			}
 			oxygenMeter += oxygenReplenishSpeed * deltaTime;
@@ -269,8 +267,11 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 		else
 		{
 			oxygenMeter = oxygenMeterMax;
-			_scene->audioManager->Get<AudioManager>()->UnloadSound("OxygenRefill");
-			startedRefill = false;
+			if (startedRefill)
+			{
+				oxygenChannel->stop();
+				startedRefill = false;
+			}
 		}
 
 		glm::vec4 newCol = glm::mix(curCol, glm::vec4(0.0f, 0.5f, 1.0f, 0.6f), 3.0f * deltaTime);
@@ -281,7 +282,7 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 	{
 		if (startedRefill)
 		{
-			_scene->audioManager->Get<AudioManager>()->UnloadSound("OxygenRefill");
+			oxygenChannel->stop();
 			startedRefill = false;
 		}
 

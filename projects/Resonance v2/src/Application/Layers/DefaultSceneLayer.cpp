@@ -6,9 +6,9 @@
 #include <GLM/gtc/type_ptr.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <GLM/gtx/common.hpp> // for fmod (floating modulus)
- 
+
 #include <filesystem> 
-   
+
 // Graphics
 #include "Graphics/Buffers/IndexBuffer.h"
 #include "Graphics/Buffers/VertexBuffer.h"
@@ -20,7 +20,7 @@
 #include "Graphics/Font.h"
 #include "Graphics/GuiBatcher.h"
 #include "Graphics/Framebuffer.h"
-   
+
 // Utilities 
 #include "Utils/MeshBuilder.h"
 #include "Utils/MeshFactory.h"
@@ -102,8 +102,8 @@ void DefaultSceneLayer::_CreateScene()
 
 	bool loadScene = true;
 	// For now we can use a toggle to generate our scene vs load from file
-	if (loadScene && std::filesystem::exists("level1.json")) {
-		app.LoadScene("level1.json");
+	if (loadScene && std::filesystem::exists("levelMenu.json")) {
+		app.LoadScene("levelMenu.json");
 
 	}
 	else {

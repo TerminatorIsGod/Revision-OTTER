@@ -94,7 +94,7 @@ public:
 
 	//General Functions
 	glm::vec3 speed = glm::vec3(0.0f);
-
+	bool started = false;
 	virtual void Awake() override;
 	virtual void Update(float deltaTime) override;
 	virtual void RenderImGui() override;

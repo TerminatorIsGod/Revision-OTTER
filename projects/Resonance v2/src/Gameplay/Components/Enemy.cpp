@@ -38,12 +38,17 @@ void Enemy::Awake()
 
 	player = scene->MainCamera->GetGameObject();
 	pathManager = scene->pathManager;
-	
-	//SetState(PatrollingState::getInstance());
+
 }
 
 void Enemy::Update(float deltaTime)
 {
+	if (!started)
+	{
+		SetState(PatrollingState::getInstance());
+		started = true;
+	}
+
 	if (myChannel != NULL)
 		myChannel->set3DAttributes(&scene->audioManager->Get<AudioManager>()->GlmVectorToFmodVector(GetGameObject()->GetPosition()), 0);
 
