@@ -98,7 +98,7 @@ protected:
 	float oxygenMeterMax = 120.0f;
 	float oxygenMeter = oxygenMeterMax;
 	float oxygenDecaySpeed = 1.0f;
-	float oxygenReplenishSpeed = 5.f;
+	float oxygenReplenishSpeed = 6.f;
 	float breathHoldDecaySpeed = 2.5f;
 
 	std::vector<SoundEmmiter::Sptr> playerEmmiters;

@@ -261,7 +261,7 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 				startedRefill = true;
 			}
 			oxygenMeter += oxygenReplenishSpeed * deltaTime;
-			playerEmmiters[playerEmmiterIndex]->targetVolume = replenishVol;
+			playerEmmiters[playerEmmiterIndex]->targetVolume = replenishVol; 
 			playerPulseTimer -= deltaTime * 0.5f;
 		}
 		else
@@ -474,12 +474,12 @@ void SimpleCameraControl::IdleState(float deltaTime)
 {
 	SetSpeed(walkSpeed);
 	idleTimer -= deltaTime;
-	playerPulseTimer -= deltaTime * 0.5f;
+	playerPulseTimer -= deltaTime * 0.5f; //ring creation speed
 	//playerPulseTimer -= deltaTime * 2.0f;
 
 	if (idleTimer <= 0.0f)
 	{
-		playerEmmiters[playerEmmiterIndex]->lerpSpeed = 0.5f;
+		playerEmmiters[playerEmmiterIndex]->lerpSpeed = 0.5f; //ring expansion speed
 
 		if (inhale)
 			inhale = false;
@@ -490,9 +490,9 @@ void SimpleCameraControl::IdleState(float deltaTime)
 	}
 
 	if (inhale)
-		playerEmmiters[playerEmmiterIndex]->targetVolume = 5.f;
+		playerEmmiters[playerEmmiterIndex]->targetVolume = 3.5f; //ring size
 	else
-		playerEmmiters[playerEmmiterIndex]->targetVolume = 6.f;
+		playerEmmiters[playerEmmiterIndex]->targetVolume = 4.5f; //ring size
 }
 
 void SimpleCameraControl::SneakState(float deltaTime)
@@ -505,19 +505,19 @@ void SimpleCameraControl::SneakState(float deltaTime)
 void SimpleCameraControl::WalkState(float deltaTime)
 {
 	SetSpeed(walkSpeed);
-	playerPulseTimer -= deltaTime * 2.0f;
+	playerPulseTimer -= deltaTime * 1.5f; //ring creation speed
 
-	playerEmmiters[playerEmmiterIndex]->targetVolume = walkSpeed;
-	playerEmmiters[playerEmmiterIndex]->lerpSpeed = 2.0f;
+	playerEmmiters[playerEmmiterIndex]->targetVolume = 6.5f; //ring size
+	playerEmmiters[playerEmmiterIndex]->lerpSpeed = 2.0f; //ring expansion speed
 }
 
 void SimpleCameraControl::RunState(float deltaTime)
 {
 	SetSpeed(runSpeed);
-	playerPulseTimer -= deltaTime * 2.5f;
+	playerPulseTimer -= deltaTime * 2.f; //ring creation speed
 
-	playerEmmiters[playerEmmiterIndex]->targetVolume = runSpeed;
-	playerEmmiters[playerEmmiterIndex]->lerpSpeed = 2.5f;
+	playerEmmiters[playerEmmiterIndex]->targetVolume = 7.5f; //ring size
+	playerEmmiters[playerEmmiterIndex]->lerpSpeed = 2.5f; //ring expansion speed
 }
 
 void SimpleCameraControl::SetSpeed(float newSpeed)
