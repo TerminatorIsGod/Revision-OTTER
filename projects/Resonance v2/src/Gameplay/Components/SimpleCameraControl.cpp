@@ -325,8 +325,8 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 
 void SimpleCameraControl::SwitchState(float deltaTime)
 {
-	if (playerState != prevState)
-		playerPulseTimer = 0.0001f;
+	//if (playerState != prevState) //When running into objects, this makes sounds go off like crazy.
+	//	playerPulseTimer = 0.0001f; // This was honestly a bit unnessicary anyways.
 
 	switch (playerState)
 	{
