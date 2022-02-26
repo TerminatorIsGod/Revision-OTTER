@@ -6,6 +6,7 @@
 #include "Gameplay/Enemy/PatrollingState.h"
 #include "Gameplay/Enemy/AggravatedState.h"
 
+
 #pragma region "Default Functions"
 
 float Magnitude(glm::vec3 dir)
@@ -37,14 +38,15 @@ void Enemy::Awake()
 
 	player = scene->MainCamera->GetGameObject();
 	pathManager = scene->pathManager;
-	//patrolPoints.push_back(glm::vec3(20));
-	//patrolPoints.push_back(glm::vec3(70));
-
-	SetState(PatrollingState::getInstance());
+	
+	//SetState(PatrollingState::getInstance());
 }
 
 void Enemy::Update(float deltaTime)
 {
+	if (myChannel != NULL)
+		myChannel->set3DAttributes(&scene->audioManager->Get<AudioManager>()->GlmVectorToFmodVector(GetGameObject()->GetPosition()), 0);
+
 	MoveListeningLight();
 	currentState->Listen(this, deltaTime);
 	currentState->Pathfind(this, deltaTime);

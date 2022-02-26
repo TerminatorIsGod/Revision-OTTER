@@ -220,6 +220,8 @@ void Application::_Run()
 			_currentScene->FindObjectByName("LoadingScreenPlane")->Get<RenderComponent>()->IsEnabled = true;
 			if (isSwappingScenesCur) { //makes sure loading screen is showing before actually loading
 				isSwappingScenesCur = false;
+				_currentScene->audioManager->Get<AudioManager>()->UnloadSound("Title");
+				_currentScene->audioManager->Get<AudioManager>()->PlaySoundByName("Transition");
 				LoadScene("level1.json");
 			}
 			else {

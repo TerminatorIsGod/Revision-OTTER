@@ -5,6 +5,8 @@
 #include "Gameplay/Physics/RigidBody.h"
 #include "Gameplay/Scene.h"
 #include "Gameplay/Enemy/EnemyState.h"
+#include "fmod.hpp"
+#include "Gameplay/Components/AudioManager.h"
 
 class EnemyState; //This forward declaration is here to avoid a circular include
 
@@ -72,6 +74,8 @@ public:
 	float distractedBackupTimer = 20.0f, distractedTimer = 5.0f; //dont use this
 
 	EnemyState* currentState;
+
+	FMOD::Channel* myChannel;
 
 #pragma endregion "Properties & Variables"
 

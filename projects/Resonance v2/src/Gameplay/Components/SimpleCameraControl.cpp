@@ -13,6 +13,8 @@
 #include "Application/Application.h"
 #include "Gameplay/Components/GUI/RectTransform.h"
 #include "Gameplay/Components/GUI/GuiPanel.h"
+#include "Gameplay/Components/AudioManager.h"
+
 
 
 SimpleCameraControl::SimpleCameraControl() :
@@ -67,23 +69,26 @@ void SimpleCameraControl::Awake() {
 	}
 	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
-
+ 
 void SimpleCameraControl::Update(float deltaTime)
 {
 
 	Movement(deltaTime);
 	SwitchState(deltaTime);
 	OxygenSystem(deltaTime);
-	MoveUI(deltaTime);
+	MoveUI(deltaTime); 
 	Interact(deltaTime);
-
+	  
 	if (playerPulseTimer <= 0.f)
-	{
+	{		 
 		playerPulseTimer = 1.0f;
 
 		playerEmmiters[playerEmmiterIndex]->isDecaying = false;
 		playerEmmiters[playerEmmiterIndex]->MoveToPlayer();
 
+		if (!startedRefill)
+			_scene->audioManager->Get<AudioManager>()->PlayFootstepSound(GetGameObject()->GetPosition());
+		
 		if (playerEmmiterIndex < playerEmmiterCount - 1)
 			playerEmmiterIndex++;
 		else
@@ -251,6 +256,12 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 	{
 		if (oxygenMeter < oxygenMeterMax)
 		{
+			if (!startedRefill)
+			{
+				_scene->audioManager->Get<AudioManager>()->LoadSound("OxygenRefill", "Audio/Sounds/replenishOxygen.wav", false, true);
+				_scene->audioManager->Get<AudioManager>()->PlaySoundByName("OxygenRefill");
+				startedRefill = true;
+			}
 			oxygenMeter += oxygenReplenishSpeed * deltaTime;
 			playerEmmiters[playerEmmiterIndex]->targetVolume = replenishVol;
 			playerPulseTimer -= deltaTime * 0.5f;
@@ -258,6 +269,8 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 		else
 		{
 			oxygenMeter = oxygenMeterMax;
+			_scene->audioManager->Get<AudioManager>()->UnloadSound("OxygenRefill");
+			startedRefill = false;
 		}
 
 		glm::vec4 newCol = glm::mix(curCol, glm::vec4(0.0f, 0.5f, 1.0f, 0.6f), 3.0f * deltaTime);
@@ -266,6 +279,12 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 	//Oxygen Decay
 	else
 	{
+		if (startedRefill)
+		{
+			_scene->audioManager->Get<AudioManager>()->UnloadSound("OxygenRefill");
+			startedRefill = false;
+		}
+
 		if (oxygenMeter > 0.01f)
 		{
 			oxygenMeter -= oxygenDecaySpeed * deltaTime;
@@ -328,7 +347,7 @@ void SimpleCameraControl::SwitchState(float deltaTime)
 void SimpleCameraControl::Interact(float deltaTime)
 {
 
-	glm::vec3 viewDir = currentRot * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f);
+	viewDir = currentRot * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f);
 	btCollisionWorld::ClosestRayResultCallback hit(ToBt(GetGameObject()->GetPosition()), ToBt(GetGameObject()->GetPosition() + (viewDir * 5.0f)));
 	_scene->GetPhysicsWorld()->rayTest(ToBt(GetGameObject()->GetPosition()), ToBt(GetGameObject()->GetPosition() + (viewDir * 5.0f)), hit);
 

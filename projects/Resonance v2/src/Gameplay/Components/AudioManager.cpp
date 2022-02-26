@@ -1,17 +1,23 @@
 #include "Gameplay/Components/AudioManager.h"
 #include "Utils/ImGuiHelper.h"
 #include "Utils/JsonGlmHelpers.h"
+#include "Gameplay/Components/SimpleCameraControl.h"
 
 void AudioManager::Awake() {
+	GetGameObject()->GetScene()->audioManager = GetGameObject();
+
 	FMOD::System_Create(&system);
 	system->init(32, FMOD_INIT_NORMAL, nullptr);
 
 	LoadSound("L1_Ambiance", "Audio/Music/Infested_Engines.wav", false, true);
 	LoadSound("Title", "Audio/Music/Resonance.wav", false, true);
-	LoadSound("Test", "Audio/Music/Dead Quarters.wav", false, true);
+	LoadSound("L2_Ambiance", "Audio/Music/Dead Quarters.wav", false, true);
+	LoadSound("Transition", "Audio/Sounds/loadingTransition.wav", false, false);
+	LoadSound("Footstep", "Audio/Sounds/footstepTest.wav", true, false);
+	LoadSound("LeaflingPatrol", "Audio/Sounds/Leaflings_Patrol2.wav", true, true);
 
-	PlaySoundByName(track);
-	//PlaySoundByName("Test");
+
+	//PlaySoundByName(track);
 }
 
 AudioManager::~AudioManager()
@@ -20,8 +26,16 @@ AudioManager::~AudioManager()
 }
 
 void AudioManager::Update(float deltaTime) {
-	GetGameObject()->GetScene();
+
+	GameObject* player = GetGameObject()->GetScene()->MainCamera->GetGameObject();
+	if (player->Has<SimpleCameraControl>())
+	{
+		glm::quat dir = player->Get<SimpleCameraControl>()->currentRot;
+		system->set3DListenerAttributes(0, &GlmVectorToFmodVector(player->GetPosition()), 0, &GlmVectorToFmodVector(dir * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f)), &GlmVectorToFmodVector(dir * glm::vec4(0.0f, -1.0f, 0.0f, 1.0f)));
+	}
 	system->update();
+	
+
 }
 
 void AudioManager::RenderImGui() {
@@ -71,10 +85,35 @@ void AudioManager::LoadSound(const std::string& soundName, const std::string& fi
 		sounds[soundName] = loadedSound;
 }
 
-void AudioManager::PlaySoundByName(const std::string& soundName)
+FMOD::Channel* AudioManager::PlaySoundByName(const std::string& soundName, glm::vec3 pos)
 {
-	system->playSound(sounds[soundName], nullptr, false, nullptr);
+	FMOD::Channel* newChannel;
+	system->playSound(sounds[soundName], nullptr, false, &newChannel);
+	newChannel->set3DAttributes(&GlmVectorToFmodVector(pos), 0);
+
+	return newChannel;
 }
+
+void AudioManager::PlayFootstepSound(glm::vec3 pos)
+{
+	////make if statement that only plays sound if < x amount of channels are being used.
+	//system->playSound(sounds["Footstep"], nullptr, false, &footstepChannel);
+
+	//float rVolume = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 0.6f));
+	//footstepChannel->setVolume(rVolume + 0.5f);
+
+	//float rPitch = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 0.4f));
+	//footstepChannel->setPitch(rPitch + 0.8f);
+
+
+	//footstepChannel->set3DAttributes(&GlmVectorToFmodVector(pos), 0);
+}
+
+//void AudioManager::PauseSoundByName(const std::string& soundName)
+//{
+//	//system->playSound(sounds[soundName], nullptr, true, nullptr);
+//	
+//}
 
 void AudioManager::UnloadSound(const std::string& soundName)
 {

@@ -55,6 +55,8 @@ namespace Gameplay {
 
 		std::vector<GameObject*> soundEmmiters;
 		GameObject* pathManager;
+		GameObject* audioManager;
+
 
 		std::vector<GameObject*> ladders;
 		std::vector<GameObject*> uiImages;

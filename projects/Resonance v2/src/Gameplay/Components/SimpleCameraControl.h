@@ -50,7 +50,8 @@ public:
 	void PlaceUI(int index, float xSize, float ySize, float xRatio = 1, float xMultiplier = 0, float yRatio = 1, float yMultiplier = 0);
 
 	SoundEmmiter::Sptr GetRecentEmmiter();
-
+	glm::vec3 viewDir;
+	glm::quat currentRot;
 protected:
 	glm::vec2 centerPos;
 	int windx, windy;
@@ -60,7 +61,6 @@ protected:
 	glm::vec3 _moveSpeeds;
 	glm::dvec2 _prevMousePos;
 	glm::vec2 _currentRot;
-	glm::quat currentRot;
 
 	bool _allowMouse = true;
 	bool isJPressed = false;
@@ -113,6 +113,6 @@ protected:
 	Texture2D::Sptr p_Distract;
 
 
-
+	bool startedRefill = false;
 
 };

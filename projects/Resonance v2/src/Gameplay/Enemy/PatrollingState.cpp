@@ -4,6 +4,7 @@
 #include "Utils\GlmBulletConversions.h"
 #include "Gameplay/Enemy/AggravatedState.h"
 #include "Gameplay/Enemy/DistractedState.h"
+#include "Gameplay/Components/AudioManager.h"
 
 EnemyState& PatrollingState::getInstance()
 {
@@ -14,13 +15,14 @@ EnemyState& PatrollingState::getInstance()
 void PatrollingState::Start(Enemy* e)
 {
 	std::cout << "\n[Enemy] " << e->GetGameObject()->Name << ": Entered Patrolling State";
-
+	e->myChannel = e->scene->audioManager->Get<AudioManager>()->PlaySoundByName("LeaflingPatrol", e->GetGameObject()->GetPosition());
 	e->pathRequested = false;
 	e->maxVelocity = e->IdleVelocity;
 }
 
 void PatrollingState::End(Enemy* e)
 {
+	e->myChannel->stop();
 	std::cout << "\n[Enemy] " << e->GetGameObject()->Name << ": Exited Patrolling State";
 }
 
