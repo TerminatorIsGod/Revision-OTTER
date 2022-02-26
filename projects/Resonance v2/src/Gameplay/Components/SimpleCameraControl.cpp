@@ -257,7 +257,7 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 		{
 			if (!startedRefill)
 			{
-				oxygenChannel = _scene->audioManager->Get<AudioManager>()->PlaySoundByName("OxygenRefill", 0.6f);
+				oxygenChannel = _scene->audioManager->Get<AudioManager>()->PlaySoundByName("OxygenRefill", 0.4f);
 				startedRefill = true;
 			}
 			oxygenMeter += oxygenReplenishSpeed * deltaTime;
@@ -289,10 +289,20 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 		if (oxygenMeter > 0.01f)
 		{
 			oxygenMeter -= oxygenDecaySpeed * deltaTime;
+			if (outOfBreath)
+			{
+				outOfBreath = false;
+				outOfBreathChannel->stop();
+			}
 		}
 		else
 		{
 			oxygenMeter = 0.01f;
+			if (!outOfBreath)
+			{
+				outOfBreathChannel = _scene->audioManager->Get<AudioManager>()->PlaySoundByName("OutOfBreath", 0.3f);
+				outOfBreath = true;
+			}
 			playerEmmiters[playerEmmiterIndex]->targetVolume = chokeVol;
 		}
 
@@ -306,6 +316,11 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 
 		if (oxygenMeter > 0.01f)
 		{
+			if (!holdingBreath)
+			{
+				_scene->audioManager->Get<AudioManager>()->PlaySoundByName("HoldingBreath", 0.4f);
+				holdingBreath = true;
+			}
 			oxygenMeter -= breathHoldDecaySpeed * deltaTime;
 			playerEmmiters[playerEmmiterIndex]->targetVolume = 0.01f;
 		}
@@ -316,6 +331,14 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 
 		glm::vec4 newCol = glm::mix(curCol, glm::vec4(0.0f, 0.3f, 0.6f, 0.6f), 3.0f * deltaTime);
 		_scene->uiImages[2]->GetChildren()[0]->Get<GuiPanel>()->SetColor(newCol);
+	}
+	else
+	{
+		if (holdingBreath)
+		{
+			_scene->audioManager->Get<AudioManager>()->PlaySoundByName("BreathOut", 0.4f);
+			holdingBreath = false;
+		}
 	}
 
 	//I tested out having the oxygen level affect the sound ring colour, I don't think it's noticible enough to replace the UI.

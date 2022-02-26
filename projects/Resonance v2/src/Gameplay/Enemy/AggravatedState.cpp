@@ -15,7 +15,7 @@ EnemyState& AggravatedState::getInstance()
 void AggravatedState::Start(Enemy* e)
 {
 	std::cout << "\n[Enemy] " << e->GetGameObject()->Name << ": Entered Aggravated State";
-	e->myChannel = e->scene->audioManager->Get<AudioManager>()->PlaySoundByName("LeaflingAgro", 2.0f, e->GetGameObject()->GetPosition());
+	e->myChannel = e->scene->audioManager->Get<AudioManager>()->PlaySoundByName("LeaflingAgro", 4.0f, e->GetGameObject()->GetPosition());
 
 	e->pathRequested = false;
 	e->agroTimer = agroTimerMax;

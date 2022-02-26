@@ -115,5 +115,9 @@ protected:
 
 
 	bool startedRefill = false;
+	bool outOfBreath = false;
+	bool holdingBreath = false;
+
 	FMOD::Channel* oxygenChannel;
+	FMOD::Channel* outOfBreathChannel;
 };

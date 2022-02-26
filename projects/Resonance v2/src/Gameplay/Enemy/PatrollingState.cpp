@@ -15,7 +15,7 @@ EnemyState& PatrollingState::getInstance()
 void PatrollingState::Start(Enemy* e)
 {
 	std::cout << "\n[Enemy] " << e->GetGameObject()->Name << ": Entered Patrolling State";
-	e->myChannel = e->scene->audioManager->Get<AudioManager>()->PlaySoundByName("LeaflingPatrol", 2.0f, e->GetGameObject()->GetPosition());
+	e->myChannel = e->scene->audioManager->Get<AudioManager>()->PlaySoundByName("LeaflingPatrol", 4.0f, e->GetGameObject()->GetPosition());
 	e->pathRequested = false;
 	e->maxVelocity = e->IdleVelocity;
 }

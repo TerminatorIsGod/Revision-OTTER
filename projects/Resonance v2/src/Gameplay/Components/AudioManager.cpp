@@ -19,6 +19,11 @@ void AudioManager::Awake() {
 	LoadSound("LeaflingAgro", "Audio/Sounds/Leaflings_Agro.wav", true, true);
 	LoadSound("Engines", "Audio/Sounds/engineWhirring.wav", true, true);
 	LoadSound("OxygenRefill", "Audio/Sounds/replenishOxygen.wav", false, true);
+	LoadSound("OutOfBreath", "Audio/Sounds/outOfBreath.wav", false, true);
+	LoadSound("HoldingBreath", "Audio/Sounds/holdingBreath.wav", false, false);
+	LoadSound("BreathOut", "Audio/Sounds/breathOut.wav", false, false);
+
+
 
 	if (track == "L1_Ambiance")
 	{
