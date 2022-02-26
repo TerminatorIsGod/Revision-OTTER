@@ -61,7 +61,7 @@ void SimpleCameraControl::Awake() {
 			emmiter->muteAtZero = true;
 			emmiter->isPlayerLight = true;
 			emmiter->linearLerp = true;
-			emmiter->defaultColour = glm::vec3(0.45, 0.45, 0.45);
+			emmiter->defaultColour = glm::vec3(0.1f, 0.0f, 0.45f);
 			emmiter->soundLightOffset = glm::vec3(0, 0, -6.0f);
 			playerEmmiters.push_back(emmiter);
 		}
@@ -261,7 +261,7 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 				startedRefill = true;
 			}
 			oxygenMeter += oxygenReplenishSpeed * deltaTime;
-			playerEmmiters[playerEmmiterIndex]->targetVolume = replenishVol; 
+			playerEmmiters[playerEmmiterIndex]->targetVolume = replenishVol;
 			playerPulseTimer -= deltaTime * 0.5f;
 		}
 		else
@@ -370,7 +370,6 @@ void SimpleCameraControl::SwitchState(float deltaTime)
 
 void SimpleCameraControl::Interact(float deltaTime)
 {
-
 	viewDir = currentRot * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f);
 	btCollisionWorld::ClosestRayResultCallback hit(ToBt(GetGameObject()->GetPosition()), ToBt(GetGameObject()->GetPosition() + (viewDir * 5.0f)));
 	_scene->GetPhysicsWorld()->rayTest(ToBt(GetGameObject()->GetPosition()), ToBt(GetGameObject()->GetPosition() + (viewDir * 5.0f)), hit);
@@ -379,6 +378,7 @@ void SimpleCameraControl::Interact(float deltaTime)
 		return;
 
 	glm::vec3 objectPos = ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
+	interactionObjectPos = objectPos;
 	if (objectPos == glm::vec3(0))
 		return;
 

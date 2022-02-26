@@ -63,10 +63,16 @@ void InteractSystem::Update(float deltaTime) {
 	glm::vec3 tpos = ppos - opos;
 	_distance = sqrt(pow(tpos.x, 2) + pow(tpos.y, 2) + pow(tpos.z, 2));
 
+	//Key
 	if (_distance <= _interactDistance && !_player->Get<SimpleCameraControl>()->promptShown) {
 		if (_iskey)
 			_player->Get<SimpleCameraControl>()->ShowPickup();
-		else if (_player->Get<InventorySystem>()->getKey(_requiredKey) && !isOpen)
+	}
+
+	//Animated Objects
+	if (_player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !_player->Get<SimpleCameraControl>()->promptShown) {
+
+		if (!_iskey && _player->Get<InventorySystem>()->getKey(_requiredKey) && !isOpen)
 			_player->Get<SimpleCameraControl>()->ShowOpen();
 		else if (_player->Get<InventorySystem>()->getKey(_requiredKey) && isOpen)
 			_player->Get<SimpleCameraControl>()->ShowClose();
@@ -76,16 +82,12 @@ void InteractSystem::Update(float deltaTime) {
 		if (!isKeyPressed)
 		{
 			if (_requiresKey) {
-
 				if (_player->Get<InventorySystem>()->getKey(_requiredKey)) {
 					interact();
-					isOpen = !isOpen;
 				}
-
 			}
 			else {
 				interact();
-				isOpen = !isOpen;
 			}
 			isKeyPressed = true;
 		}
@@ -114,19 +116,18 @@ void InteractSystem::interact() {
 	//	_body->IsEnabled = !isOpen;
 	//}
 
+	//Animated Object (based on raycast)
+	if (_lerpS && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos) {
+		_lerpS->lerpReverse = isOpen;
+		_lerpS->beginLerp = true;
+		isOpen = !isOpen;
+	}
 
-	if (_distance <= _interactDistance) {
-
-		if (_lerpS) {
-			_lerpS->lerpReverse = isOpen;
-			_lerpS->beginLerp = true;
-		}
-
-		if (_iskey) {
-			_player->Get<InventorySystem>()->setKey(_requiredKey, true);
-			GetGameObject()->SetPostion(glm::vec3(0, 0, -100000));
-		}
-
+	//Key (based on distance)
+	if (_iskey && _distance <= _interactDistance) {
+		_player->Get<InventorySystem>()->setKey(_requiredKey, true);
+		GetGameObject()->SetPostion(glm::vec3(0, 0, -100000));
+		isOpen = !isOpen;
 	}
 
 }

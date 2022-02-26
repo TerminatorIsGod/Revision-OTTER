@@ -53,6 +53,8 @@ public:
 	SoundEmmiter::Sptr GetRecentEmmiter();
 	glm::vec3 viewDir;
 	glm::quat currentRot;
+	glm::vec3 interactionObjectPos;
+
 protected:
 	glm::vec2 centerPos;
 	int windx, windy;
@@ -120,4 +122,5 @@ protected:
 
 	FMOD::Channel* oxygenChannel;
 	FMOD::Channel* outOfBreathChannel;
+
 };
