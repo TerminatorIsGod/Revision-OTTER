@@ -62,7 +62,8 @@ void SimpleCameraControl::Awake() {
 			emmiter->isPlayerLight = true;
 			emmiter->linearLerp = true;
 			emmiter->defaultColour = glm::vec3(0.1f, 0.0f, 0.45f);
-			emmiter->soundLightOffset = glm::vec3(0, 0, -6.0f);
+			emmiter->soundLightOffset = glm::vec3(0, 0, -3.0f);
+			emmiter->soundName = "";
 			playerEmmiters.push_back(emmiter);
 		}
 	}
@@ -78,6 +79,7 @@ void SimpleCameraControl::Update(float deltaTime)
 	MoveUI(deltaTime);
 	Interact(deltaTime);
 
+
 	if (playerPulseTimer <= 0.f)
 	{
 		playerPulseTimer = 1.0f;
@@ -85,13 +87,24 @@ void SimpleCameraControl::Update(float deltaTime)
 		playerEmmiters[playerEmmiterIndex]->isDecaying = false;
 		playerEmmiters[playerEmmiterIndex]->MoveToPlayer();
 
-		if (!startedRefill)
-			_scene->audioManager->Get<AudioManager>()->PlayFootstepSound(GetGameObject()->GetPosition());
+		soundDelayTimer = soundDelayTimerMax;
+		startSoundDelay = true;
 
 		if (playerEmmiterIndex < playerEmmiterCount - 1)
 			playerEmmiterIndex++;
 		else
 			playerEmmiterIndex = 0;
+	}
+
+	if (startSoundDelay)
+	{
+		soundDelayTimer -= deltaTime;
+		if (soundDelayTimer <= 0.0f)
+		{
+			if (playerState != Idle)
+				_scene->audioManager->Get<AudioManager>()->PlayFootstepSound(GetGameObject()->GetPosition(), playerEmmiters[playerEmmiterIndex]->targetVolume / 10.0f);
+			startSoundDelay = false;
+		}
 	}
 
 	prevState = playerState;
@@ -257,7 +270,7 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 		{
 			if (!startedRefill)
 			{
-				oxygenChannel = _scene->audioManager->Get<AudioManager>()->PlaySoundByName("OxygenRefill", 0.4f);
+				oxygenChannel = _scene->audioManager->Get<AudioManager>()->PlaySoundByName("OxygenRefill", 0.5f);
 				startedRefill = true;
 			}
 			oxygenMeter += oxygenReplenishSpeed * deltaTime;
@@ -270,6 +283,7 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 			if (startedRefill)
 			{
 				oxygenChannel->stop();
+				_scene->audioManager->Get<AudioManager>()->PlaySoundByName("StopReplenish", 0.5f);
 				startedRefill = false;
 			}
 		}
@@ -283,6 +297,7 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 		if (startedRefill)
 		{
 			oxygenChannel->stop();
+			_scene->audioManager->Get<AudioManager>()->PlaySoundByName("StopReplenish", 0.5f);
 			startedRefill = false;
 		}
 
@@ -398,6 +413,7 @@ void SimpleCameraControl::Interact(float deltaTime)
 				_scene->soundEmmiters[i]->Get<SoundEmmiter>()->targetVolume = _scene->soundEmmiters[i]->Get<SoundEmmiter>()->distractionVolume;
 				_scene->soundEmmiters[i]->Get<SoundEmmiter>()->isDecaying = false;
 				_scene->soundEmmiters[i]->Get<SoundEmmiter>()->lerpSpeed = 4.0f;
+
 				isEPressed = true;
 			}
 		}
@@ -482,9 +498,16 @@ void SimpleCameraControl::IdleState(float deltaTime)
 		playerEmmiters[playerEmmiterIndex]->lerpSpeed = 0.5f; //ring expansion speed
 
 		if (inhale)
+		{
 			inhale = false;
+			_scene->audioManager->Get<AudioManager>()->PlaySoundByName("IdleOut", 0.3f);
+		}
+
 		else
+		{
 			inhale = true;
+			_scene->audioManager->Get<AudioManager>()->PlaySoundByName("IdleIn", 0.3f);
+		}
 
 		idleTimer = idleTimerDefault;
 	}
@@ -493,6 +516,7 @@ void SimpleCameraControl::IdleState(float deltaTime)
 		playerEmmiters[playerEmmiterIndex]->targetVolume = 3.5f; //ring size
 	else
 		playerEmmiters[playerEmmiterIndex]->targetVolume = 4.5f; //ring size
+
 }
 
 void SimpleCameraControl::SneakState(float deltaTime)

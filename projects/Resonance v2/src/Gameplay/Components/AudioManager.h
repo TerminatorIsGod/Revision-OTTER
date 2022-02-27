@@ -27,7 +27,7 @@ public:
 	void UnloadSound(const std::string& soundName);
 	FMOD::Channel* PlaySoundByName(const std::string& soundName, float vol = 1.0f, glm::vec3 pos = glm::vec3(0.0f));
 	//void PauseSoundByName(const std::string& soundName);
-	void PlayFootstepSound(glm::vec3 pos);
+	void PlayFootstepSound(glm::vec3 pos, float vol);
 
 
 	const FMOD_VECTOR GlmVectorToFmodVector(glm::vec3 vec);

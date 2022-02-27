@@ -41,6 +41,9 @@ public:
 	void MoveToPlayer();
 	//Generic Functions
 	glm::vec3 speed = glm::vec3(0.0f);
+	std::string soundName;
+	float soundVol;
+
 
 	virtual void Awake() override;
 
@@ -55,5 +58,5 @@ public:
 
 protected:
 	int soundLight;
-
+	bool soundPlayed;
 };

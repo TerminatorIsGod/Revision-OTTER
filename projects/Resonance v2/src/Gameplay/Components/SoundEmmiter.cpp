@@ -1,7 +1,7 @@
 #include "Gameplay/Components/SoundEmmiter.h"
 #include "Utils/ImGuiHelper.h"
 #include "Utils/JsonGlmHelpers.h"
-
+#include "Gameplay/Components/AudioManager.h"
 
 void SoundEmmiter::Awake()
 {
@@ -45,13 +45,27 @@ void SoundEmmiter::RenderImGui() {
 	LABEL_LEFT(ImGui::Checkbox, "muteAtZero", &muteAtZero);
 	LABEL_LEFT(ImGui::DragFloat, "distractionVolume", &distractionVolume);
 	LABEL_LEFT(ImGui::DragFloat3, "defaultColour", &defaultColour.x);
+
+	// Draw a textbox for our track name
+	static char nameBuff[256];
+	memcpy(nameBuff, soundName.c_str(), soundName.size());
+	nameBuff[soundName.size()] = '\0';
+	if (ImGui::InputText("", nameBuff, 256)) {
+		soundName = nameBuff;
+	}
+
+	LABEL_LEFT(ImGui::DragFloat, "soundVol", &soundVol);
+
 }
 
 nlohmann::json SoundEmmiter::ToJson() const {
 	return {
 		{ "muteAtZero", glm::vec3(muteAtZero) },
 		{ "distractionVolume", glm::vec3(distractionVolume) },
-		{ "defaultColour", defaultColour }
+		{ "defaultColour", defaultColour },
+		{ "soundName", soundName },
+		{ "soundVol", soundVol }
+
 	};
 }
 
@@ -65,6 +79,8 @@ SoundEmmiter::Sptr SoundEmmiter::FromJson(const nlohmann::json& blob) {
 
 	result->distractionVolume = JsonGet(blob, "distractionVolume", glm::vec3(result->distractionVolume)).x;
 	result->defaultColour = JsonGet(blob, "defaultColour", result->defaultColour);
+	result->soundName = JsonGet(blob, "soundName", result->soundName);
+	result->soundVol = JsonGet(blob, "soundVol", 1.0f);
 
 	return result;
 }
@@ -77,6 +93,12 @@ void SoundEmmiter::Decay(float deltaTime)
 
 void SoundEmmiter::Attack(float deltaTime)
 {
+	if (!soundPlayed && !isPlayerLight)
+	{
+		scene->audioManager->Get<AudioManager>()->PlaySoundByName(soundName, soundVol, GetGameObject()->GetPosition());
+		soundPlayed = true;
+	}
+
 	if (linearLerp)
 	{
 		volume = glm::mix(volume, targetVolume, t);
@@ -97,6 +119,7 @@ void SoundEmmiter::Attack(float deltaTime)
 		t = 0.0f;
 		isDecaying = true;
 		volume = -1.0;
+		soundPlayed = false;
 	}
 }
 

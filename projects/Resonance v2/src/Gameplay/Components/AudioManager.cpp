@@ -9,11 +9,11 @@ void AudioManager::Awake() {
 	FMOD::System_Create(&system);
 	system->init(32, FMOD_INIT_NORMAL, nullptr);
 
-	LoadSound("L1_Ambiance", "Audio/Music/Infested_Engines.wav", true, true);
+	LoadSound("L1_Ambiance", "Audio/Music/Infested_Engines.wav", false, true);
 	LoadSound("Title", "Audio/Music/Resonance.wav", false, true);
 	LoadSound("L2_Ambiance", "Audio/Music/Dead Quarters.wav", false, true);
 	LoadSound("Transition", "Audio/Sounds/loadingTransition.wav", false, false);
-	LoadSound("Footstep", "Audio/Sounds/footstepTest.wav", true, false);
+	LoadSound("Footstep", "Audio/Sounds/footstepTest4.wav", false, false);
 	LoadSound("LeaflingPatrol", "Audio/Sounds/Leaflings_Patrol2.wav", true, true);
 	LoadSound("LeaflingDistracted", "Audio/Sounds/Leaflings_Distracted.wav", true, true);
 	LoadSound("LeaflingAgro", "Audio/Sounds/Leaflings_Agro.wav", true, true);
@@ -22,6 +22,11 @@ void AudioManager::Awake() {
 	LoadSound("OutOfBreath", "Audio/Sounds/outOfBreath.wav", false, true);
 	LoadSound("HoldingBreath", "Audio/Sounds/holdingBreath.wav", false, false);
 	LoadSound("BreathOut", "Audio/Sounds/breathOut.wav", false, false);
+	LoadSound("ValveTwist", "Audio/Sounds/valveTwist2.wav", true, false);
+	LoadSound("VendingMachine", "Audio/Sounds/vendingMachine.wav", true, false);
+	LoadSound("IdleIn", "Audio/Sounds/idleIn.wav", false, false);
+	LoadSound("IdleOut", "Audio/Sounds/idleOut.wav", false, false);
+	LoadSound("StopReplenish", "Audio/Sounds/stopReplenishOxygen.wav", false, false);
 
 
 
@@ -30,7 +35,7 @@ void AudioManager::Awake() {
 		FMOD::Channel* tempChannel;
 		system->playSound(sounds[track], nullptr, false, &tempChannel);
 		tempChannel->set3DAttributes(&GlmVectorToFmodVector(glm::vec3(0, 50, -7)), 0);
-		tempChannel->setVolume(15.0f);
+		tempChannel->setVolume(1.0f);
 
 		FMOD::Channel* tempChannel2;
 		system->playSound(sounds["Engines"], nullptr, false, &tempChannel2);
@@ -125,16 +130,16 @@ FMOD::Channel* AudioManager::PlaySoundByName(const std::string& soundName, float
 	return newChannel;
 }
 
-void AudioManager::PlayFootstepSound(glm::vec3 pos)
+void AudioManager::PlayFootstepSound(glm::vec3 pos, float vol)
 {
 	//make if statement that only plays sound if < x amount of channels are being used.
 	system->playSound(sounds["Footstep"], nullptr, false, &footstepChannel);
 
-	float rVolume = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 0.6f));
-	footstepChannel->setVolume(rVolume + 0.5f);
+	float rVolume = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 0.3f));
+	footstepChannel->setVolume(vol + rVolume);
 
 	float rPitch = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 0.4f));
-	footstepChannel->setPitch(rPitch + 0.4f);
+	footstepChannel->setPitch(rPitch + 0.7f);
 
 	footstepChannel->set3DAttributes(&GlmVectorToFmodVector(pos), 0);
 }
