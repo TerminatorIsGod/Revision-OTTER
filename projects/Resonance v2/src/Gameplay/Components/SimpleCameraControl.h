@@ -38,6 +38,7 @@ public:
 	void ShowClimb();
 	void ShowPickup();
 	void ShowDistract();
+	void ShowLocked();
 	void ShowGameOver();
 
 	bool promptShown = false;
@@ -116,6 +117,7 @@ protected:
 	Texture2D::Sptr p_Close;
 	Texture2D::Sptr p_Open;
 	Texture2D::Sptr p_Distract;
+	Texture2D::Sptr p_Locked;
 
 
 	bool startedRefill = false;

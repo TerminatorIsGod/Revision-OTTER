@@ -76,6 +76,10 @@ void AggravatedState::Listen(Enemy* e, float deltaTime)
 	if (glm::length(e->player->GetPosition() - e->GetGameObject()->GetPosition()) < 7.0f) //Kill player
 	{
 		e->player->Get<SimpleCameraControl>()->ShowGameOver();
+		FMOD::ChannelGroup* cGroup;
+		e->scene->audioManager->Get<AudioManager>()->system->getMasterChannelGroup(&cGroup);
+		cGroup->stop();
+		e->scene->audioManager->Get<AudioManager>()->PlaySoundByName("Death");
 		e->GetGameObject()->GetScene()->requestSceneReload = true;
 		e->scene->IsPlaying = false;
 	}

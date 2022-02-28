@@ -84,7 +84,10 @@ vec3 CalcPointLightContribution(vec3 worldPos, vec3 normal, vec3 viewDir, Light 
 	{
 		attenuation = attenuation * attenuation;
 	}
-
+	else if (attenuation < 0)
+	{
+		attenuation = 0;
+	}
 	return (diffuseOut + specularOut) * attenuation;
 }
 

@@ -27,8 +27,11 @@ void AudioManager::Awake() {
 	LoadSound("IdleIn", "Audio/Sounds/idleIn.wav", false, false);
 	LoadSound("IdleOut", "Audio/Sounds/idleOut.wav", false, false);
 	LoadSound("StopReplenish", "Audio/Sounds/stopReplenishOxygen.wav", false, false);
-
-
+	LoadSound("Death", "Audio/Music/Death Has Come Too Early.wav", false, false);
+	LoadSound("LadderClimb", "Audio/Sounds/ladderClimb.wav", false, false);
+	LoadSound("KeyPickup", "Audio/Sounds/keyPickup.wav", false, false);
+	LoadSound("DoorOpen", "Audio/Sounds/doorOpen.wav", true, false);
+	LoadSound("DoorClose", "Audio/Sounds/doorClose.wav", true, false);
 
 	if (track == "L1_Ambiance")
 	{
@@ -64,7 +67,7 @@ void AudioManager::Update(float deltaTime) {
 	if (player->Has<SimpleCameraControl>())
 	{
 		glm::quat dir = player->Get<SimpleCameraControl>()->currentRot;
-		system->set3DListenerAttributes(0, &GlmVectorToFmodVector(player->GetPosition()), 0, &GlmVectorToFmodVector(dir * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f)), &GlmVectorToFmodVector(dir * glm::vec4(0.0f, -1.0f, 0.0f, 1.0f)));
+		system->set3DListenerAttributes(0, &GlmVectorToFmodVector(player->GetPosition()), &GlmVectorToFmodVector(player->Get<Gameplay::Physics::RigidBody>()->GetLinearVelocity()), &GlmVectorToFmodVector(dir * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f)), &GlmVectorToFmodVector(dir * glm::vec4(0.0f, -1.0f, 0.0f, 1.0f)));
 	}
 	system->update();
 
@@ -130,9 +133,23 @@ FMOD::Channel* AudioManager::PlaySoundByName(const std::string& soundName, float
 	return newChannel;
 }
 
+FMOD::Channel* AudioManager::PlaySoundWithVariation(const std::string& soundName, float baseVol, float basePitch, float volRange, float pitchRange, glm::vec3 pos)
+{
+	FMOD::Channel* newChannel;
+	system->playSound(sounds[soundName], nullptr, false, &newChannel);
+
+	float rVolume = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / volRange));
+	newChannel->setVolume(baseVol + rVolume);
+
+	float rPitch = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / pitchRange));
+	newChannel->setPitch(basePitch + rPitch);
+
+	newChannel->set3DAttributes(&GlmVectorToFmodVector(pos), 0);
+	return newChannel;
+}
+
 void AudioManager::PlayFootstepSound(glm::vec3 pos, float vol)
 {
-	//make if statement that only plays sound if < x amount of channels are being used.
 	system->playSound(sounds["Footstep"], nullptr, false, &footstepChannel);
 
 	float rVolume = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 0.3f));

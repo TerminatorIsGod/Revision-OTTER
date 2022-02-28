@@ -7,6 +7,7 @@
 #include "Gameplay/Components/SimpleCameraControl.h"
 #include "Gameplay/InputEngine.h"
 #include "Application/Application.h"
+#include "Gameplay/Components/AudioManager.h"
 
 void InteractSystem::Awake()
 {
@@ -63,19 +64,25 @@ void InteractSystem::Update(float deltaTime) {
 	glm::vec3 tpos = ppos - opos;
 	_distance = sqrt(pow(tpos.x, 2) + pow(tpos.y, 2) + pow(tpos.z, 2));
 
-	//Key
-	if (_distance <= _interactDistance && !_player->Get<SimpleCameraControl>()->promptShown) {
-		if (_iskey)
-			_player->Get<SimpleCameraControl>()->ShowPickup();
+	//Key (proximity based)
+	if (_iskey && _distance <= _interactDistance && !_player->Get<SimpleCameraControl>()->promptShown) {
+		_player->Get<SimpleCameraControl>()->ShowPickup();
 	}
 
-	//Animated Objects
-	if (_player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !_player->Get<SimpleCameraControl>()->promptShown) {
+	//Animated Objects (raycast based)
+	if (!_iskey && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !_player->Get<SimpleCameraControl>()->promptShown) {
 
-		if (!_iskey && _player->Get<InventorySystem>()->getKey(_requiredKey) && !isOpen)
-			_player->Get<SimpleCameraControl>()->ShowOpen();
-		else if (_player->Get<InventorySystem>()->getKey(_requiredKey) && isOpen)
-			_player->Get<SimpleCameraControl>()->ShowClose();
+		if (_player->Get<InventorySystem>()->getKey(_requiredKey))
+		{
+			if (!isOpen)
+				_player->Get<SimpleCameraControl>()->ShowOpen();
+			else if (isOpen)
+				_player->Get<SimpleCameraControl>()->ShowClose();
+		}
+		else
+		{
+			_player->Get<SimpleCameraControl>()->ShowLocked();
+		}
 	}
 
 	if (glfwGetKey(_window, GLFW_KEY_E)) {
@@ -120,12 +127,22 @@ void InteractSystem::interact() {
 	if (_lerpS && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos) {
 		_lerpS->lerpReverse = isOpen;
 		_lerpS->beginLerp = true;
-		isOpen = !isOpen;
+		if (isOpen)
+		{
+			isOpen = false;
+			GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundWithVariation("DoorClose", 0.8f, 0.8f, 0.3f, 0.3f, GetGameObject()->GetPosition());
+		}
+		else
+		{
+			isOpen = true;
+			GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundWithVariation("DoorOpen", 1.1f, 0.8f, 0.3f, 0.3f, GetGameObject()->GetPosition());
+		}
 	}
 
 	//Key (based on distance)
 	if (_iskey && _distance <= _interactDistance) {
 		_player->Get<InventorySystem>()->setKey(_requiredKey, true);
+		GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("KeyPickup", 0.5f);
 		GetGameObject()->SetPostion(glm::vec3(0, 0, -100000));
 		isOpen = !isOpen;
 	}

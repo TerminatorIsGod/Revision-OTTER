@@ -50,8 +50,10 @@ void Enemy::Update(float deltaTime)
 	}
 
 	if (myChannel != NULL)
-		myChannel->set3DAttributes(&scene->audioManager->Get<AudioManager>()->GlmVectorToFmodVector(GetGameObject()->GetPosition()), 0);
-
+	{
+		AudioManager::Sptr aMan = scene->audioManager->Get<AudioManager>();
+		myChannel->set3DAttributes(&aMan->GlmVectorToFmodVector(GetGameObject()->GetPosition()), &aMan->GlmVectorToFmodVector(body->GetLinearVelocity()));
+	}
 	MoveListeningLight();
 	currentState->Listen(this, deltaTime);
 	currentState->Pathfind(this, deltaTime);

@@ -33,6 +33,8 @@ SimpleCameraControl::~SimpleCameraControl()
 	p_Close->~Texture2D();
 	p_Open->~Texture2D();
 	p_Distract->~Texture2D();
+	p_Locked->~Texture2D();
+
 }
 
 void SimpleCameraControl::Awake() {
@@ -49,7 +51,9 @@ void SimpleCameraControl::Awake() {
 		p_Close = ResourceManager::CreateAsset<Texture2D>("textures/ui/ClosePrompt.png");
 		p_Open = ResourceManager::CreateAsset<Texture2D>("textures/ui/OpenPrompt.png");
 		p_Distract = ResourceManager::CreateAsset<Texture2D>("textures/ui/DistractPrompt.png");
+		p_Locked = ResourceManager::CreateAsset<Texture2D>("textures/ui/LockedPrompt.png");
 	}
+
 	for (int i = 0; i < playerEmmiterCount; i++)
 	{
 		GameObject::Sptr soundEmmiter = _scene->CreateGameObject("playerEmmiter");
@@ -102,7 +106,7 @@ void SimpleCameraControl::Update(float deltaTime)
 		if (soundDelayTimer <= 0.0f)
 		{
 			if (playerState != Idle)
-				_scene->audioManager->Get<AudioManager>()->PlayFootstepSound(GetGameObject()->GetPosition(), playerEmmiters[playerEmmiterIndex]->targetVolume / 10.0f);
+				_scene->audioManager->Get<AudioManager>()->PlayFootstepSound(GetGameObject()->GetPosition(), playerEmmiters[playerEmmiterIndex]->targetVolume / 5.0f);
 			startSoundDelay = false;
 		}
 	}
@@ -421,6 +425,7 @@ void SimpleCameraControl::Interact(float deltaTime)
 		{
 			if (!isEPressed)
 			{
+				_scene->audioManager->Get<AudioManager>()->PlaySoundWithVariation("LadderClimb", 0.3f, 0.9f, 0.2f, 0.3f);
 				GetGameObject()->SetPostion(_scene->ladders[i]->Get<Ladder>()->teleportPos);
 				isEPressed = true;
 			}
@@ -462,6 +467,13 @@ void SimpleCameraControl::ShowDistract()
 {
 	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
 	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(p_Distract);
+	promptShown = true;
+}
+
+void SimpleCameraControl::ShowLocked()
+{
+	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
+	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(p_Locked);
 	promptShown = true;
 }
 
