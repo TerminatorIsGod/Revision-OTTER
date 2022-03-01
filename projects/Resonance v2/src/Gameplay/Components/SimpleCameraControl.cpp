@@ -120,15 +120,15 @@ void SimpleCameraControl::Movement(float deltaTime)
 {
 	auto _body = GetComponent<Gameplay::Physics::RigidBody>();
 
-	//if (glfwGetKey(_window, GLFW_KEY_M) && _allowMouse == false) {
-	//	_isMousePressed = !_isMousePressed;
-	//	_allowMouse = true;
+	if (glfwGetKey(_window, GLFW_KEY_M) && _allowMouse == false) {
+		_isMousePressed = !_isMousePressed;
+		_allowMouse = true;
 
-	//	std::cout << "Chaning mouse thing\n";
-	//}
-	//else if (!glfwGetKey(_window, GLFW_KEY_M)) {
-	//	_allowMouse = false;
-	//}
+		std::cout << "Chaning mouse thing\n";
+	}
+	else if (!glfwGetKey(_window, GLFW_KEY_M)) {
+		_allowMouse = false;
+	}
 
 	if (_isMousePressed) {
 		glm::dvec2 currentMousePos;
@@ -202,19 +202,19 @@ void SimpleCameraControl::Movement(float deltaTime)
 			playerEmmiters[playerEmmiterIndex]->lerpSpeed = playerEmmiters[playerEmmiterIndex]->attackSpeed;
 		}
 
-		//if (glfwGetKey(_window, GLFW_KEY_J))
-		//{
-		//	if (!isJPressed)
-		//	{
-		//		isJPressed = true;
-		//		if (freecam)
-		//			freecam = false;
-		//		else
-		//			freecam = true;
-		//	}
-		//}
-		//else
-		//	isJPressed = false;
+		if (glfwGetKey(_window, GLFW_KEY_J))
+		{
+			if (!isJPressed)
+			{
+				isJPressed = true;
+				if (freecam)
+					freecam = false;
+				else
+					freecam = true;
+			}
+		}
+		else
+			isJPressed = false;
 
 		//input *= deltaTime;
 
