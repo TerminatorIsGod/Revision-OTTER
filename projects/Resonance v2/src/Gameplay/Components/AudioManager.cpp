@@ -8,6 +8,7 @@ void AudioManager::Awake() {
 
 	FMOD::System_Create(&system);
 	system->init(32, FMOD_INIT_NORMAL, nullptr);
+	system->set3DSettings(1.0f, 1.0f, 1.5f);
 
 	LoadSound("L1_Ambiance", "Audio/Music/Infested_Engines.wav", false, true);
 	LoadSound("Title", "Audio/Music/Resonance.wav", false, true);
@@ -38,7 +39,7 @@ void AudioManager::Awake() {
 		FMOD::Channel* tempChannel;
 		system->playSound(sounds[track], nullptr, false, &tempChannel);
 		tempChannel->set3DAttributes(&GlmVectorToFmodVector(glm::vec3(0, 50, -7)), 0);
-		tempChannel->setVolume(1.0f);
+		tempChannel->setVolume(0.5f);
 
 		FMOD::Channel* tempChannel2;
 		system->playSound(sounds["Engines"], nullptr, false, &tempChannel2);
@@ -123,7 +124,7 @@ void AudioManager::LoadSound(const std::string& soundName, const std::string& fi
 		sounds[soundName] = loadedSound;
 }
 
-FMOD::Channel* AudioManager::PlaySoundByName(const std::string& soundName, float vol, glm::vec3 pos)
+FMOD::Channel* AudioManager::PlaySoundByName(const std::string& soundName, float vol, glm::vec3 pos, bool lowpass)
 {
 	FMOD::Channel* newChannel;
 	system->playSound(sounds[soundName], nullptr, false, &newChannel);

@@ -45,15 +45,17 @@ void Enemy::Update(float deltaTime)
 {
 	if (!started)
 	{
+		scene->audioManager->Get<AudioManager>()->system->createDSPByType(FMOD_DSP_TYPE_MULTIBAND_EQ, &myDSP);
+		myDSP->setParameterInt(FMOD_DSP_MULTIBAND_EQ_A_FILTER, FMOD_DSP_MULTIBAND_EQ_FILTER_LOWPASS_12DB);
+		myDSP->setParameterFloat(FMOD_DSP_MULTIBAND_EQ_A_FREQUENCY, 1000.0f);
+		myDSP->setParameterFloat(FMOD_DSP_MULTIBAND_EQ_A_Q, 0.707);
+
 		SetState(PatrollingState::getInstance());
 		started = true;
 	}
 
-	if (myChannel != NULL)
-	{
-		AudioManager::Sptr aMan = scene->audioManager->Get<AudioManager>();
-		myChannel->set3DAttributes(&aMan->GlmVectorToFmodVector(GetGameObject()->GetPosition()), &aMan->GlmVectorToFmodVector(body->GetLinearVelocity()));
-	}
+
+
 	MoveListeningLight();
 	currentState->Listen(this, deltaTime);
 	currentState->Pathfind(this, deltaTime);
@@ -65,12 +67,50 @@ void Enemy::Update(float deltaTime)
 		lastHeardSounds.pop_back();
 		lastHeardPositions.pop_back();
 	}
-	//if (glfwGetKey(window, GLFW_KEY_P))
-	//{
-	//	pathRequested = false;
-	//}
 
 	GetGameObject()->SetPostion(glm::vec3(GetGameObject()->GetPosition().x, GetGameObject()->GetPosition().y, startPos.z));
+
+	if (myChannel != NULL)
+	{
+		AudioManager::Sptr aMan = scene->audioManager->Get<AudioManager>();
+		myChannel->set3DAttributes(&aMan->GlmVectorToFmodVector(GetGameObject()->GetPosition()), &aMan->GlmVectorToFmodVector(body->GetLinearVelocity()));
+
+		//Sound Occlusion Rayscast
+		btCollisionWorld::ClosestRayResultCallback hit2(ToBt(GetGameObject()->GetPosition()), ToBt(player->GetPosition()));
+		scene->GetPhysicsWorld()->rayTest(ToBt(GetGameObject()->GetPosition()), ToBt(player->GetPosition()), hit2);
+
+		if (hit2.m_collisionObject == NULL)
+			return;
+
+		glm::vec3 objectPos = ToGlm(hit2.m_collisionObject->getWorldTransform().getOrigin());
+
+		float currentWetVal;
+		myDSP->getWetDryMix(nullptr, &currentWetVal, nullptr);
+
+		//Hmm maybe make it so the dampening isn't as intense on non-static objects, than on static objects
+		if (hit2.m_collisionObject->isStaticObject())
+		{
+			currentWetVal = glm::mix(currentWetVal, 1.0f, 1.8f * deltaTime);
+			myDSP->setWetDryMix(1.0f, currentWetVal, 1.0f - currentWetVal);
+		}
+		else if (glm::round(objectPos) == glm::round(player->GetPosition()))
+		{
+			currentWetVal = glm::mix(currentWetVal, 0.0f, 1.8f * deltaTime);
+			myDSP->setWetDryMix(1.0f, currentWetVal, 1.0f - currentWetVal);
+		}
+		else
+		{
+			btCollisionWorld::ClosestRayResultCallback hit2(ToBt(player->GetPosition()), ToBt(GetGameObject()->GetPosition()));
+			scene->GetPhysicsWorld()->rayTest(ToBt(player->GetPosition()), ToBt(GetGameObject()->GetPosition()), hit2);
+
+			if (hit2.m_collisionObject == NULL || hit2.m_collisionObject->isStaticObject())
+				return;
+
+			currentWetVal = glm::mix(currentWetVal, 0.0f, 1.8f * deltaTime);
+			myDSP->setWetDryMix(1.0f, currentWetVal, 1.0f - currentWetVal);
+
+		}
+	}
 }
 
 void Enemy::RenderImGui() {

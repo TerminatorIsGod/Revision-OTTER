@@ -76,6 +76,8 @@ public:
 	EnemyState* currentState;
 
 	FMOD::Channel* myChannel;
+	FMOD::DSP* myDSP;
+
 
 #pragma endregion "Properties & Variables"
 
