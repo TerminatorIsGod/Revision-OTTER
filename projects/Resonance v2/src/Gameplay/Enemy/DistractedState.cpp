@@ -101,7 +101,7 @@ void DistractedState::Listen(Enemy* e, float deltaTime)
 			e->scene->GetPhysicsWorld()->rayTest(ToBt(e->GetGameObject()->GetPosition()), ToBt(e->player->GetPosition()), hit2);
 
 			glm::vec3 objectPos = ToGlm(hit2.m_collisionObject->getWorldTransform().getOrigin());
-			if (objectPos == e->player->GetPosition())
+			if (glm::round(objectPos) == glm::round(e->player->GetPosition()))
 			{
 				//std::cout << "\nIM AGRO!!";
 				e->SetState(AggravatedState::getInstance());

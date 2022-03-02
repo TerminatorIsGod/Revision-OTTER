@@ -83,7 +83,6 @@ void SimpleCameraControl::Update(float deltaTime)
 	MoveUI(deltaTime);
 	Interact(deltaTime);
 
-
 	if (playerPulseTimer <= 0.f)
 	{
 		playerPulseTimer = 1.0f;
@@ -292,6 +291,7 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 		if (oxygenMeter > 0.01f)
 		{
 			oxygenMeter -= oxygenDecaySpeed * deltaTime;
+
 			if (outOfBreath)
 			{
 				outOfBreath = false;
@@ -313,7 +313,7 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 		_scene->uiImages[2]->GetChildren()[0]->Get<GuiPanel>()->SetColor(newCol);
 	}
 
-	if (glfwGetKey(_window, GLFW_KEY_LEFT_CONTROL))//Hold Breath
+	if (glfwGetKey(_window, GLFW_KEY_LEFT_CONTROL) && oxygenMeter > 0.01f)//Hold Breath
 	{
 		SetSpeed(1.0f);
 
@@ -326,6 +326,8 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 			}
 			oxygenMeter -= breathHoldDecaySpeed * deltaTime;
 			playerEmmiters[playerEmmiterIndex]->targetVolume = 0.01f;
+			LerpHeight(-1.0f, deltaTime, 4.0f);
+
 		}
 		else
 		{
@@ -337,6 +339,12 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 	}
 	else
 	{
+		if (playerPulseTimer <= 0.5f && playerState != Idle)
+			LerpHeight(0.1f, deltaTime, 4.0f);
+		else
+			LerpHeight(0.0f, deltaTime, 4.0f);
+
+
 		if (holdingBreath)
 		{
 			_scene->audioManager->Get<AudioManager>()->PlaySoundByName("BreathOut", 0.4f);
@@ -348,6 +356,17 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 	//soundEmmiter->colour = soundEmmiter->defaultColour * (oxygenMeter / oxygenMeterMax);
 }
 
+void SimpleCameraControl::LerpHeight(float heightOffset, float deltaTime, float speed)
+{
+	if (freecam)
+		return;
+	glm::vec3 playerPos = GetGameObject()->GetPosition();
+	//if (heightOffset != 0 && glm::abs(playerPos.z - (baseHeight + heightOffset) < 0.01f))
+	//	return;
+
+	GetGameObject()->SetPostion(glm::lerp(playerPos, glm::vec3(playerPos.x, playerPos.y, baseHeight + heightOffset), speed * deltaTime));
+
+}
 
 void SimpleCameraControl::SwitchState(float deltaTime)
 {
@@ -427,6 +446,7 @@ void SimpleCameraControl::Interact(float deltaTime)
 			{
 				_scene->audioManager->Get<AudioManager>()->PlaySoundWithVariation("LadderClimb", 0.3f, 0.9f, 0.2f, 0.3f);
 				GetGameObject()->SetPostion(_scene->ladders[i]->Get<Ladder>()->teleportPos);
+				baseHeight = _scene->ladders[i]->Get<Ladder>()->teleportPos.z;
 				isEPressed = true;
 			}
 		}
@@ -579,6 +599,8 @@ void SimpleCameraControl::PlaceUI(int index, float xSize, float ySize, float xRa
 
 	crosshairUI->SetPosition(centerPos + sizeAdj + posAdj);
 }
+
+
 
 SoundEmmiter::Sptr SimpleCameraControl::GetRecentEmmiter()
 {

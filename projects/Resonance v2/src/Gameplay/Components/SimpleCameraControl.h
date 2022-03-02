@@ -20,7 +20,7 @@ public:
 	virtual void Awake() override;
 	virtual void Update(float deltaTime) override;
 	glm::vec3 startingPos = glm::vec3(2.7, -8, 6);
-
+	float baseHeight = 6.0f;
 
 public:
 
@@ -51,6 +51,7 @@ public:
 	void MoveUI(float deltaTime);
 	void PlaceUI(int index, float xSize, float ySize, float xRatio = 1, float xMultiplier = 0, float yRatio = 1, float yMultiplier = 0);
 
+	void LerpHeight(float heightOffset, float deltaTime, float height);
 	SoundEmmiter::Sptr GetRecentEmmiter();
 	glm::vec3 viewDir;
 	glm::quat currentRot;
