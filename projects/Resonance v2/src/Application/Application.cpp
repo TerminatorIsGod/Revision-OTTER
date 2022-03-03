@@ -229,10 +229,18 @@ void Application::_Run()
 			}
 		}
 
+		if (glfwGetKey(_window, GLFW_KEY_0) == GLFW_PRESS) {
+			LoadScene("levelMenu.json");
+		}
+		else if (glfwGetKey(_window, GLFW_KEY_1) == GLFW_PRESS) {
+			LoadScene("level1.json");
+		}
+
 		//Check to see if pause game
 		if (glfwGetKey(_window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 			if (!isEscapePressed && isGameStarted) {
 				isGamePaused = !isGamePaused;
+				showPauseScreen = isGamePaused;
 			}
 			isEscapePressed = true;
 		}
@@ -246,7 +254,7 @@ void Application::_Run()
 			auto menuenablething = menuobj->Get<GuiPanel>();
 
 
-			if (isGamePaused) {
+			if (isGamePaused && showPauseScreen) {
 				menuenablething->IsEnabled = true;
 			}
 			else {
