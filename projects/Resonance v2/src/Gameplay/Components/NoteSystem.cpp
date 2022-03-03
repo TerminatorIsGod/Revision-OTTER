@@ -16,6 +16,7 @@ void NoteSystem::Awake()
 	_lerpS = GetGameObject()->Get<LerpSystem>();
 	Application& app = Application::Get();
 	_window = app.GetWindow();
+
 }
 
 void NoteSystem::RenderImGui() {
@@ -86,6 +87,8 @@ void NoteSystem::interact() {
 	glm::vec3 ppos = _player->GetPosition();
 	glm::vec3 opos = GetGameObject()->GetPosition();
 
+	Application& app = Application::Get();
+
 	glm::vec3 tpos = ppos - opos;
 	_distance = sqrt(pow(tpos.x, 2) + pow(tpos.y, 2) + pow(tpos.z, 2));
 
@@ -99,6 +102,7 @@ void NoteSystem::interact() {
 			isOpen = false;
 			GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundWithVariation("DoorClose", 0.8f, 0.8f, 0.3f, 0.3f, GetGameObject()->GetPosition());
 			GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<GuiPanel>()->IsEnabled = false;
+			app.isGamePaused = false;
 		}
 		else
 		{
@@ -106,6 +110,7 @@ void NoteSystem::interact() {
 			GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundWithVariation("DoorOpen", 1.1f, 0.8f, 0.3f, 0.3f, GetGameObject()->GetPosition());
 			GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<GuiPanel>()->IsEnabled = true;
 			GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<RectTransform>()->SetPosition( glm::vec2( windx/2, windy/2 ) );
+			app.isGamePaused = true;
 		}
 	}
 
