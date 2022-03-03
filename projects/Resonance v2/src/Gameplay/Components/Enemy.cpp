@@ -76,8 +76,10 @@ void Enemy::Update(float deltaTime)
 		myChannel->set3DAttributes(&aMan->GlmVectorToFmodVector(GetGameObject()->GetPosition()), &aMan->GlmVectorToFmodVector(body->GetLinearVelocity()));
 
 		//Sound Occlusion Rayscast
-		btCollisionWorld::ClosestRayResultCallback hit2(ToBt(GetGameObject()->GetPosition()), ToBt(player->GetPosition()));
-		scene->GetPhysicsWorld()->rayTest(ToBt(GetGameObject()->GetPosition()), ToBt(player->GetPosition()), hit2);
+		btCollisionWorld::ClosestRayResultCallback hit2(ToBt(GetGameObject()->GetPosition() + glm::vec3(0.0f, 0.0f, 2.0f)), ToBt(player->GetPosition()));
+		scene->GetPhysicsWorld()->rayTest(ToBt(GetGameObject()->GetPosition() + glm::vec3(0.0f, 0.0f, 2.0f)), ToBt(player->GetPosition()), hit2);
+
+		canSeePlayer = false;
 
 		if (hit2.m_collisionObject == NULL)
 			return;
@@ -97,6 +99,8 @@ void Enemy::Update(float deltaTime)
 		{
 			currentWetVal = glm::mix(currentWetVal, 0.0f, 1.8f * deltaTime);
 			myDSP->setWetDryMix(1.0f, currentWetVal, 1.0f - currentWetVal);
+
+			canSeePlayer = true;
 		}
 		else
 		{
@@ -217,6 +221,24 @@ void Enemy::MoveChase(float deltaTime)
 	GetGameObject()->LookAt(GetGameObject()->GetPosition() + body->GetLinearVelocity() * -1.0f);
 }
 
+void Enemy::MoveLinear(float deltaTime)
+{
+	ChaseLinear(deltaTime);
+
+	//AvoidanceReflect(body->GetLinearVelocity(), deltaTime);
+
+	glm::vec3 vel = body->GetLinearVelocity();
+	glm::vec3 leftDir = glm::vec3(-vel.y + vel.x, vel.x + vel.y, 0.0f) / 2.0f;
+	glm::vec3 rightDir = glm::vec3(vel.y + vel.x, -vel.x + vel.y, 0.0f) / 2.0f;
+
+	Avoidance(leftDir, deltaTime);
+	Avoidance(rightDir, deltaTime);
+	Avoidance(glm::vec3(-body->GetLinearVelocity().y, body->GetLinearVelocity().x, 0.0f), deltaTime);
+	Avoidance(glm::vec3(body->GetLinearVelocity().y, -body->GetLinearVelocity().x, 0.0f), deltaTime);
+
+	GetGameObject()->LookAt(GetGameObject()->GetPosition() + body->GetLinearVelocity() * -1.0f);
+}
+
 void Enemy::Steering(float deltaTime)
 {
 	glm::vec3 newVel = body->GetLinearVelocity();
@@ -258,6 +280,17 @@ void Enemy::Chase(float deltaTime)
 	body->SetLinearVelocity(glm::vec3(newVel.x, newVel.y, 0.0f));
 }
 
+void Enemy::ChaseLinear(float deltaTime)
+{
+	glm::vec3 newVel = body->GetLinearVelocity();
+
+	//Steering
+	newVel = (player->GetPosition() - GetGameObject()->GetPosition()) * deltaTime;
+	newVel = glm::normalize(newVel) * maxVelocity;
+
+	body->SetLinearVelocity(glm::vec3(newVel.x, newVel.y, 0.0f));
+}
+
 void Enemy::AvoidanceReflect(glm::vec3 dir, float deltaTime)
 {
 	//Check if greater than zero before normalizing since that would divide by 0
@@ -280,7 +313,9 @@ void Enemy::AvoidanceReflect(glm::vec3 dir, float deltaTime)
 
 	for (int i = 0; i < scene->soundEmmiters.size(); i++)
 	{
-		if (objectPos == scene->soundEmmiters[i]->GetPosition())
+		if (glm::round(objectPos) == glm::round(scene->soundEmmiters[i]->GetPosition()))
+			return;
+		if (glm::round(objectPos) == glm::round(player->GetPosition()))
 			return;
 	}
 

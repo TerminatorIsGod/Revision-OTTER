@@ -45,6 +45,8 @@ public:
 	float avoidanceRange = 2.5f; //2.5 is good
 	float avoidanceStrength = 1000.0f; //1000 is good, 750 seemed to increase odds of enemies getting stuck
 
+	bool canSeePlayer = false;
+
 	//Listening Light
 	float listeningRadius = 3.0f;
 	int soundLight;
@@ -88,8 +90,10 @@ public:
 	void MoveListeningLight();
 	void Move(float deltaTime);
 	void MoveChase(float deltaTime);
+	void MoveLinear(float deltaTime);
 	void Steering(float deltaTime);
 	void Chase(float deltaTime);
+	void ChaseLinear(float deltaTime);
 	void AvoidanceReflect(glm::vec3 dir, float deltaTime);
 	void Avoidance(glm::vec3 dir, float deltaTime);
 	void IsPlayerDead();

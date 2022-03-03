@@ -53,7 +53,7 @@ void AudioManager::Awake() {
 	}
 	else
 	{
-		PlaySoundByName(track);
+		PlaySoundByName(track, 0.5f);
 	}
 }
 
