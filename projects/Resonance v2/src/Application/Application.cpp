@@ -229,6 +229,13 @@ void Application::_Run()
 			}
 		}
 
+		if (glfwGetKey(_window, GLFW_KEY_0) == GLFW_PRESS) {
+			LoadScene("levelMenu.json");
+		}
+		else if (glfwGetKey(_window, GLFW_KEY_1) == GLFW_PRESS) {
+			LoadScene("level1.json");
+		}
+
 		//Check to see if pause game
 		if (glfwGetKey(_window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 			if (!isEscapePressed && isGameStarted) {
