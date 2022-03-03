@@ -89,18 +89,10 @@ void DistractedState::Listen(Enemy* e, float deltaTime)
 
 		e->pathRequested = false;
 
-		//Switch to agro when super close to player? Turned this off for now, 
-		//I find it interesting for the enemies to slowly follow you while you hold ur breath.
-		if (glm::length(e->player->GetPosition() - e->GetGameObject()->GetPosition()) < 7.0f)
+		if (!e->player->Get<SimpleCameraControl>()->holdingBreath && s->Get<SoundEmmiter>()->isPlayerLight)
 		{
-			//std::cout << "\nIM AGRO!!";
-			//e->SetState(AggravatedState::getInstance());
-		}
-
-		if (s->Get<SoundEmmiter>()->isPlayerLight)
-		{
-			btCollisionWorld::ClosestRayResultCallback hit2(ToBt(e->GetGameObject()->GetPosition()), ToBt(e->player->GetPosition()));
-			e->scene->GetPhysicsWorld()->rayTest(ToBt(e->GetGameObject()->GetPosition()), ToBt(e->player->GetPosition()), hit2);
+			btCollisionWorld::ClosestRayResultCallback hit2(ToBt(e->GetGameObject()->GetPosition() + glm::vec3(0.0f, 0.0f, 2.0f)), ToBt(e->player->GetPosition()));
+			e->scene->GetPhysicsWorld()->rayTest(ToBt(e->GetGameObject()->GetPosition() + glm::vec3(0.0f, 0.0f, 2.0f)), ToBt(e->player->GetPosition()), hit2);
 
 			glm::vec3 objectPos = ToGlm(hit2.m_collisionObject->getWorldTransform().getOrigin());
 			if (glm::round(objectPos) == glm::round(e->player->GetPosition()))

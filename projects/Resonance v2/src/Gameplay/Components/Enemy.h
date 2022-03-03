@@ -67,7 +67,7 @@ public:
 	const float agroStationaryListeningRadius = 6.0f;
 	const float patrolListeningRadius = 4.0f; // this is normmally 4
 
-	float AgroVelocity = 11.0f;
+	float AgroVelocity = 13.0f;
 	float IdleVelocity = 6.0f;
 
 	float agroTimer = 5.0f;

@@ -56,6 +56,7 @@ public:
 	glm::vec3 viewDir;
 	glm::quat currentRot;
 	glm::vec3 interactionObjectPos;
+	bool holdingBreath = false;
 
 protected:
 	glm::vec2 centerPos;
@@ -123,7 +124,6 @@ protected:
 
 	bool startedRefill = false;
 	bool outOfBreath = false;
-	bool holdingBreath = false;
 
 	FMOD::Channel* oxygenChannel;
 	FMOD::Channel* outOfBreathChannel;
