@@ -105,7 +105,7 @@ void AggravatedState::Pathfind(Enemy* e, float deltaTime)
 		return;
 
 	glm::vec3 objectPos = ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
-	if (objectPos == e->player->GetPosition())
+	if (glm::round(objectPos) == glm::round(e->player->GetPosition()))
 	{
 		e->target = soundPos;
 		return;
@@ -139,6 +139,10 @@ void AggravatedState::Pathfind(Enemy* e, float deltaTime)
 
 void AggravatedState::Move(Enemy* e, float  deltaTime)
 {
-	e->MoveChase(deltaTime);
+	if (e->nIndex > 0 || !e->canSeePlayer)
+		e->MoveChase(deltaTime);
+	else
+		e->MoveLinear(deltaTime);
+
 }
 
