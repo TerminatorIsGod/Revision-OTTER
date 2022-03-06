@@ -57,6 +57,7 @@
 #include <Gameplay/Components/CurveLerpSystem.h>
 #include <Gameplay/Components/MenuSystemNewAndImproved.h>
 #include <Gameplay/Components/AudioManager.h>
+#include <Gameplay/Components/NoteSystem.h>
 
 
 // GUI
@@ -365,6 +366,7 @@ void Application::_RegisterClasses()
 	ComponentManager::RegisterType<CurveLerpSystem>();
 	ComponentManager::RegisterType<MenuSystemNewAndImproved>();
 	ComponentManager::RegisterType<AudioManager>();
+	ComponentManager::RegisterType<NoteSystem>();
 
 }
 

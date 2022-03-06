@@ -71,6 +71,7 @@
 #include <Gameplay/Components/LerpSystem.h> 
 #include <Gameplay/Components/CurveLerpSystem.h>
 #include <Gameplay/Components/MenuSystemNewAndImproved.h>
+#include <Gameplay/Components/NoteSystem.h>
 // GUI
 #include "Gameplay/Components/GUI/RectTransform.h"
 #include "Gameplay/Components/GUI/GuiPanel.h"

@@ -68,6 +68,7 @@ void NoteSystem::Update(float deltaTime) {
 	if (glfwGetKey(_window, GLFW_KEY_E)) {
 		if (!isKeyPressed)
 		{
+			std::cout << "Player interacted with note\n\n";
 			interact();
 			isKeyPressed = true;
 		}
@@ -93,7 +94,7 @@ void NoteSystem::interact() {
 	_distance = sqrt(pow(tpos.x, 2) + pow(tpos.y, 2) + pow(tpos.z, 2));
 
 	//Animated Object (based on raycast)
-	if (_player->Get<SimpleCameraControl>()->interactionObjectPos == opos) {
+	if (_distance <= _interactDistance) { //_player->Get<SimpleCameraControl>()->interactionObjectPos == opos
 		int windx, windy;
 		glfwGetWindowSize(_window, &windx, &windy);
 
@@ -102,15 +103,17 @@ void NoteSystem::interact() {
 			isOpen = false;
 			//GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundWithVariation("DoorClose", 0.8f, 0.8f, 0.3f, 0.3f, GetGameObject()->GetPosition());
 			GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<GuiPanel>()->IsEnabled = false;
-			app.isGamePaused = false;
+			std::cout << "Note disabled\n\n";
+			//app.isGamePaused = false;
 		}
 		else
 		{
 			isOpen = true;
 			//GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundWithVariation("DoorOpen", 1.1f, 0.8f, 0.3f, 0.3f, GetGameObject()->GetPosition());
 			GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<GuiPanel>()->IsEnabled = true;
-			GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<RectTransform>()->SetPosition(glm::vec2(windx / 2, windy / 2));
-			app.isGamePaused = true;
+			GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<RectTransform>()->SetPosition( glm::vec2( windx/2, windy/2 ) );
+			std::cout << "Note enabled\n\n";
+			//app.isGamePaused = true;
 		}
 	}
 
