@@ -77,7 +77,7 @@ public:
 
 	EnemyState* currentState;
 
-	FMOD::Channel* myChannel;
+	FMOD::Studio::EventInstance* myChannel;
 	FMOD::DSP* myDSP;
 
 

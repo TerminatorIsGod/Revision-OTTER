@@ -130,12 +130,12 @@ void InteractSystem::interact() {
 		if (isOpen)
 		{
 			isOpen = false;
-			GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundWithVariation("DoorClose", 0.8f, 0.8f, 0.3f, 0.3f, GetGameObject()->GetPosition());
+			GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("DoorClose", 0.8f, GetGameObject()->GetPosition());
 		}
 		else
 		{
 			isOpen = true;
-			GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundWithVariation("DoorOpen", 1.1f, 0.8f, 0.3f, 0.3f, GetGameObject()->GetPosition());
+			GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("DoorOpen", 1.1f, GetGameObject()->GetPosition());
 		}
 	}
 

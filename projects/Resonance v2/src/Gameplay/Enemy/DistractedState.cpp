@@ -17,8 +17,8 @@ EnemyState& DistractedState::getInstance()
 void DistractedState::Start(Enemy* e)
 {
 	std::cout << "\n[Enemy] " << e->GetGameObject()->Name << ": Entered Distracted State";
-	e->myChannel = e->scene->audioManager->Get<AudioManager>()->PlaySoundByName("LeaflingDistracted", 4.0f, e->GetGameObject()->GetPosition(), true);
-	e->myChannel->addDSP(FMOD_CHANNELCONTROL_DSP_HEAD, e->myDSP);
+	e->myChannel = e->scene->audioManager->Get<AudioManager>()->PlaySoundByName("LeaflingDistracted", 2.0f, e->GetGameObject()->GetPosition(), true);
+	//e->myChannel->addDSP(FMOD_CHANNELCONTROL_DSP_HEAD, e->myDSP);
 
 	e->pathRequested = false;
 	e->maxVelocity = e->IdleVelocity;
@@ -28,7 +28,7 @@ void DistractedState::Start(Enemy* e)
 
 void DistractedState::End(Enemy* e)
 {
-	e->myChannel->stop();
+	e->myChannel->stop(FMOD_STUDIO_STOP_IMMEDIATE);
 	std::cout << "\n[Enemy] " << e->GetGameObject()->Name << ": Exited Distracted State";
 }
 

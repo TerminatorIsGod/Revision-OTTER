@@ -22,7 +22,7 @@ void SoundEmmiter::Awake()
 void SoundEmmiter::Update(float deltaTime)
 {
 	//if (isDecaying)
-	//{
+	//{ 
 	//	if (muteAtZero && volume < 0.1f)
 	//		volume = -1.0f;
 	//	else

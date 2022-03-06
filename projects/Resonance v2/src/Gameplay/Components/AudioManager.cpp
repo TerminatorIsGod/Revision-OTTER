@@ -6,60 +6,52 @@
 void AudioManager::Awake() {
 	GetGameObject()->GetScene()->audioManager = GetGameObject();
 
-	FMOD::System_Create(&system);
-	system->init(32, FMOD_INIT_NORMAL, nullptr);
-	system->set3DSettings(1.0f, 1.0f, 1.5f);
+	FMOD_RESULT result;
+	result = FMOD::Studio::System::create(&studioSystem); // Create the Studio System object.
 
-	LoadSound("L1_Ambiance", "Audio/Music/Infested_Engines.wav", false, true);
-	LoadSound("Title", "Audio/Music/Resonance.wav", false, true);
-	LoadSound("L2_Ambiance", "Audio/Music/Dead Quarters.wav", false, true);
-	LoadSound("Transition", "Audio/Sounds/loadingTransition.wav", false, false);
-	LoadSound("Footstep", "Audio/Sounds/footstepTest4.wav", false, false);
-	LoadSound("LeaflingPatrol", "Audio/Sounds/Leaflings_Patrol2.wav", true, true);
-	LoadSound("LeaflingDistracted", "Audio/Sounds/Leaflings_Distracted.wav", true, true);
-	LoadSound("LeaflingAgro", "Audio/Sounds/Leaflings_Agro.wav", true, true);
-	LoadSound("Engines", "Audio/Sounds/engineWhirring.wav", true, true);
-	LoadSound("OxygenRefill", "Audio/Sounds/replenishOxygen.wav", false, true);
-	LoadSound("OutOfBreath", "Audio/Sounds/outOfBreath.wav", false, true);
-	LoadSound("HoldingBreath", "Audio/Sounds/holdingBreath.wav", false, false);
-	LoadSound("BreathOut", "Audio/Sounds/breathOut.wav", false, false);
-	LoadSound("ValveTwist", "Audio/Sounds/valveTwist2.wav", true, false);
-	LoadSound("VendingMachine", "Audio/Sounds/vendingMachine.wav", true, false);
-	LoadSound("IdleIn", "Audio/Sounds/idleIn.wav", false, false);
-	LoadSound("IdleOut", "Audio/Sounds/idleOut.wav", false, false);
-	LoadSound("StopReplenish", "Audio/Sounds/stopReplenishOxygen.wav", false, false);
-	LoadSound("Death", "Audio/Music/Death Has Come Too Early.wav", false, false);
-	LoadSound("LadderClimb", "Audio/Sounds/ladderClimb.wav", false, false);
-	LoadSound("KeyPickup", "Audio/Sounds/keyPickup.wav", false, false);
-	LoadSound("DoorOpen", "Audio/Sounds/doorOpen.wav", true, false);
-	LoadSound("DoorClose", "Audio/Sounds/doorClose.wav", true, false);
+	// Initialize FMOD Studio, which will also initialize FMOD Low Level
+	result = studioSystem->initialize(512, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, 0);
+	studioSystem->getCoreSystem(&system);
+
+	studioSystem->loadBankFile("Audio/Fmod Studio Projects/Resonance Audio/Build/Desktop/Master.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &soundBank);
+	studioSystem->loadBankFile("Audio/Fmod Studio Projects/Resonance Audio/Build/Desktop/Master.strings.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &soundStringBank);
+	soundBank->loadSampleData();
+
+	LoadSound("L1_Ambiance", "event:/Level 1 Ambiance");
+	LoadSound("Title", "event:/Title Screen");
+	LoadSound("Transition", "event:/Loading Transition");
+	LoadSound("Footstep", "event:/Footstep");
+	LoadSound("LeaflingPatrol", "event:/Leafling Patrol");
+	LoadSound("LeaflingDistracted", "event:/Leafling Distracted");
+	LoadSound("LeaflingAgro", "event:/Leafling Aggravated");
+	LoadSound("Engines", "event:/Engine Whirring");
+	LoadSound("OxygenRefill", "event:/Replenish Oxygen");
+	LoadSound("OutOfBreath", "event:/Out of Breath");
+	LoadSound("HoldingBreath", "event:/Hold Breath");
+	LoadSound("BreathOut", "event:/Release Breath");
+	LoadSound("ValveTwist", "event:/Valve Twist");
+	LoadSound("VendingMachine", "event:/Vending Machine");
+	LoadSound("IdleIn", "event:/Idle Breathe In");
+	LoadSound("IdleOut", "event:/Idle Breathe Out");
+	LoadSound("StopReplenish", "event:/Stop Replenish Oxygen");
+	LoadSound("Death", "event:/Death");
+	LoadSound("LadderClimb", "event:/Ladder Climb");
+	LoadSound("KeyPickup", "event:/Key Pickup");
+	LoadSound("DoorOpen", "event:/Door Open");
+	LoadSound("DoorClose", "event:/Door Close");
 
 	if (track == "L1_Ambiance")
 	{
-		FMOD::Channel* tempChannel;
-		system->playSound(sounds[track], nullptr, false, &tempChannel);
-		tempChannel->set3DAttributes(&GlmVectorToFmodVector(glm::vec3(0, 50, -7)), 0);
-		tempChannel->setVolume(0.5f);
-
-		FMOD::Channel* tempChannel2;
-		system->playSound(sounds["Engines"], nullptr, false, &tempChannel2);
-		tempChannel2->set3DAttributes(&GlmVectorToFmodVector(glm::vec3(13.5f, 28.8f, 0)), 0);
-		tempChannel2->setVolume(3.0f);
-
-		FMOD::Channel* tempChannel3;
-		system->playSound(sounds["Engines"], nullptr, false, &tempChannel3);
-		tempChannel3->set3DAttributes(&GlmVectorToFmodVector(glm::vec3(-13.5f, 28.8f, 0)), 0);
-		tempChannel3->setVolume(3.0f);
+		PlaySoundByName("Engines", 1.0f, glm::vec3(13.5f, 28.8f, 0));
+		PlaySoundByName("Engines", 1.0f, glm::vec3(-13.5f, 28.8f, 0));
 	}
-	else
-	{
-		PlaySoundByName(track, 0.5f);
-	}
+
+	PlaySoundByName(track, 0.5f);
 }
 
 AudioManager::~AudioManager()
 {
-	system->release();
+	studioSystem->release();
 }
 
 void AudioManager::Update(float deltaTime) {
@@ -68,9 +60,15 @@ void AudioManager::Update(float deltaTime) {
 	if (player->Has<SimpleCameraControl>())
 	{
 		glm::quat dir = player->Get<SimpleCameraControl>()->currentRot;
-		system->set3DListenerAttributes(0, &GlmVectorToFmodVector(player->GetPosition()), &GlmVectorToFmodVector(player->Get<Gameplay::Physics::RigidBody>()->GetLinearVelocity()), &GlmVectorToFmodVector(dir * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f)), &GlmVectorToFmodVector(dir * glm::vec4(0.0f, -1.0f, 0.0f, 1.0f)));
+		FMOD_3D_ATTRIBUTES listenerAttributes;
+		listenerAttributes.position = GlmVectorToFmodVector(player->GetPosition());
+		listenerAttributes.velocity = GlmVectorToFmodVector(player->Get<Gameplay::Physics::RigidBody>()->GetLinearVelocity());
+		listenerAttributes.forward = GlmVectorToFmodVector(dir * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f));
+		listenerAttributes.up = GlmVectorToFmodVector(dir * glm::vec4(0.0f, -1.0f, 0.0f, 1.0f));
+
+		studioSystem->setListenerAttributes(0, &listenerAttributes);
 	}
-	system->update();
+	studioSystem->update();
 
 	FMOD::ChannelGroup* masterChannelGroup;
 	system->getMasterChannelGroup(&masterChannelGroup);
@@ -103,80 +101,43 @@ AudioManager::Sptr AudioManager::FromJson(const nlohmann::json& blob) {
 	return result;
 }
 
-void AudioManager::LoadSound(const std::string& soundName, const std::string& filename, bool b3d, bool bLooping, bool bStream)
+void AudioManager::LoadSound(const std::string& soundName, const std::string& filename)
 {
-	//Check if already loaded
-	auto foundElement = sounds.find(soundName);
-	if (foundElement != sounds.end())
+	FMOD::Studio::EventDescription* eventDesc;
+	studioSystem->getEvent(filename.c_str(), &eventDesc);
+
+	events[soundName] = eventDesc;
+}
+
+FMOD::Studio::EventInstance* AudioManager::PlaySoundByName(const std::string& soundName, float vol, glm::vec3 pos, bool lowpass)
+{
+	FMOD::Studio::EventInstance* eventInst;
+	events[soundName]->createInstance(&eventInst);
+
+	if (pos != glm::vec3(0.0f))
 	{
-		//has already been loaded.
-		return;
+		FMOD_3D_ATTRIBUTES attributes;
+		attributes.position = GlmVectorToFmodVector(pos);
+		eventInst->set3DAttributes(&attributes);
 	}
+	eventInst->setVolume(vol);
+	eventInst->start();
 
-	FMOD_MODE mode = FMOD_DEFAULT;
-	mode |= (b3d) ? FMOD_3D : FMOD_2D;
-	mode |= (bLooping) ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF;
-	mode |= (bStream) ? FMOD_CREATESTREAM : FMOD_CREATECOMPRESSEDSAMPLE;
-
-	FMOD::Sound* loadedSound;
-	system->createSound(filename.c_str(), mode, nullptr, &loadedSound);
-	if (loadedSound != nullptr)
-		sounds[soundName] = loadedSound;
-}
-
-FMOD::Channel* AudioManager::PlaySoundByName(const std::string& soundName, float vol, glm::vec3 pos, bool lowpass)
-{
-	FMOD::Channel* newChannel;
-	system->playSound(sounds[soundName], nullptr, false, &newChannel);
-	newChannel->setVolume(vol);
-	newChannel->set3DAttributes(&GlmVectorToFmodVector(pos), 0);
-
-	return newChannel;
-}
-
-FMOD::Channel* AudioManager::PlaySoundWithVariation(const std::string& soundName, float baseVol, float basePitch, float volRange, float pitchRange, glm::vec3 pos)
-{
-	FMOD::Channel* newChannel;
-	system->playSound(sounds[soundName], nullptr, false, &newChannel);
-
-	float rVolume = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / volRange));
-	newChannel->setVolume(baseVol + rVolume);
-
-	float rPitch = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / pitchRange));
-	newChannel->setPitch(basePitch + rPitch);
-
-	newChannel->set3DAttributes(&GlmVectorToFmodVector(pos), 0);
-	return newChannel;
+	return eventInst;
 }
 
 void AudioManager::PlayFootstepSound(glm::vec3 pos, float vol)
 {
-	system->playSound(sounds["Footstep"], nullptr, false, &footstepChannel);
+	FMOD::Studio::EventInstance* eventInst;
+	events["Footstep"]->createInstance(&eventInst);
 
-	float rVolume = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 0.3f));
-	footstepChannel->setVolume(vol + rVolume);
-
-	float rPitch = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 0.4f));
-	footstepChannel->setPitch(rPitch + 0.7f);
-
-	footstepChannel->set3DAttributes(&GlmVectorToFmodVector(pos), 0);
+	eventInst->setVolume(vol);
+	eventInst->start();
 }
-
-//void AudioManager::PauseSoundByName(const std::string& soundName)
-//{
-//	//system->playSound(sounds[soundName], nullptr, true, nullptr);
-//	
-//}
 
 void AudioManager::UnloadSound(const std::string& soundName)
 {
-	//Check if already loaded
-	auto foundElement = sounds.find(soundName);
-	if (foundElement != sounds.end())
-	{
-		foundElement->second->release();
-		sounds.erase(foundElement);
-	}
+	events[soundName]->releaseAllInstances();
 }
 
 const FMOD_VECTOR AudioManager::GlmVectorToFmodVector(glm::vec3 vec)

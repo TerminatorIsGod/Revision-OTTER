@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include "Gameplay/Enemy/PatrollingState.h"
 #include "Gameplay/Enemy/AggravatedState.h"
+#include "fmod_studio.hpp"
 
 
 #pragma region "Default Functions"
@@ -45,11 +46,6 @@ void Enemy::Update(float deltaTime)
 {
 	if (!started)
 	{
-		scene->audioManager->Get<AudioManager>()->system->createDSPByType(FMOD_DSP_TYPE_MULTIBAND_EQ, &myDSP);
-		myDSP->setParameterInt(FMOD_DSP_MULTIBAND_EQ_A_FILTER, FMOD_DSP_MULTIBAND_EQ_FILTER_LOWPASS_12DB);
-		myDSP->setParameterFloat(FMOD_DSP_MULTIBAND_EQ_A_FREQUENCY, 1000.0f);
-		myDSP->setParameterFloat(FMOD_DSP_MULTIBAND_EQ_A_Q, 0.707);
-
 		SetState(PatrollingState::getInstance());
 		started = true;
 	}
@@ -73,7 +69,11 @@ void Enemy::Update(float deltaTime)
 	if (myChannel != NULL)
 	{
 		AudioManager::Sptr aMan = scene->audioManager->Get<AudioManager>();
-		myChannel->set3DAttributes(&aMan->GlmVectorToFmodVector(GetGameObject()->GetPosition()), &aMan->GlmVectorToFmodVector(body->GetLinearVelocity()));
+
+		FMOD_3D_ATTRIBUTES attributes;
+		attributes.position = aMan->GlmVectorToFmodVector(GetGameObject()->GetPosition());
+		attributes.velocity = aMan->GlmVectorToFmodVector(body->GetLinearVelocity());
+		myChannel->set3DAttributes(&attributes);
 
 		//Sound Occlusion Rayscast
 		btCollisionWorld::ClosestRayResultCallback hit2(ToBt(GetGameObject()->GetPosition() + glm::vec3(0.0f, 0.0f, 2.0f)), ToBt(player->GetPosition()));
@@ -87,18 +87,18 @@ void Enemy::Update(float deltaTime)
 		glm::vec3 objectPos = ToGlm(hit2.m_collisionObject->getWorldTransform().getOrigin());
 
 		float currentWetVal;
-		myDSP->getWetDryMix(nullptr, &currentWetVal, nullptr);
+		myChannel->getParameterByName("Lowpass Mix", &currentWetVal);
 
 		//Hmm maybe make it so the dampening isn't as intense on non-static objects, than on static objects
 		if (hit2.m_collisionObject->isStaticObject())
 		{
 			currentWetVal = glm::mix(currentWetVal, 1.0f, 1.8f * deltaTime);
-			myDSP->setWetDryMix(1.0f, currentWetVal, 1.0f - currentWetVal);
+			myChannel->setParameterByName("Lowpass Mix", currentWetVal);
 		}
 		else if (glm::round(objectPos) == glm::round(player->GetPosition()))
 		{
 			currentWetVal = glm::mix(currentWetVal, 0.0f, 1.8f * deltaTime);
-			myDSP->setWetDryMix(1.0f, currentWetVal, 1.0f - currentWetVal);
+			myChannel->setParameterByName("Lowpass Mix", currentWetVal);
 
 			canSeePlayer = true;
 		}
@@ -111,8 +111,7 @@ void Enemy::Update(float deltaTime)
 				return;
 
 			currentWetVal = glm::mix(currentWetVal, 0.0f, 1.8f * deltaTime);
-			myDSP->setWetDryMix(1.0f, currentWetVal, 1.0f - currentWetVal);
-
+			myChannel->setParameterByName("Lowpass Mix", currentWetVal);
 		}
 	}
 }

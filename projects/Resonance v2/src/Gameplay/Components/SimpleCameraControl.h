@@ -2,7 +2,7 @@
 #include "IComponent.h"
 #include "Gameplay/Physics/RigidBody.h"
 #include "Gameplay/Components/SoundEmmiter.h"
-#include "fmod.hpp"
+#include "fmod_studio.hpp"
 
 struct GLFWwindow;
 
@@ -125,7 +125,7 @@ protected:
 	bool startedRefill = false;
 	bool outOfBreath = false;
 
-	FMOD::Channel* oxygenChannel;
-	FMOD::Channel* outOfBreathChannel;
+	FMOD::Studio::EventInstance* oxygenChannel;
+	FMOD::Studio::EventInstance* outOfBreathChannel;
 
 };

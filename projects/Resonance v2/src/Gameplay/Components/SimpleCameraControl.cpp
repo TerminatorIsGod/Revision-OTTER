@@ -105,7 +105,7 @@ void SimpleCameraControl::Update(float deltaTime)
 		if (soundDelayTimer <= 0.0f)
 		{
 			if (playerState != Idle)
-				_scene->audioManager->Get<AudioManager>()->PlayFootstepSound(GetGameObject()->GetPosition(), playerEmmiters[playerEmmiterIndex]->targetVolume / 5.0f);
+				_scene->audioManager->Get<AudioManager>()->PlayFootstepSound(GetGameObject()->GetPosition() - glm::vec3(0, 0, -5.0f), playerEmmiters[playerEmmiterIndex]->targetVolume / 5.0f);
 			startSoundDelay = false;
 		}
 	}
@@ -269,7 +269,7 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 			oxygenMeter = oxygenMeterMax;
 			if (startedRefill)
 			{
-				oxygenChannel->stop();
+				oxygenChannel->stop(FMOD_STUDIO_STOP_IMMEDIATE);
 				_scene->audioManager->Get<AudioManager>()->PlaySoundByName("StopReplenish", 0.5f);
 				startedRefill = false;
 			}
@@ -283,7 +283,7 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 	{
 		if (startedRefill)
 		{
-			oxygenChannel->stop();
+			oxygenChannel->stop(FMOD_STUDIO_STOP_IMMEDIATE);
 			_scene->audioManager->Get<AudioManager>()->PlaySoundByName("StopReplenish", 0.5f);
 			startedRefill = false;
 		}
@@ -295,7 +295,7 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 			if (outOfBreath)
 			{
 				outOfBreath = false;
-				outOfBreathChannel->stop();
+				outOfBreathChannel->stop(FMOD_STUDIO_STOP_IMMEDIATE);
 			}
 		}
 		else
@@ -444,7 +444,7 @@ void SimpleCameraControl::Interact(float deltaTime)
 		{
 			if (!isEPressed)
 			{
-				_scene->audioManager->Get<AudioManager>()->PlaySoundWithVariation("LadderClimb", 0.3f, 0.9f, 0.2f, 0.3f);
+				_scene->audioManager->Get<AudioManager>()->PlaySoundByName("LadderClimb");
 				GetGameObject()->SetPostion(_scene->ladders[i]->Get<Ladder>()->teleportPos);
 				baseHeight = _scene->ladders[i]->Get<Ladder>()->teleportPos.z;
 				isEPressed = true;
