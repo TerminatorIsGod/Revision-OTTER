@@ -74,6 +74,7 @@
 #include "Layers/ImGuiDebugLayer.h"
 #include "Layers/InstancedRenderingTestLayer.h"
 #include "Layers/ParticleLayer.h"
+#include <Gameplay/Components/AnimationSystem.h>
 
 Application* Application::_singleton = nullptr;
 std::string Application::_applicationName = "Resonance";
@@ -85,7 +86,7 @@ Application::Application() :
 	_window(nullptr),
 	_windowSize({ DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT }),
 	_isRunning(false),
-	_isEditor(false),
+	_isEditor(true),
 	_windowTitle("Resonance"),
 	_currentScene(nullptr),
 	_targetScene(nullptr),
@@ -233,10 +234,10 @@ void Application::_Run()
 		}
 
 		if (glfwGetKey(_window, GLFW_KEY_0) == GLFW_PRESS) {
-			LoadScene("levelMenu.json");
+			//LoadScene("levelMenu.json");
 		}
 		else if (glfwGetKey(_window, GLFW_KEY_1) == GLFW_PRESS) {
-			LoadScene("level1.json");
+			//LoadScene("level1.json");
 		}
 
 		//Check to see if pause game
@@ -367,6 +368,8 @@ void Application::_RegisterClasses()
 	ComponentManager::RegisterType<MenuSystemNewAndImproved>();
 	ComponentManager::RegisterType<AudioManager>();
 	ComponentManager::RegisterType<NoteSystem>();
+
+	ComponentManager::RegisterType<AnimationSystem>();
 
 }
 

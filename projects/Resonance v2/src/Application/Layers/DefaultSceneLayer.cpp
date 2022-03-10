@@ -80,6 +80,7 @@
 
 #include "Application/Application.h"
 #include "Gameplay/Components/ParticleSystem.h"
+#include "Gameplay/Components/AnimationSystem.h"
 
 DefaultSceneLayer::DefaultSceneLayer() :
 	ApplicationLayer()
@@ -364,6 +365,20 @@ void DefaultSceneLayer::_CreateScene()
 			// This is an example of attaching a component and setting some parameters
 			RotatingBehaviour::Sptr behaviour = monkey2->Add<RotatingBehaviour>();
 			behaviour->RotationSpeed = glm::vec3(0.0f, 0.0f, -90.0f);
+		}
+
+		GameObject::Sptr animTest = scene->CreateGameObject("Anim Test");
+		{
+			// Set and rotation position in the scene
+			animTest->SetPostion(glm::vec3(-1.5f, 0.0f, 1.0f));
+			animTest->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
+
+			// Add a render component
+			RenderComponent::Sptr renderer = animTest->Add<RenderComponent>();
+			renderer->SetMesh(monkeyMesh);
+			renderer->SetMaterial(boxMaterial);
+
+			animTest->Add<AnimationSystem>();
 		}
 
 		GameObject::Sptr demoBase = scene->CreateGameObject("Demo Parent");
