@@ -74,6 +74,7 @@
 #include "Layers/ImGuiDebugLayer.h"
 #include "Layers/InstancedRenderingTestLayer.h"
 #include "Layers/ParticleLayer.h"
+#include <Gameplay/Components/AnimationSystem.h>
 
 Application* Application::_singleton = nullptr;
 std::string Application::_applicationName = "Resonance";
@@ -367,6 +368,8 @@ void Application::_RegisterClasses()
 	ComponentManager::RegisterType<MenuSystemNewAndImproved>();
 	ComponentManager::RegisterType<AudioManager>();
 	ComponentManager::RegisterType<NoteSystem>();
+
+	ComponentManager::RegisterType<AnimationSystem>();
 
 }
 
