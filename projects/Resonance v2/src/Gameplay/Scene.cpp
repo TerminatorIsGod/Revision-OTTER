@@ -146,7 +146,7 @@ namespace Gameplay {
 		for (auto& obj : _objects) {
 			obj->Awake();
 		}
-		// Set up our lighting 
+		// Set up our lighting  
 		SetupShaderAndLights();
 
 		_isAwake = true;

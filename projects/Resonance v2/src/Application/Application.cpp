@@ -85,7 +85,7 @@ Application::Application() :
 	_window(nullptr),
 	_windowSize({ DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT }),
 	_isRunning(false),
-	_isEditor(false),
+	_isEditor(true),
 	_windowTitle("Resonance"),
 	_currentScene(nullptr),
 	_targetScene(nullptr),
@@ -232,12 +232,12 @@ void Application::_Run()
 			}
 		}
 
-		if (glfwGetKey(_window, GLFW_KEY_0) == GLFW_PRESS) {
-			LoadScene("levelMenu.json");
-		}
-		else if (glfwGetKey(_window, GLFW_KEY_1) == GLFW_PRESS) {
-			LoadScene("level1.json");
-		}
+		//if (glfwGetKey(_window, GLFW_KEY_0) == GLFW_PRESS) {
+		//	LoadScene("levelMenu.json");
+		//} 
+		//else if (glfwGetKey(_window, GLFW_KEY_1) == GLFW_PRESS) {
+		//	LoadScene("level1.json");
+		//}
 
 		//Check to see if pause game
 		if (glfwGetKey(_window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
