@@ -54,6 +54,10 @@ void DistractedState::Listen(Enemy* e, float deltaTime)
 
 	for each (GameObject * s in e->scene->soundEmmiters)
 	{
+		//if muted, skip over the light
+		if (s->Get<SoundEmmiter>()->volume <= -1.0f)
+			continue;
+
 		//Checking if any sounds are in listening Radius
 		glm::vec3 dir = s->GetPosition() - e->GetGameObject()->GetPosition();
 		float dist = glm::length(dir);
