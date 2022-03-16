@@ -407,30 +407,6 @@ void SimpleCameraControl::Interact(float deltaTime)
 	if (objectPos == glm::vec3(0))
 		return;
 
-	//Distraction Items
-	for (int i = 0; i < _scene->soundEmmiters.size(); i++)
-	{
-		if (objectPos != _scene->soundEmmiters[i]->GetPosition())
-			continue;
-
-		//UI Prompt
-		ShowDistract();
-
-		if (glfwGetKey(_window, GLFW_KEY_E))
-		{
-			if (!isEPressed)
-			{
-				_scene->soundEmmiters[i]->Get<SoundEmmiter>()->targetVolume = _scene->soundEmmiters[i]->Get<SoundEmmiter>()->distractionVolume;
-				_scene->soundEmmiters[i]->Get<SoundEmmiter>()->isDecaying = false;
-				_scene->soundEmmiters[i]->Get<SoundEmmiter>()->lerpSpeed = 4.0f;
-
-				isEPressed = true;
-			}
-		}
-		else
-			isEPressed = false;
-	}
-
 	//Ladder
 	for (int i = 0; i < _scene->ladders.size(); i++)
 	{
@@ -614,13 +590,16 @@ void SimpleCameraControl::RenderImGui()
 	LABEL_LEFT(ImGui::DragFloat2, "Mouse Sensitivity", &_mouseSensitivity.x, 0.01f);
 	LABEL_LEFT(ImGui::DragFloat3, "Move Speed       ", &_moveSpeeds.x, 0.01f, 0.01f);
 	LABEL_LEFT(ImGui::DragFloat, "Shift Multiplier ", &_shiftMultipler, 0.01f, 1.0f);
+	LABEL_LEFT(ImGui::DragFloat3, "Starting Position", &startingPos.x);
+
 }
 
 nlohmann::json SimpleCameraControl::ToJson() const {
 	return {
 		{ "mouse_sensitivity", _mouseSensitivity},
 		{ "move_speed", _moveSpeeds },
-		{ "shift_mult", _shiftMultipler }
+		{ "shift_mult", _shiftMultipler },
+		{ "starting_pos", startingPos }
 	};
 }
 
@@ -629,5 +608,7 @@ SimpleCameraControl::Sptr SimpleCameraControl::FromJson(const nlohmann::json& bl
 	result->_mouseSensitivity = JsonGet(blob, "mouse_sensitivity", result->_mouseSensitivity);
 	result->_moveSpeeds = JsonGet(blob, "move_speed", result->_moveSpeeds);
 	result->_shiftMultipler = JsonGet(blob, "shift_mult", 2.0f);
+	result->startingPos = JsonGet(blob, "starting_pos", result->startingPos);
+
 	return result;
 }

@@ -112,6 +112,7 @@ public:
 	bool isGamePaused = false;
 	bool isGameStarted = true;
 	bool showPauseScreen = false;
+	std::string scenePath;
 	nlohmann::json _backupState;
 protected:
 	// The GL driver layer is a special friend that can access our protected members (mainly window info)

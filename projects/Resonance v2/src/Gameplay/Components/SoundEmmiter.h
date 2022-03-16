@@ -4,6 +4,8 @@
 #include "Gameplay/Scene.h"
 #include "Gameplay/Components/RenderComponent.h"
 
+struct GLFWwindow;
+
 using namespace Gameplay;
 
 /// <summary>
@@ -26,11 +28,15 @@ public:
 	float lerpSpeed;
 	glm::vec3 soundLightOffset = glm::vec3(0, 0, 0);
 	Scene* scene;
+	GameObject* player;
+	GLFWwindow* _window;
 
 	bool isDecaying = true;
 	bool muteAtZero = false;
 	bool isPlayerLight = false;
 	bool linearLerp = false;
+	bool isEPressed = false;
+	bool isThrowable = false;
 
 	glm::vec3 defaultColour = glm::vec3(0.03f, 0.03f, 0.03f);
 	glm::vec3 colour = defaultColour;
@@ -39,6 +45,8 @@ public:
 	void Decay(float deltaTime);
 	void Attack(float deltaTime);
 	void MoveToPlayer();
+	void Interaction();
+	void MoveToPos(glm::vec3 pos);
 	//Generic Functions
 	glm::vec3 speed = glm::vec3(0.0f);
 	std::string soundName;

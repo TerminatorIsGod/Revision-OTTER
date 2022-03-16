@@ -2,12 +2,19 @@
 #include "Utils/ImGuiHelper.h"
 #include "Utils/JsonGlmHelpers.h"
 #include "Gameplay/Components/AudioManager.h"
+#include "Gameplay/Components/SimpleCameraControl.h"
+#include "Application/Application.h"
+#include <GLFW/glfw3.h>
+
 
 void SoundEmmiter::Awake()
 {
 	lerpSpeed = attackSpeed;
 
 	scene = GetGameObject()->GetScene();
+	player = scene->MainCamera->GetGameObject();
+	Application& app = Application::Get();
+	_window = app.GetWindow();
 
 	scene->Lights.push_back(Light());
 	soundLight = scene->Lights.size() - 1;
@@ -21,23 +28,13 @@ void SoundEmmiter::Awake()
 
 void SoundEmmiter::Update(float deltaTime)
 {
-	//if (isDecaying)
-	//{ 
-	//	if (muteAtZero && volume < 0.1f)
-	//		volume = -1.0f;
-	//	else
-	//		Decay(deltaTime);
-	//}
-	//else
-	//{
-	//	Attack(deltaTime);
-	//}
+	Interaction();
 
 	if (!isDecaying)
 		Attack(deltaTime);
 
 	scene->Lights[soundLight].Range = volume * volume * -1.20f;
-	if (!isPlayerLight)
+	if (!isPlayerLight && !isThrowable)
 		scene->Lights[soundLight].Position = GetGameObject()->GetPosition();
 }
 
@@ -93,12 +90,14 @@ void SoundEmmiter::Decay(float deltaTime)
 
 void SoundEmmiter::Attack(float deltaTime)
 {
+	//Audio Stuff
 	if (!soundPlayed && !isPlayerLight)
 	{
 		scene->audioManager->Get<AudioManager>()->PlaySoundByName(soundName, soundVol, GetGameObject()->GetPosition());
 		soundPlayed = true;
 	}
 
+	//2 Different Lerping Methods
 	if (linearLerp)
 	{
 		volume = glm::mix(volume, targetVolume, t);
@@ -114,6 +113,7 @@ void SoundEmmiter::Attack(float deltaTime)
 
 	scene->Lights[soundLight].Color = glm::vec3(defaultColour * (1.0f - (volume / targetVolume)));
 
+	//Checks if Lerping is Complete
 	if (targetVolume - volume < 0.001f || t >= 1.0)
 	{
 		t = 0.0f;
@@ -127,4 +127,38 @@ void SoundEmmiter::MoveToPlayer()
 {
 	GetGameObject()->SetPostion(scene->MainCamera->GetGameObject()->GetPosition() + soundLightOffset);
 	scene->Lights[soundLight].Position = scene->MainCamera->GetGameObject()->GetPosition() + soundLightOffset;
+}
+
+void SoundEmmiter::MoveToPos(glm::vec3 pos)
+{
+	GetGameObject()->SetPostion(pos + soundLightOffset);
+	scene->Lights[soundLight].Position = pos + soundLightOffset;
+}
+
+void SoundEmmiter::Interaction()
+{
+	if (isPlayerLight)
+		return;
+
+	if (player->Get<SimpleCameraControl>()->interactionObjectPos != GetGameObject()->GetPosition())
+		return;
+
+	if (isThrowable)
+		return;
+
+	player->Get<SimpleCameraControl>()->ShowDistract();
+
+	if (glfwGetKey(_window, GLFW_KEY_E))
+	{
+		if (!isEPressed)
+		{
+			targetVolume = distractionVolume;
+			isDecaying = false;
+			lerpSpeed = 4.0f;
+
+			isEPressed = true;
+		}
+	}
+	else
+		isEPressed = false;
 }

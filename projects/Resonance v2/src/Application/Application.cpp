@@ -58,6 +58,8 @@
 #include <Gameplay/Components/MenuSystemNewAndImproved.h>
 #include <Gameplay/Components/AudioManager.h>
 #include <Gameplay/Components/NoteSystem.h>
+#include <Gameplay/Components/ThrowableItem.h>
+
 
 
 // GUI
@@ -133,7 +135,7 @@ bool Application::LoadScene(const std::string & path) {
 		isEscapePressed = false;
 		isGamePaused = false;
 		isGameStarted = true;
-
+		scenePath = path;
 		std::string manifestPath = std::filesystem::path(path).stem().string() + "-manifest.json";
 		if (std::filesystem::exists(manifestPath)) {
 			LOG_INFO("Loading manifest from \"{}\"", manifestPath);
@@ -238,7 +240,7 @@ void Application::_Run()
 		//} 
 		//else if (glfwGetKey(_window, GLFW_KEY_1) == GLFW_PRESS) {
 		//	LoadScene("level1.json");
-		//}
+		//} 
 
 		//Check to see if pause game
 		if (glfwGetKey(_window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
@@ -267,7 +269,7 @@ void Application::_Run()
 		}
 
 		if (_currentScene->requestSceneReload && glfwGetKey(GetWindow(), GLFW_KEY_E)) {
-			LoadScene("Level1.json");
+			LoadScene(scenePath);
 			_currentScene->IsPlaying = true;
 		}
 
@@ -368,6 +370,8 @@ void Application::_RegisterClasses()
 	ComponentManager::RegisterType<MenuSystemNewAndImproved>();
 	ComponentManager::RegisterType<AudioManager>();
 	ComponentManager::RegisterType<NoteSystem>();
+	ComponentManager::RegisterType<ThrowableItem>();
+
 
 	ComponentManager::RegisterType<AnimationSystem>();
 
