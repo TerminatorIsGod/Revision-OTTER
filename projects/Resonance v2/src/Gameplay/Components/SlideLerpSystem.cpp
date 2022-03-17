@@ -14,7 +14,7 @@ void SlideLerpSystem::Awake()
 void SlideLerpSystem::RenderImGui() {
 	ImGuiStorage* guiStore = ImGui::GetStateStorage();
 
-	if (LABEL_LEFT(ImGui::DragFloat3, "Start Rotation", &startx, 1.0f)) {
+	if (LABEL_LEFT(ImGui::DragFloat3, "Start Position", &startx, 1.0f)) {
 
 		// Update the editor state with our new values
 		guiStore->SetFloat(ImGui::GetID(&startx), startx);
@@ -22,7 +22,7 @@ void SlideLerpSystem::RenderImGui() {
 		guiStore->SetFloat(ImGui::GetID(&startz), startz);
 	}
 
-	if (LABEL_LEFT(ImGui::DragFloat3, "End Rotation", &endx, 1.0f)) {
+	if (LABEL_LEFT(ImGui::DragFloat3, "End Position", &endx, 1.0f)) {
 
 		// Update the editor state with our new values
 		guiStore->SetFloat(ImGui::GetID(&endx), endx);
