@@ -83,6 +83,7 @@
 #include "Application/Application.h"
 #include "Gameplay/Components/ParticleSystem.h"
 #include "Gameplay/Components/AnimationSystem.h"
+#include "Gameplay/Components/SlideLerpSystem.h"
 
 DefaultSceneLayer::DefaultSceneLayer() :
 	ApplicationLayer()
