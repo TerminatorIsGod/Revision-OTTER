@@ -93,7 +93,7 @@ void SoundEmmiter::Attack(float deltaTime)
 	//Audio Stuff
 	if (!soundPlayed && !isPlayerLight)
 	{
-		scene->audioManager->Get<AudioManager>()->PlaySoundByName(soundName, soundVol, GetGameObject()->GetPosition());
+		scene->audioManager->Get<AudioManager>()->PlaySoundByName(soundName, soundVol, scene->Lights[soundLight].Position);
 		soundPlayed = true;
 	}
 

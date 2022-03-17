@@ -39,9 +39,11 @@ public:
 	void ShowPickup();
 	void ShowDistract();
 	void ShowLocked();
+	void ShowDropThrow();
 	void ShowGameOver();
 
 	bool promptShown = false;
+	bool allowInteraction = true;
 	void IdleState(float deltaTime);
 	void SneakState(float deltaTime);
 	void WalkState(float deltaTime);
@@ -120,6 +122,8 @@ protected:
 	Texture2D::Sptr p_Open;
 	Texture2D::Sptr p_Distract;
 	Texture2D::Sptr p_Locked;
+	Texture2D::Sptr p_DropThrow;
+
 
 
 	bool startedRefill = false;

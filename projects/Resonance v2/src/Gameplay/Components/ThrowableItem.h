@@ -28,6 +28,7 @@ public:
 	bool isEPressed = false;
 	bool isHeld = false;
 	bool thrown = false;
+	bool destroyOnImpact = true;
 	virtual void Awake() override;
 	virtual void Update(float deltaTime) override;
 	virtual void RenderImGui() override;

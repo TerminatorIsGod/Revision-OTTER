@@ -35,7 +35,7 @@ void ThrowableItem::Update(float deltaTime)
 				GetComponent<Gameplay::Physics::RigidBody>()->SetType(RigidBodyType::Kinematic);
 				GetComponent<Gameplay::Physics::RigidBody>()->SetLinearVelocity(glm::vec3(0.0f));
 				thrown = false;
-				//GetComponent<Gameplay::Physics::RigidBody>()->IsEnabled = false;
+				player->Get<SimpleCameraControl>()->allowInteraction = false;
 				isEPressed = true;
 			}
 		}
@@ -46,12 +46,13 @@ void ThrowableItem::Update(float deltaTime)
 	{
 		if (glfwGetKey(_window, GLFW_KEY_E))
 		{
+
 			if (!isEPressed)
 			{
 				isHeld = false;
 				GetComponent<Gameplay::Physics::RigidBody>()->SetType(RigidBodyType::Dynamic);
 				GetComponent<Gameplay::Physics::RigidBody>()->SetLinearVelocity(glm::vec3(0.0f));
-				//GetComponent<Gameplay::Physics::RigidBody>()->IsEnabled = true;
+				player->Get<SimpleCameraControl>()->allowInteraction = true;
 				isEPressed = true;
 			}
 		}
@@ -61,7 +62,7 @@ void ThrowableItem::Update(float deltaTime)
 
 	if (thrown)
 	{
-		//std::cout << "\nVEL Dif " << prevVel - glm::length(GetComponent<Gameplay::Physics::RigidBody>()->GetLinearVelocity());
+		//hit something
 		if (prevVel - glm::length(GetComponent<Gameplay::Physics::RigidBody>()->GetLinearVelocity()) > 1.0f)
 		{
 			GetGameObject()->Get<SoundEmmiter>()->MoveToPos(GetGameObject()->GetPosition());
@@ -69,12 +70,18 @@ void ThrowableItem::Update(float deltaTime)
 			GetGameObject()->Get<SoundEmmiter>()->isDecaying = false;
 			GetGameObject()->Get<SoundEmmiter>()->lerpSpeed = 4.0f;
 			thrown = false;
+
+			if (destroyOnImpact)
+			{
+				GetGameObject()->SetPostion(glm::vec3(420, 420, -420));
+			}
 		}
 		prevVel = glm::length(GetComponent<Gameplay::Physics::RigidBody>()->GetLinearVelocity());
 	}
 
 	if (isHeld)
 	{
+		player->Get<SimpleCameraControl>()->ShowDropThrow();
 		glm::vec4 newOffset = glm::vec4(0.0f, 0.0f, -1.0f, 1.0f);
 		glm::vec3 localOffset = glm::vec3(newOffset * player->GetInverseTransform());
 
@@ -88,13 +95,15 @@ void ThrowableItem::Update(float deltaTime)
 		//Throw
 		if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_LEFT))
 		{
-			//std::cout << "\nLEFT CLICK";
 			isHeld = false;
 			thrown = true;
 			GetComponent<Gameplay::Physics::RigidBody>()->SetType(RigidBodyType::Dynamic);
 			GetComponent<Gameplay::Physics::RigidBody>()->SetLinearVelocity(glm::vec3(0.0f));
 			//GetComponent<Gameplay::Physics::RigidBody>()->IsEnabled = true;
 			GetComponent<Gameplay::Physics::RigidBody>()->ApplyForce(player->Get<SimpleCameraControl>()->viewDir * 850.0f);
+			player->Get<SimpleCameraControl>()->allowInteraction = true;
+			player->Get<SimpleCameraControl>()->promptShown = false; //Makes sure the ui size is reset so the pickup prompt doesn't look stretched
+
 		}
 	}
 	else
@@ -107,21 +116,21 @@ void ThrowableItem::Update(float deltaTime)
 
 void ThrowableItem::RenderImGui() {
 
-	LABEL_LEFT(ImGui::DragFloat3, "temp", &temp.x);
+	LABEL_LEFT(ImGui::Checkbox, "Destroy On Impact", &destroyOnImpact);
 
 }
 
 nlohmann::json ThrowableItem::ToJson() const {
 
 	nlohmann::json result;
-	result["temp"] = temp;
-	return result;
+	result["destroyOnImpact"] = destroyOnImpact;
 
+	return result;
 }
 
 ThrowableItem::Sptr ThrowableItem::FromJson(const nlohmann::json& blob) {
 	ThrowableItem::Sptr result = std::make_shared<ThrowableItem>();
-	result->temp = JsonGet(blob, "temp", glm::vec3(0.0f));
+	result->destroyOnImpact = JsonGet(blob, "destroyOnImpact", true);
 
 	return result;
 }

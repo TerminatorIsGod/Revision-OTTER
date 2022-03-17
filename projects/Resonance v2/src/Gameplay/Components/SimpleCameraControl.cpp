@@ -52,6 +52,7 @@ void SimpleCameraControl::Awake() {
 		p_Open = ResourceManager::CreateAsset<Texture2D>("textures/ui/OpenPrompt.png");
 		p_Distract = ResourceManager::CreateAsset<Texture2D>("textures/ui/DistractPrompt.png");
 		p_Locked = ResourceManager::CreateAsset<Texture2D>("textures/ui/LockedPrompt.png");
+		p_DropThrow = ResourceManager::CreateAsset<Texture2D>("textures/ui/DropThrow Prompt.png");
 	}
 
 	for (int i = 0; i < playerEmmiterCount; i++)
@@ -76,12 +77,17 @@ void SimpleCameraControl::Awake() {
 
 void SimpleCameraControl::Update(float deltaTime)
 {
+	viewDir = currentRot * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f);
 
 	Movement(deltaTime);
 	SwitchState(deltaTime);
 	OxygenSystem(deltaTime);
 	MoveUI(deltaTime);
-	Interact(deltaTime);
+
+	if (allowInteraction)
+		Interact(deltaTime);
+	else
+		interactionObjectPos = glm::vec3(0.0f);
 
 	if (playerPulseTimer <= 0.f)
 	{
@@ -392,7 +398,6 @@ void SimpleCameraControl::SwitchState(float deltaTime)
 
 void SimpleCameraControl::Interact(float deltaTime)
 {
-	viewDir = currentRot * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f);
 	btCollisionWorld::ClosestRayResultCallback hit(ToBt(GetGameObject()->GetPosition()), ToBt(GetGameObject()->GetPosition() + (viewDir * 5.0f)));
 	_scene->GetPhysicsWorld()->rayTest(ToBt(GetGameObject()->GetPosition()), ToBt(GetGameObject()->GetPosition() + (viewDir * 5.0f)), hit);
 
@@ -470,6 +475,15 @@ void SimpleCameraControl::ShowLocked()
 {
 	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
 	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(p_Locked);
+	promptShown = true;
+}
+
+void SimpleCameraControl::ShowDropThrow()
+{
+	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
+	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(p_DropThrow);
+	PlaceUI(3, 53.33f, 30, 1, 0, 12, 1); // Interaction Prompt
+
 	promptShown = true;
 }
 
@@ -553,7 +567,8 @@ void SimpleCameraControl::MoveUI(float deltaTime)
 	PlaceUI(0, 10, 10); // Crosshair
 	PlaceUI(1, 60, 60, 16, 7, 16, 7); //Oxygen Meter
 	PlaceUI(2, 60, 60.0f * (oxygenMeter / oxygenMeterMax), 16, 7, 16, 7); //Oxygen Fill
-	PlaceUI(3, 30, 30, 1, 0, 12, 1); // Interaction Prompt
+	if (!promptShown)
+		PlaceUI(3, 30, 30, 1, 0, 12, 1); // Interaction Prompt
 	PlaceUI(4, windx / 4.0f, windy / 4.0f, 1, 0, 2, 1); // Game Over Screen
 
 
