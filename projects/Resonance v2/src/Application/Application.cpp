@@ -77,6 +77,7 @@
 #include "Layers/InstancedRenderingTestLayer.h"
 #include "Layers/ParticleLayer.h"
 #include <Gameplay/Components/AnimationSystem.h>
+#include <Gameplay/Components/SlideLerpSystem.h>
 
 Application* Application::_singleton = nullptr;
 std::string Application::_applicationName = "Resonance";
@@ -374,6 +375,7 @@ void Application::_RegisterClasses()
 
 
 	ComponentManager::RegisterType<AnimationSystem>();
+	ComponentManager::RegisterType<SlideLerpSystem>();
 
 }
 

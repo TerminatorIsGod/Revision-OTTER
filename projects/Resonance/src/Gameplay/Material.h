@@ -129,7 +129,7 @@ namespace Gameplay {
 			/// Renders GUI for this uniform
 			/// </summary>
 			void RenderImGui();
-
+			 
 			/// <summary>
 			/// Converts this uniform into a JSON representation
 			/// </summary>
@@ -151,7 +151,7 @@ namespace Gameplay {
 					return *reinterpret_cast<T*>(Value);
 				}
 			}
-
+			 
 			template <typename T>
 			const T& Get() const {
 				return const_cast<UniformData*>(this)->Get<T>();
