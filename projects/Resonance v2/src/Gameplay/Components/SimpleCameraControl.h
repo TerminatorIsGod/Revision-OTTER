@@ -41,6 +41,10 @@ public:
 	void ShowLocked();
 	void ShowDropThrow();
 	void ShowGameOver();
+	void FadeInBlack(float deltaTime);
+	void FadeOutBlack(float deltaTime);
+	void ShowBlack();
+
 
 	bool promptShown = false;
 	bool allowInteraction = true;
@@ -123,6 +127,8 @@ protected:
 	Texture2D::Sptr p_Distract;
 	Texture2D::Sptr p_Locked;
 	Texture2D::Sptr p_DropThrow;
+	Texture2D::Sptr blackTex;
+	Texture2D::Sptr gameoverTex;
 
 
 

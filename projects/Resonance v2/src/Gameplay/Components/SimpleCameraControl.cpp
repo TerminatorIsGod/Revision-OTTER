@@ -53,6 +53,8 @@ void SimpleCameraControl::Awake() {
 		p_Distract = ResourceManager::CreateAsset<Texture2D>("textures/ui/DistractPrompt.png");
 		p_Locked = ResourceManager::CreateAsset<Texture2D>("textures/ui/LockedPrompt.png");
 		p_DropThrow = ResourceManager::CreateAsset<Texture2D>("textures/ui/DropThrow Prompt.png");
+		blackTex = ResourceManager::CreateAsset<Texture2D>("textures/black.png");
+		gameoverTex = ResourceManager::CreateAsset<Texture2D>("textures/ui/deathScreen.jpg");
 	}
 
 	for (int i = 0; i < playerEmmiterCount; i++)
@@ -73,10 +75,13 @@ void SimpleCameraControl::Awake() {
 		}
 	}
 	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	ShowBlack();
 }
 
 void SimpleCameraControl::Update(float deltaTime)
 {
+	FadeOutBlack(deltaTime);
+
 	viewDir = currentRot * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f);
 
 	Movement(deltaTime);
@@ -489,8 +494,34 @@ void SimpleCameraControl::ShowDropThrow()
 
 void SimpleCameraControl::ShowGameOver()
 {
+	_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(gameoverTex);
 	_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
 	promptShown = true;
+}
+
+void SimpleCameraControl::FadeInBlack(float deltaTime)
+{
+	float lerpedAlpha = glm::lerp(_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->GetColor().a, 1.0f, deltaTime);
+	_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f, 1.0f, 1.0f, lerpedAlpha));
+}
+
+void SimpleCameraControl::FadeOutBlack(float deltaTime)
+{
+	if (_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->GetColor().a <= 0.0001f)
+	{
+		_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f, 1.0f, 1.0f, 0.0f));
+		return;
+	}
+	float lerpedAlpha = glm::lerp(_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->GetColor().a, 0.0f, deltaTime);
+	_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f, 1.0f, 1.0f, lerpedAlpha));
+
+}
+
+void SimpleCameraControl::ShowBlack()
+{
+	_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(blackTex);
+	_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
+
 }
 
 
