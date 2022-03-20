@@ -97,7 +97,7 @@ void NoteSystem::interact() {
 	if (_distance <= _interactDistance) { //_player->Get<SimpleCameraControl>()->interactionObjectPos == opos
 		int windx, windy;
 		glfwGetWindowSize(_window, &windx, &windy);
-
+		
 		if (isOpen)
 		{
 			isOpen = false;
@@ -114,6 +114,7 @@ void NoteSystem::interact() {
 			//GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundWithVariation("DoorOpen", 1.1f, 0.8f, 0.3f, 0.3f, GetGameObject()->GetPosition());
 			GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<GuiPanel>()->IsEnabled = true;
 			GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<RectTransform>()->SetPosition( glm::vec2( windx/2, windy/2 ) );
+			GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<RectTransform>()->SetSize(glm::vec2((windx / 4), (windy / 4.5)));
 			std::cout << "Note enabled\n\n";
 			if(GetGameObject()->GetScene()->FindObjectByName("Main Camera"))
 				GetGameObject()->GetScene()->FindObjectByName("Main Camera")->Get<SimpleCameraControl>()->IsEnabled = false;
