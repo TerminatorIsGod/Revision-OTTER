@@ -107,8 +107,8 @@ void DefaultSceneLayer::_CreateScene()
 
 	bool loadScene = true;
 	// For now we can use a toggle to generate our scene vs load from file
-	if (loadScene && std::filesystem::exists("levelMenu.json")) {
-		app.LoadScene("levelMenu.json");
+	if (loadScene && std::filesystem::exists("level2.json")) {
+		app.LoadScene("level2.json");
 
 	}
 	else {
@@ -381,7 +381,7 @@ void DefaultSceneLayer::_CreateScene()
 			renderer->SetMesh(monkeyMesh);
 			renderer->SetMaterial(boxMaterial);
 
-			animTest->Add<AnimationSystem>();
+			animTest->Add<NoteSystem>();
 		}
 
 		GameObject::Sptr demoBase = scene->CreateGameObject("Demo Parent");
