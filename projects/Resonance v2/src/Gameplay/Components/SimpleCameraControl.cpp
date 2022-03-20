@@ -75,12 +75,19 @@ void SimpleCameraControl::Awake() {
 		}
 	}
 	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-	ShowBlack();
 }
 
 void SimpleCameraControl::Update(float deltaTime)
 {
-	FadeOutBlack(deltaTime);
+	if (!updateStarted)
+	{
+		ShowBlack();
+		updateStarted = true;
+	}
+	else
+	{
+		FadeOutBlack(deltaTime);
+	}
 
 	viewDir = currentRot * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f);
 
@@ -94,36 +101,7 @@ void SimpleCameraControl::Update(float deltaTime)
 	else
 		interactionObjectPos = glm::vec3(0.0f);
 
-	if (playerPulseTimer <= 0.f)
-	{
-		playerPulseTimer = 1.0f;
-
-		playerEmmiters[playerEmmiterIndex]->isDecaying = false;
-		playerEmmiters[playerEmmiterIndex]->MoveToPlayer();
-
-		soundDelayTimer = soundDelayTimerMax;
-		startSoundDelay = true;
-
-		if (playerEmmiterIndex < playerEmmiterCount - 1)
-			playerEmmiterIndex++;
-		else
-			playerEmmiterIndex = 0;
-	}
-
-	if (startSoundDelay)
-	{
-		soundDelayTimer -= deltaTime;
-		if (soundDelayTimer <= 0.0f)
-		{
-			if (playerState != Idle)
-				_scene->audioManager->Get<AudioManager>()->PlayFootstepSound(GetGameObject()->GetPosition() - glm::vec3(0, 0, -5.0f), playerEmmiters[playerEmmiterIndex]->targetVolume / 5.0f);
-			startSoundDelay = false;
-		}
-	}
-
-	prevState = playerState;
-	//std::cout << "\nPulse Timer: " << playerPulseTimer;
-
+	EmitSound(deltaTime);
 }
 
 void SimpleCameraControl::Movement(float deltaTime)
@@ -439,6 +417,39 @@ void SimpleCameraControl::Interact(float deltaTime)
 		else
 			isEPressed = false;
 	}
+}
+
+void SimpleCameraControl::EmitSound(float deltaTime)
+{
+	if (playerPulseTimer <= 0.f)
+	{
+		playerPulseTimer = 1.0f;
+
+		playerEmmiters[playerEmmiterIndex]->isDecaying = false;
+		playerEmmiters[playerEmmiterIndex]->MoveToPlayer();
+
+		soundDelayTimer = soundDelayTimerMax;
+		startSoundDelay = true;
+
+		if (playerEmmiterIndex < playerEmmiterCount - 1)
+			playerEmmiterIndex++;
+		else
+			playerEmmiterIndex = 0;
+	}
+
+	if (startSoundDelay)
+	{
+		soundDelayTimer -= deltaTime;
+		if (soundDelayTimer <= 0.0f)
+		{
+			if (playerState != Idle)
+				_scene->audioManager->Get<AudioManager>()->PlayFootstepSound(GetGameObject()->GetPosition() - glm::vec3(0, 0, -5.0f), playerEmmiters[playerEmmiterIndex]->targetVolume / 5.0f);
+			startSoundDelay = false;
+		}
+	}
+
+	prevState = playerState;
+	//std::cout << "\nPulse Timer: " << playerPulseTimer;
 }
 
 void SimpleCameraControl::ShowOpen()

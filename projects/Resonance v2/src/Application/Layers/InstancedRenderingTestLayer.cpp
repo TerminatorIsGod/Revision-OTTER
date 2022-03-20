@@ -13,7 +13,7 @@ InstancedRenderingTestLayer::InstancedRenderingTestLayer()
 
 InstancedRenderingTestLayer::~InstancedRenderingTestLayer()
 { }
-
+ 
 void InstancedRenderingTestLayer::OnSceneLoad() {
 	Gameplay::Scene::Sptr scene = Application::Get().CurrentScene();
 

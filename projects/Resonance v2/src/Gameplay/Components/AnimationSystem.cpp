@@ -8,14 +8,14 @@
 #include <Gameplay/Components/RenderComponent.h>
 
 void AnimationSystem::Awake()
-{
+{ 
 
 	for (int i = 0; i < frames; i++) {
 		std::string tempName = filePrefix + std::to_string(i) + ".obj";
 		meshes.push_back(ResourceManager::CreateAsset<MeshResource>(tempName));
 	}
 
-}
+} 
 
 void AnimationSystem::RenderImGui() {
 
@@ -26,7 +26,7 @@ void AnimationSystem::RenderImGui() {
 	if (LABEL_LEFT(ImGui::Button, "List Meshes")) {
 		listMeshes = true;
 	}
-}
+} 
 
 nlohmann::json AnimationSystem::ToJson() const {
 	return {
@@ -58,7 +58,7 @@ void AnimationSystem::Update(float deltaTime) {
 
 	timer += deltaTime;
 
-	if (timer >= (1/speed)) {
+	if (timer >= (1 / speed)) {
 		timer -= (1 / speed);
 
 		GetGameObject()->Get<RenderComponent>()->SetMesh(meshes.at(curFrame));

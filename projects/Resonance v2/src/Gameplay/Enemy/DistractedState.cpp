@@ -1,6 +1,6 @@
 #include "Gameplay/Enemy/DistractedState.h"
 #include "Gameplay/Scene.h"
-#include "Gameplay/Components/SoundEmmiter.h"
+#include <Gameplay/Components/SoundEmmiter.h>
 #include "Utils\GlmBulletConversions.h"
 #include "Gameplay/Enemy/PatrollingState.h"
 #include "Gameplay/Enemy/AggravatedState.h"
@@ -38,7 +38,6 @@ void DistractedState::Listen(Enemy* e, float deltaTime)
 	e->listeningRadius = glm::mix(e->listeningRadius, e->patrolListeningRadius, 2.0f * deltaTime);
 	e->scene->Lights[e->soundLight].Color = glm::mix(e->scene->Lights[e->soundLight].Color, e->yellow, 4.0f * deltaTime);
 
-	//std::cout << "\nSWITCHING BACK IN: " << e->distractedTimer;
 	//Backup distraction timer
 	if (e->distractedBackupTimer > 0)
 		e->distractedBackupTimer -= deltaTime;
@@ -58,8 +57,10 @@ void DistractedState::Listen(Enemy* e, float deltaTime)
 		if (s->Get<SoundEmmiter>()->volume <= -1.0f)
 			continue;
 
+		glm::vec3 SoundPos = e->scene->Lights[s->Get<SoundEmmiter>()->soundLight].Position;
+
 		//Checking if any sounds are in listening Radius
-		glm::vec3 dir = s->GetPosition() - e->GetGameObject()->GetPosition();
+		glm::vec3 dir = SoundPos - e->GetGameObject()->GetPosition();
 		float dist = glm::length(dir);
 		float totalRadius = s->Get<SoundEmmiter>()->volume + e->listeningRadius;
 
@@ -67,10 +68,11 @@ void DistractedState::Listen(Enemy* e, float deltaTime)
 			continue;
 
 		//Raycasting toward heard sound to determine state change
-		btCollisionWorld::ClosestRayResultCallback hit(ToBt(e->GetGameObject()->GetPosition()), ToBt(s->GetPosition()));
-		e->scene->GetPhysicsWorld()->rayTest(ToBt(e->GetGameObject()->GetPosition()), ToBt(s->GetPosition()), hit);
+		btCollisionWorld::ClosestRayResultCallback hit(ToBt(e->GetGameObject()->GetPosition()), ToBt(SoundPos));
+		e->scene->GetPhysicsWorld()->rayTest(ToBt(e->GetGameObject()->GetPosition()), ToBt(SoundPos), hit);
 
-		if (hit.hasHit() && hit.m_collisionObject->isStaticObject())
+
+		if (hit.hasHit() && hit.m_collisionObject->isStaticObject() && glm::length(ToGlm(hit.m_hitPointWorld) - SoundPos) > 0.1f)
 			continue;
 
 		//Adding the heard sound to our lists (removing them if already there)
@@ -86,7 +88,7 @@ void DistractedState::Listen(Enemy* e, float deltaTime)
 		e->lastHeardSounds.insert(e->lastHeardSounds.begin(), s);
 
 		if (!s->Get<SoundEmmiter>()->isPlayerLight)
-			e->lastHeardPositions.insert(e->lastHeardPositions.begin(), s->GetPosition());
+			e->lastHeardPositions.insert(e->lastHeardPositions.begin(), SoundPos);
 		else
 			e->lastHeardPositions.insert(e->lastHeardPositions.begin(), e->player->GetPosition()); //If player's sound, go directly to them instead of their sound
 
@@ -134,11 +136,18 @@ void DistractedState::Pathfind(Enemy* e, float deltaTime)
 	btCollisionWorld::ClosestRayResultCallback hit(ToBt(enemyPos), ToBt(soundPos));
 	e->scene->GetPhysicsWorld()->rayTest(ToBt(enemyPos), ToBt(soundPos), hit);
 
-	if (!hit.hasHit())
-		return;
-
-	glm::vec3 objectPos = ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
-	if (objectPos == e->lastHeardPositions[0])
+	if (hit.hasHit())
+	{
+		glm::vec3 objectPos = ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
+		if (objectPos == e->lastHeardPositions[0])
+		{
+			e->target = soundPos;
+			if (glm::length(soundPos - enemyPos) < 12.0f)
+				SwitchIndex(e, deltaTime);
+			return;
+		}
+	}
+	else if (glm::length(ToGlm(hit.m_hitPointWorld) - e->lastHeardPositions[0]) < 0.1f)
 	{
 		e->target = soundPos;
 		if (glm::length(soundPos - enemyPos) < 12.0f)
@@ -148,6 +157,7 @@ void DistractedState::Pathfind(Enemy* e, float deltaTime)
 
 	if (!e->pathRequested)
 	{
+
 		e->pathSet.clear();
 		//std::cout << "\nCalculated Path to: " << patrolPos.x << ", " << patrolPos.y << ", " << patrolPos.z;
 		e->pathSet = e->pathManager->Get<pathfindingManager>()->requestPath(enemyPos, e->lastHeardPositions[0]);

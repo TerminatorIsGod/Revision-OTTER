@@ -50,7 +50,8 @@ public:
 
 	MAKE_TYPENAME(SoundEmmiter);
 
-protected:
 	int soundLight;
+protected:
+
 
 };

@@ -33,6 +33,7 @@ public:
 	void OxygenSystem(float deltaTime);
 	void SwitchState(float deltaTime);
 	void Interact(float deltaTime);
+	void EmitSound(float deltaTime);
 	void ShowOpen();
 	void ShowClose();
 	void ShowClimb();
@@ -130,7 +131,7 @@ protected:
 	Texture2D::Sptr blackTex;
 	Texture2D::Sptr gameoverTex;
 
-
+	bool updateStarted = false;
 
 	bool startedRefill = false;
 	bool outOfBreath = false;

@@ -63,8 +63,8 @@ public:
 	static SoundEmmiter::Sptr FromJson(const nlohmann::json& data);
 
 	MAKE_TYPENAME(SoundEmmiter);
+	int soundLight;
 
 protected:
-	int soundLight;
 	bool soundPlayed;
 };

@@ -1,6 +1,6 @@
 #include "Gameplay/Enemy/PatrollingState.h"
 #include "Gameplay/Scene.h"
-#include "Gameplay/Components/SoundEmmiter.h"
+#include <Gameplay/Components/SoundEmmiter.h>
 #include "Utils\GlmBulletConversions.h"
 #include "Gameplay/Enemy/AggravatedState.h"
 #include "Gameplay/Enemy/DistractedState.h"
@@ -36,8 +36,13 @@ void PatrollingState::Listen(Enemy* e, float deltaTime)
 
 	for each (GameObject * s in e->scene->soundEmmiters)
 	{
+		//if muted, skip over the light
+		if (s->Get<SoundEmmiter>()->volume <= -1.0f)
+			continue;
+
+		glm::vec3 SoundPos = e->scene->Lights[s->Get<SoundEmmiter>()->soundLight].Position;
 		//Checking if any sounds are in listening Radius
-		glm::vec3 dir = s->GetPosition() - e->GetGameObject()->GetPosition();
+		glm::vec3 dir = SoundPos - e->GetGameObject()->GetPosition();
 		float dist = glm::length(dir);
 		float totalRadius = s->Get<SoundEmmiter>()->volume + e->listeningRadius;
 
@@ -47,10 +52,12 @@ void PatrollingState::Listen(Enemy* e, float deltaTime)
 
 
 		//Raycasting toward heard sound to determine state change
-		btCollisionWorld::ClosestRayResultCallback hit(ToBt(e->GetGameObject()->GetPosition()), ToBt(s->GetPosition()));
-		e->scene->GetPhysicsWorld()->rayTest(ToBt(e->GetGameObject()->GetPosition()), ToBt(s->GetPosition()), hit);
+		btCollisionWorld::ClosestRayResultCallback hit(ToBt(e->GetGameObject()->GetPosition()), ToBt(SoundPos));
+		e->scene->GetPhysicsWorld()->rayTest(ToBt(e->GetGameObject()->GetPosition()), ToBt(SoundPos), hit);
 
-		if (hit.hasHit() && hit.m_collisionObject->isStaticObject())
+		//Should do the second raycast from sound source to enemy to make sure theres no static objects in the way
+
+		if (hit.hasHit() && hit.m_collisionObject->isStaticObject() && glm::length(ToGlm(hit.m_hitPointWorld) - SoundPos) > 0.1f)
 			continue;
 
 		//Adding the heard sound to our lists (removing them if already there)
@@ -66,14 +73,10 @@ void PatrollingState::Listen(Enemy* e, float deltaTime)
 		e->lastHeardSounds.insert(e->lastHeardSounds.begin(), s);
 
 		if (!s->Get<SoundEmmiter>()->isPlayerLight)
-			e->lastHeardPositions.insert(e->lastHeardPositions.begin(), s->GetPosition());
+			e->lastHeardPositions.insert(e->lastHeardPositions.begin(), SoundPos);
 		else
 			e->lastHeardPositions.insert(e->lastHeardPositions.begin(), e->player->GetPosition()); //If player's sound, go directly to them instead of their sound
 
-		////Determining State Change
-		//if (s->Get<SoundEmmiter>()->isPlayerLight)
-		//	e->SetState(AggravatedState::getInstance());
-		//else
 		e->SetState(DistractedState::getInstance());
 
 	}
