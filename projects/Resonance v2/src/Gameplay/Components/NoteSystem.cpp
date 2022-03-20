@@ -62,7 +62,7 @@ void NoteSystem::Update(float deltaTime) {
 	if (_player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !_player->Get<SimpleCameraControl>()->promptShown) {
 
 		//show interact message
-		//_player->Get<SimpleCameraControl>()->ShowPickup();
+		_player->Get<SimpleCameraControl>()->ShowPickup();
 	}
 
 	if (glfwGetKey(_window, GLFW_KEY_E)) {
@@ -94,7 +94,7 @@ void NoteSystem::interact() {
 	_distance = sqrt(pow(tpos.x, 2) + pow(tpos.y, 2) + pow(tpos.z, 2));
 
 	//Animated Object (based on raycast)
-	if (_distance <= _interactDistance) { //_player->Get<SimpleCameraControl>()->interactionObjectPos == opos
+	if (_distance <= _interactDistance && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos) { //_player->Get<SimpleCameraControl>()->interactionObjectPos == opos
 		int windx, windy;
 		glfwGetWindowSize(_window, &windx, &windy);
 		
