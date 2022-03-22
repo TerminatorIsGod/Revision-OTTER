@@ -84,6 +84,7 @@
 #include "Gameplay/Components/ParticleSystem.h"
 #include "Gameplay/Components/AnimationSystem.h"
 #include "Gameplay/Components/SlideLerpSystem.h"
+#include <Gameplay/Components/AnimationSystemManager.h>
 
 DefaultSceneLayer::DefaultSceneLayer() :
 	ApplicationLayer()
@@ -381,7 +382,8 @@ void DefaultSceneLayer::_CreateScene()
 			renderer->SetMesh(monkeyMesh);
 			renderer->SetMaterial(boxMaterial);
 
-			animTest->Add<NoteSystem>();
+			animTest->Add<AnimationSystem>();
+			animTest->Add<AnimationSystemManager>();
 		}
 
 		GameObject::Sptr demoBase = scene->CreateGameObject("Demo Parent");

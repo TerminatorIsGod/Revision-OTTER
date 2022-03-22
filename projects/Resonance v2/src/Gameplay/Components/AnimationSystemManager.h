@@ -7,12 +7,12 @@
 /// A simple behaviour that applies an impulse along the Z axis to the 
 /// rigidbody of the parent when the space key is pressed
 /// </summary>
-class AnimationSystem : public Gameplay::IComponent {
+class AnimationSystemManager : public Gameplay::IComponent {
 public:
-	typedef std::shared_ptr<AnimationSystem> Sptr;
+	typedef std::shared_ptr<AnimationSystemManager> Sptr;
 
-	AnimationSystem();
-	virtual ~AnimationSystem();
+	AnimationSystemManager();
+	virtual ~AnimationSystemManager();
 
 	virtual void Awake() override;
 	virtual void Update(float deltaTime) override;
@@ -20,25 +20,17 @@ public:
 
 public:
 	virtual void RenderImGui() override;
-	MAKE_TYPENAME(AnimationSystem);
+	MAKE_TYPENAME(AnimationSystemManager);
 	virtual nlohmann::json ToJson() const override;
-	static AnimationSystem::Sptr FromJson(const nlohmann::json& blob);
+	static AnimationSystemManager::Sptr FromJson(const nlohmann::json& blob);
 
 	bool isMeshesLoaded = false;
 
 	bool showInfo = false;
 	bool listMeshes = false;
 
-	int curFrame = 1;
-	float speed = 0.0f;
-	float timer = 0.0f;
-
-	std::string objectLoadName = "";
-
 	//meshes vector
 	std::vector<Gameplay::MeshResource::Sptr> meshes;
-
-	int curMesh = 0;
 
 	std::string filePrefix = "";
 	int frames = 0;
