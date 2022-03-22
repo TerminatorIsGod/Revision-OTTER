@@ -79,6 +79,10 @@ void NoteSystem::Update(float deltaTime) {
 		isKeyPressed = false;
 	}
 
+	Application& app = Application::Get();
+
+	if (!app.isGamePaused && isOpen)
+		interact();
 
 }
 
@@ -105,8 +109,8 @@ void NoteSystem::interact() {
 			GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("NotePutdown", 1.0f);
 			GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<GuiPanel>()->IsEnabled = false;
 			std::cout << "Note disabled\n\n";
-			if (GetGameObject()->GetScene()->FindObjectByName("Main Camera"))
-				GetGameObject()->GetScene()->FindObjectByName("Main Camera")->Get<SimpleCameraControl>()->IsEnabled = true;
+			//if (GetGameObject()->GetScene()->FindObjectByName("Main Camera"))
+				//GetGameObject()->GetScene()->FindObjectByName("Main Camera")->Get<SimpleCameraControl>()->IsEnabled = true;
 			//app.isGamePaused = false;
 		}
 		else
@@ -118,9 +122,8 @@ void NoteSystem::interact() {
 			GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<RectTransform>()->SetPosition(glm::vec2(windx / 2, windy / 2));
 			GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<RectTransform>()->SetSize(glm::vec2((windx / 4), (windy / 4.5)));
 			std::cout << "Note enabled\n\n";
-			if (GetGameObject()->GetScene()->FindObjectByName("Main Camera"))
-				GetGameObject()->GetScene()->FindObjectByName("Main Camera")->Get<SimpleCameraControl>()->IsEnabled = false;
-			//app.isGamePaused = true;
+			app.isGamePaused = true;
+			app.isInteracting = true;
 		}
 	}
 
