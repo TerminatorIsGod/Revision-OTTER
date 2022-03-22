@@ -270,6 +270,13 @@ void Application::_Run()
 			}
 		}
 
+		if (isInteracting && glfwGetKey(_window, GLFW_KEY_E) != GLFW_PRESS)
+			isInteracting = false;
+
+		if (isGamePaused && !isInteracting && !showPauseScreen && glfwGetKey(_window, GLFW_KEY_E) == GLFW_PRESS) {
+			isGamePaused = false;
+		}
+
 		if (_currentScene->requestSceneReload && glfwGetKey(GetWindow(), GLFW_KEY_E)) {
 			LoadScene(scenePath);
 			_currentScene->IsPlaying = true;
