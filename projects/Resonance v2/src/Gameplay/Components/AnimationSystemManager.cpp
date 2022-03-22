@@ -8,21 +8,21 @@
 #include <Gameplay/Components/RenderComponent.h>
 
 void AnimationSystemManager::Awake()
-{ 
+{
 
 	for (int i = 0; i < frames; i++) {
 		std::string tempName = filePrefix + std::to_string(i) + ".obj";
 		meshes.push_back(ResourceManager::CreateAsset<MeshResource>(tempName));
 	}
 
-} 
+}
 
 void AnimationSystemManager::RenderImGui() {
 
 	if (LABEL_LEFT(ImGui::Button, "List Meshes")) {
 		listMeshes = true;
 	}
-} 
+}
 
 nlohmann::json AnimationSystemManager::ToJson() const {
 	return {

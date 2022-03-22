@@ -32,6 +32,7 @@ void ThrowableItem::Update(float deltaTime)
 			if (!isEPressed)
 			{
 				isHeld = true;
+				scene->audioManager->Get<AudioManager>()->PlaySoundByName("GlassPickup", 1.0f);
 				GetComponent<Gameplay::Physics::RigidBody>()->SetType(RigidBodyType::Kinematic);
 				GetComponent<Gameplay::Physics::RigidBody>()->SetLinearVelocity(glm::vec3(0.0f));
 				thrown = false;

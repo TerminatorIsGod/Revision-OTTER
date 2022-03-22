@@ -182,7 +182,7 @@ void Enemy::SetState(EnemyState& newState)
 	currentState = &newState;
 	currentState->Start(this);
 }
-
+ 
 
 void Enemy::Move(float deltaTime)
 {

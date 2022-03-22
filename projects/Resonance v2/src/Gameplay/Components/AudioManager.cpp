@@ -40,6 +40,11 @@ void AudioManager::Awake() {
 	LoadSound("DoorOpen", "event:/Door Open");
 	LoadSound("DoorClose", "event:/Door Close");
 	LoadSound("Gasp", "event:/Gasp");
+	LoadSound("GlassShatter", "event:/Glass Shatter");
+	LoadSound("GlassPickup", "event:/Glass Pickup");
+	LoadSound("NotePickup", "event:/Note Pickup");
+	LoadSound("NotePutdown", "event:/Note Putdown");
+
 
 
 	if (track == "L1_Ambiance")

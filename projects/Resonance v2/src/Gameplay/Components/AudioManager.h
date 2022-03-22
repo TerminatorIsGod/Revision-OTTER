@@ -15,7 +15,7 @@ public:
 	FMOD::Studio::System* studioSystem;
 	FMOD::Studio::Bank* soundBank;
 	FMOD::Studio::Bank* soundStringBank;
-	FMOD::Studio::EventDescription* soundEvents[20];
+	FMOD::Studio::EventDescription* soundEvents[40];
 
 	float volume = 1.0f;
 	std::string track = "L1_Ambiance";

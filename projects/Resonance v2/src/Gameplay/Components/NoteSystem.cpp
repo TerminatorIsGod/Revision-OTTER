@@ -9,6 +9,7 @@
 #include "Application/Application.h"
 #include "Gameplay/Components/AudioManager.h"
 #include "../../../../Resonance/src/Gameplay/Components/GUI/GuiPanel.h"
+#include "Gameplay/Components/AudioManager.h"
 
 void NoteSystem::Awake()
 {
@@ -97,11 +98,11 @@ void NoteSystem::interact() {
 	if (_distance <= _interactDistance && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos) { //_player->Get<SimpleCameraControl>()->interactionObjectPos == opos
 		int windx, windy;
 		glfwGetWindowSize(_window, &windx, &windy);
-		
+
 		if (isOpen)
 		{
 			isOpen = false;
-			//GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundWithVariation("DoorClose", 0.8f, 0.8f, 0.3f, 0.3f, GetGameObject()->GetPosition());
+			GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("NotePutdown", 1.0f);
 			GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<GuiPanel>()->IsEnabled = false;
 			std::cout << "Note disabled\n\n";
 			if (GetGameObject()->GetScene()->FindObjectByName("Main Camera"))
@@ -111,12 +112,13 @@ void NoteSystem::interact() {
 		else
 		{
 			isOpen = true;
-			//GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundWithVariation("DoorOpen", 1.1f, 0.8f, 0.3f, 0.3f, GetGameObject()->GetPosition());
+
+			GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("NotePickup", 1.0f);
 			GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<GuiPanel>()->IsEnabled = true;
-			GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<RectTransform>()->SetPosition( glm::vec2( windx/2, windy/2 ) );
+			GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<RectTransform>()->SetPosition(glm::vec2(windx / 2, windy / 2));
 			GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<RectTransform>()->SetSize(glm::vec2((windx / 4), (windy / 4.5)));
 			std::cout << "Note enabled\n\n";
-			if(GetGameObject()->GetScene()->FindObjectByName("Main Camera"))
+			if (GetGameObject()->GetScene()->FindObjectByName("Main Camera"))
 				GetGameObject()->GetScene()->FindObjectByName("Main Camera")->Get<SimpleCameraControl>()->IsEnabled = false;
 			//app.isGamePaused = true;
 		}
