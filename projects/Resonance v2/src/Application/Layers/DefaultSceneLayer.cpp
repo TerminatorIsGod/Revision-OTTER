@@ -108,8 +108,8 @@ void DefaultSceneLayer::_CreateScene()
 
 	bool loadScene = true;
 	// For now we can use a toggle to generate our scene vs load from file
-	if (loadScene && std::filesystem::exists("level1.json")) {
-		app.LoadScene("level1.json");
+	if (loadScene && std::filesystem::exists("levelMenu.json")) {
+		app.LoadScene("levelMenu.json");
 
 	}
 	else {

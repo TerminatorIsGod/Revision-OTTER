@@ -39,6 +39,8 @@ void AudioManager::Awake() {
 	LoadSound("KeyPickup", "event:/Key Pickup");
 	LoadSound("DoorOpen", "event:/Door Open");
 	LoadSound("DoorClose", "event:/Door Close");
+	LoadSound("Gasp", "event:/Gasp");
+
 
 	if (track == "L1_Ambiance")
 	{
@@ -139,6 +141,14 @@ void AudioManager::UnloadSound(const std::string& soundName)
 {
 	events[soundName]->releaseAllInstances();
 }
+
+void AudioManager::StopAllSounds()
+{
+	FMOD::Studio::Bus* masterBus;
+	studioSystem->getBus("bus:/", &masterBus);
+	masterBus->stopAllEvents(FMOD_STUDIO_STOP_ALLOWFADEOUT);
+}
+
 
 const FMOD_VECTOR AudioManager::GlmVectorToFmodVector(glm::vec3 vec)
 {

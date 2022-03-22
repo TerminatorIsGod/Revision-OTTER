@@ -42,6 +42,7 @@ public:
 	void ShowLocked();
 	void ShowDropThrow();
 	void ShowGameOver();
+	void ShowLoading();
 	void FadeInBlack(float deltaTime);
 	void FadeOutBlack(float deltaTime);
 	void ShowBlack();
@@ -117,7 +118,7 @@ protected:
 	int playerEmmiterIndex = 0;
 	float playerPulseTimer = 0;
 	int playerEmmiterCount = 5;
-	float soundDelayTimerMax = 0.1f;
+	float soundDelayTimerMax = 0.0f;
 	float soundDelayTimer = 0.0f;
 	bool startSoundDelay = false;
 	//Prompt Textures
@@ -130,6 +131,8 @@ protected:
 	Texture2D::Sptr p_DropThrow;
 	Texture2D::Sptr blackTex;
 	Texture2D::Sptr gameoverTex;
+	Texture2D::Sptr loadingTex;
+
 
 	bool updateStarted = false;
 

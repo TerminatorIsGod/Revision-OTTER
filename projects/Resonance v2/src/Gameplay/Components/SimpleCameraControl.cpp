@@ -34,7 +34,10 @@ SimpleCameraControl::~SimpleCameraControl()
 	p_Open->~Texture2D();
 	p_Distract->~Texture2D();
 	p_Locked->~Texture2D();
-
+	p_DropThrow->~Texture2D();
+	blackTex->~Texture2D();
+	gameoverTex->~Texture2D();
+	loadingTex->~Texture2D();
 }
 
 void SimpleCameraControl::Awake() {
@@ -55,6 +58,7 @@ void SimpleCameraControl::Awake() {
 		p_DropThrow = ResourceManager::CreateAsset<Texture2D>("textures/ui/DropThrow Prompt.png");
 		blackTex = ResourceManager::CreateAsset<Texture2D>("textures/black.png");
 		gameoverTex = ResourceManager::CreateAsset<Texture2D>("textures/ui/deathScreen.jpg");
+		loadingTex = ResourceManager::CreateAsset<Texture2D>("textures/ui/LoadingScreen.png");
 	}
 
 	for (int i = 0; i < playerEmmiterCount; i++)
@@ -69,7 +73,7 @@ void SimpleCameraControl::Awake() {
 			emmiter->isPlayerLight = true;
 			emmiter->linearLerp = true;
 			emmiter->defaultColour = glm::vec3(0.1f, 0.0f, 0.45f);
-			emmiter->soundLightOffset = glm::vec3(0, 0, -3.0f);
+			emmiter->soundLightOffset = glm::vec3(0, 0, -6.0f);
 			emmiter->soundName = "";
 			playerEmmiters.push_back(emmiter);
 		}
@@ -82,6 +86,7 @@ void SimpleCameraControl::Update(float deltaTime)
 	if (!updateStarted)
 	{
 		ShowBlack();
+		_scene->audioManager->Get<AudioManager>()->PlaySoundByName("Gasp", 0.5f);
 		updateStarted = true;
 	}
 	else
@@ -392,31 +397,6 @@ void SimpleCameraControl::Interact(float deltaTime)
 
 	glm::vec3 objectPos = ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
 	interactionObjectPos = objectPos;
-	if (objectPos == glm::vec3(0))
-		return;
-
-	//Ladder
-	for (int i = 0; i < _scene->ladders.size(); i++)
-	{
-		if (objectPos != _scene->ladders[i]->GetPosition())
-			continue;
-
-		//Ui Prompt
-		ShowClimb();
-
-		if (glfwGetKey(_window, GLFW_KEY_E))
-		{
-			if (!isEPressed)
-			{
-				_scene->audioManager->Get<AudioManager>()->PlaySoundByName("LadderClimb");
-				GetGameObject()->SetPostion(_scene->ladders[i]->Get<Ladder>()->teleportPos);
-				baseHeight = _scene->ladders[i]->Get<Ladder>()->teleportPos.z;
-				isEPressed = true;
-			}
-		}
-		else
-			isEPressed = false;
-	}
 }
 
 void SimpleCameraControl::EmitSound(float deltaTime)
@@ -426,6 +406,7 @@ void SimpleCameraControl::EmitSound(float deltaTime)
 		playerPulseTimer = 1.0f;
 
 		playerEmmiters[playerEmmiterIndex]->isDecaying = false;
+		playerEmmiters[playerEmmiterIndex]->volume = 0.0f;
 		playerEmmiters[playerEmmiterIndex]->MoveToPlayer();
 
 		soundDelayTimer = soundDelayTimerMax;
@@ -510,6 +491,14 @@ void SimpleCameraControl::ShowGameOver()
 	promptShown = true;
 }
 
+void SimpleCameraControl::ShowLoading()
+{
+	_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(loadingTex);
+	_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
+	PlaceUI(4, windx / 4.0f, windy / 4.0f, 1, 0, 2, 1); // Game Over Screen
+	promptShown = true;
+}
+
 void SimpleCameraControl::FadeInBlack(float deltaTime)
 {
 	float lerpedAlpha = glm::lerp(_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->GetColor().a, 1.0f, deltaTime);
@@ -569,7 +558,7 @@ void SimpleCameraControl::IdleState(float deltaTime)
 		playerEmmiters[playerEmmiterIndex]->targetVolume = 4.5f; //ring size
 
 }
-
+//This state is no longer used in the game.
 void SimpleCameraControl::SneakState(float deltaTime)
 {
 	SetSpeed(sneakSpeed);
@@ -580,19 +569,19 @@ void SimpleCameraControl::SneakState(float deltaTime)
 void SimpleCameraControl::WalkState(float deltaTime)
 {
 	SetSpeed(walkSpeed);
-	playerPulseTimer -= deltaTime * 1.5f; //ring creation speed
+	playerPulseTimer -= deltaTime * 2.0f; //ring creation speed
 
 	playerEmmiters[playerEmmiterIndex]->targetVolume = 6.5f; //ring size
-	playerEmmiters[playerEmmiterIndex]->lerpSpeed = 2.0f; //ring expansion speed
+	playerEmmiters[playerEmmiterIndex]->lerpSpeed = 3.0f; //ring expansion speed
 }
 
 void SimpleCameraControl::RunState(float deltaTime)
 {
 	SetSpeed(runSpeed);
-	playerPulseTimer -= deltaTime * 2.f; //ring creation speed
+	playerPulseTimer -= deltaTime * 2.5f; //ring creation speed
 
 	playerEmmiters[playerEmmiterIndex]->targetVolume = 7.5f; //ring size
-	playerEmmiters[playerEmmiterIndex]->lerpSpeed = 2.5f; //ring expansion speed
+	playerEmmiters[playerEmmiterIndex]->lerpSpeed = 3.0f; //ring expansion speed
 }
 
 void SimpleCameraControl::SetSpeed(float newSpeed)

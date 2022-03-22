@@ -57,8 +57,6 @@ namespace Gameplay {
 		GameObject* pathManager;
 		GameObject* audioManager;
 
-
-		std::vector<GameObject*> ladders;
 		std::vector<GameObject*> uiImages;
 
 		bool requestSceneReload = false;
