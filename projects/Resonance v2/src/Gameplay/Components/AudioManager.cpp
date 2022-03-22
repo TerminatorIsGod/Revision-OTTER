@@ -39,6 +39,8 @@ void AudioManager::Awake() {
 	LoadSound("KeyPickup", "event:/Key Pickup");
 	LoadSound("DoorOpen", "event:/Door Open");
 	LoadSound("DoorClose", "event:/Door Close");
+	LoadSound("Gasp", "event:/Gasp");
+
 
 	if (track == "L1_Ambiance")
 	{

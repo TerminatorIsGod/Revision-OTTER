@@ -85,7 +85,7 @@ VertexArrayObject::Sptr ObjLoader::LoadFromFile(const std::string& filename, boo
 			// Read in and store a position
 			file >> vecData.x >> vecData.y >> vecData.z;
 			normals.push_back(vecData);
-		} 
+		}
 		else if (command == "vt") {
 			// Read in and store a position
 			file >> vecData.x >> vecData.y;
@@ -126,18 +126,15 @@ VertexArrayObject::Sptr ObjLoader::LoadFromFile(const std::string& filename, boo
 					// Find the index associated with the combination of attributes
 					auto it = vertexMap.find(key);
 
-					// If it exists, we push the index to our indices
-					if (it != vertexMap.end()) {
-						edges[ix] = it->second;
-					} else {
-						vertices.push_back(vertexIndices - glm::ivec3(1));
-						uint32_t index = static_cast<uint32_t>(vertices.size()) - 1;
 
-						// Cache the index based on our key
-						vertexMap[key] = index;
-						// Add index to mesh, and add to edges list for if we are using quads
-						edges[ix] = index;
-					}
+					vertices.push_back(vertexIndices - glm::ivec3(1));
+					uint32_t index = static_cast<uint32_t>(vertices.size()) - 1;
+
+					// Cache the index based on our key
+					vertexMap[key] = index;
+					// Add index to mesh, and add to edges list for if we are using quads
+					edges[ix] = index;
+
 				}
 				// We've reached the end of the line, break out of the loop
 				else { break; }

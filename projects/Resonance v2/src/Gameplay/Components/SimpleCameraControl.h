@@ -117,7 +117,7 @@ protected:
 	int playerEmmiterIndex = 0;
 	float playerPulseTimer = 0;
 	int playerEmmiterCount = 5;
-	float soundDelayTimerMax = 0.1f;
+	float soundDelayTimerMax = 0.0f;
 	float soundDelayTimer = 0.0f;
 	bool startSoundDelay = false;
 	//Prompt Textures

@@ -69,7 +69,7 @@ void SimpleCameraControl::Awake() {
 			emmiter->isPlayerLight = true;
 			emmiter->linearLerp = true;
 			emmiter->defaultColour = glm::vec3(0.1f, 0.0f, 0.45f);
-			emmiter->soundLightOffset = glm::vec3(0, 0, -3.0f);
+			emmiter->soundLightOffset = glm::vec3(0, 0, -6.0f);
 			emmiter->soundName = "";
 			playerEmmiters.push_back(emmiter);
 		}
@@ -82,6 +82,7 @@ void SimpleCameraControl::Update(float deltaTime)
 	if (!updateStarted)
 	{
 		ShowBlack();
+		_scene->audioManager->Get<AudioManager>()->PlaySoundByName("Gasp", 0.5f);
 		updateStarted = true;
 	}
 	else
@@ -426,6 +427,7 @@ void SimpleCameraControl::EmitSound(float deltaTime)
 		playerPulseTimer = 1.0f;
 
 		playerEmmiters[playerEmmiterIndex]->isDecaying = false;
+		playerEmmiters[playerEmmiterIndex]->volume = 0.0f;
 		playerEmmiters[playerEmmiterIndex]->MoveToPlayer();
 
 		soundDelayTimer = soundDelayTimerMax;
@@ -569,7 +571,7 @@ void SimpleCameraControl::IdleState(float deltaTime)
 		playerEmmiters[playerEmmiterIndex]->targetVolume = 4.5f; //ring size
 
 }
-
+//This state is no longer used in the game.
 void SimpleCameraControl::SneakState(float deltaTime)
 {
 	SetSpeed(sneakSpeed);
@@ -580,19 +582,19 @@ void SimpleCameraControl::SneakState(float deltaTime)
 void SimpleCameraControl::WalkState(float deltaTime)
 {
 	SetSpeed(walkSpeed);
-	playerPulseTimer -= deltaTime * 1.5f; //ring creation speed
+	playerPulseTimer -= deltaTime * 2.0f; //ring creation speed
 
 	playerEmmiters[playerEmmiterIndex]->targetVolume = 6.5f; //ring size
-	playerEmmiters[playerEmmiterIndex]->lerpSpeed = 2.0f; //ring expansion speed
+	playerEmmiters[playerEmmiterIndex]->lerpSpeed = 3.0f; //ring expansion speed
 }
 
 void SimpleCameraControl::RunState(float deltaTime)
 {
 	SetSpeed(runSpeed);
-	playerPulseTimer -= deltaTime * 2.f; //ring creation speed
+	playerPulseTimer -= deltaTime * 2.5f; //ring creation speed
 
 	playerEmmiters[playerEmmiterIndex]->targetVolume = 7.5f; //ring size
-	playerEmmiters[playerEmmiterIndex]->lerpSpeed = 2.5f; //ring expansion speed
+	playerEmmiters[playerEmmiterIndex]->lerpSpeed = 3.0f; //ring expansion speed
 }
 
 void SimpleCameraControl::SetSpeed(float newSpeed)

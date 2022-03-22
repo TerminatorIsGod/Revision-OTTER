@@ -63,9 +63,18 @@ vec3 CalcPointLightContribution(vec3 worldPos, vec3 normal, vec3 viewDir, Light 
 
 	// Halfway vector between light normal and direction to camera
 	vec3 halfDir     = normalize(toLight + viewDir);
+
 	// Calculate our specular power
-	float specPower  = pow(max(dot(normal, halfDir), 0.0), pow(256, shininess));
-	specPower = round(specPower);
+	float specPower;
+	if (light.ColorAttenuation.w >= 0.0)
+	{
+		specPower = pow(max(dot(normal, halfDir), 0.0), pow(256, shininess));
+	}
+	else 
+	{
+		specPower  = pow(max(dot(normal, halfDir), 0.0), pow(256, -5));
+	}
+		specPower = round(specPower);
 
 	// Calculate specular color
 	vec3 specularOut = specPower * light.ColorAttenuation.rgb;
