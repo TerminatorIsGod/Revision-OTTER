@@ -393,31 +393,6 @@ void SimpleCameraControl::Interact(float deltaTime)
 
 	glm::vec3 objectPos = ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
 	interactionObjectPos = objectPos;
-	if (objectPos == glm::vec3(0))
-		return;
-
-	//Ladder
-	for (int i = 0; i < _scene->ladders.size(); i++)
-	{
-		if (objectPos != _scene->ladders[i]->GetPosition())
-			continue;
-
-		//Ui Prompt
-		ShowClimb();
-
-		if (glfwGetKey(_window, GLFW_KEY_E))
-		{
-			if (!isEPressed)
-			{
-				_scene->audioManager->Get<AudioManager>()->PlaySoundByName("LadderClimb");
-				GetGameObject()->SetPostion(_scene->ladders[i]->Get<Ladder>()->teleportPos);
-				baseHeight = _scene->ladders[i]->Get<Ladder>()->teleportPos.z;
-				isEPressed = true;
-			}
-		}
-		else
-			isEPressed = false;
-	}
 }
 
 void SimpleCameraControl::EmitSound(float deltaTime)
