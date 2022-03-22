@@ -34,7 +34,10 @@ SimpleCameraControl::~SimpleCameraControl()
 	p_Open->~Texture2D();
 	p_Distract->~Texture2D();
 	p_Locked->~Texture2D();
-
+	p_DropThrow->~Texture2D();
+	blackTex->~Texture2D();
+	gameoverTex->~Texture2D();
+	loadingTex->~Texture2D();
 }
 
 void SimpleCameraControl::Awake() {
@@ -55,6 +58,7 @@ void SimpleCameraControl::Awake() {
 		p_DropThrow = ResourceManager::CreateAsset<Texture2D>("textures/ui/DropThrow Prompt.png");
 		blackTex = ResourceManager::CreateAsset<Texture2D>("textures/black.png");
 		gameoverTex = ResourceManager::CreateAsset<Texture2D>("textures/ui/deathScreen.jpg");
+		loadingTex = ResourceManager::CreateAsset<Texture2D>("textures/ui/LoadingScreen.png");
 	}
 
 	for (int i = 0; i < playerEmmiterCount; i++)
@@ -484,6 +488,14 @@ void SimpleCameraControl::ShowGameOver()
 {
 	_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(gameoverTex);
 	_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
+	promptShown = true;
+}
+
+void SimpleCameraControl::ShowLoading()
+{
+	_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(loadingTex);
+	_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
+	PlaceUI(4, windx / 4.0f, windy / 4.0f, 1, 0, 2, 1); // Game Over Screen
 	promptShown = true;
 }
 

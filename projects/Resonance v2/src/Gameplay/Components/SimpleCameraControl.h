@@ -42,6 +42,7 @@ public:
 	void ShowLocked();
 	void ShowDropThrow();
 	void ShowGameOver();
+	void ShowLoading();
 	void FadeInBlack(float deltaTime);
 	void FadeOutBlack(float deltaTime);
 	void ShowBlack();
@@ -130,6 +131,8 @@ protected:
 	Texture2D::Sptr p_DropThrow;
 	Texture2D::Sptr blackTex;
 	Texture2D::Sptr gameoverTex;
+	Texture2D::Sptr loadingTex;
+
 
 	bool updateStarted = false;
 

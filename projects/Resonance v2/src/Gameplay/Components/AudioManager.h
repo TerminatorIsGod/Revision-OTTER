@@ -30,6 +30,8 @@ public:
 
 	void LoadSound(const std::string& soundName, const std::string& filename);
 	void UnloadSound(const std::string& soundName);
+	void StopAllSounds();
+
 	FMOD::Studio::EventInstance* PlaySoundByName(const std::string& soundName, float vol = 1.0f, glm::vec3 pos = glm::vec3(0.0f), bool lowpass = false);
 	//FMOD::Channel* PlaySoundWithVariation(const std::string& soundName, float baseVol = 1.0f, float basePitch = 1.0f, float volRange = 1.0f, float pitchRange = 1.0f, glm::vec3 pos = glm::vec3(0.0f));
 	//void PauseSoundByName(const std::string& soundName);

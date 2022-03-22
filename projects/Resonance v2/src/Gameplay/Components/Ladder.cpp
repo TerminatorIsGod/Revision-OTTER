@@ -40,16 +40,23 @@ void Ladder::Update(float deltaTime)
 	}
 	else
 	{
+		if (isEPressed)
+		{
+			//Loads a frame after pressed so that the loading screen has a frame to render
+			Application& app = Application::Get();
+			app.LoadScene("level2.json");
+		}
+
 		player->ShowOpen();
 
 		if (glfwGetKey(_window, GLFW_KEY_E))
 		{
 			if (!isEPressed)
 			{
-				//Show loading screen here
-				Application& app = Application::Get();
+				player->ShowLoading();
+				_scene->audioManager->Get<AudioManager>()->StopAllSounds();
+				_scene->audioManager->Get<AudioManager>()->PlaySoundByName("Transition");
 
-				app.LoadScene("level2.json");
 				isEPressed = true;
 			}
 		}
