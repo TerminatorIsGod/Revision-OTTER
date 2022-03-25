@@ -99,6 +99,28 @@ void DefaultSceneLayer::OnAppLoad(const nlohmann::json & config) {
 	_CreateScene();
 }
 
+int nodeCount = 0;
+GameObject::Sptr createNavNode(glm::vec3 pos, MeshResource::Sptr mesh, Material::Sptr material) {
+	nodeCount++;
+	Application& app = Application::Get();
+	// This shader handles our basic materials without reflections (cause they expensive)
+
+	GameObject::Sptr navNode = app.CurrentScene()->CreateGameObject("Node " + std::to_string(nodeCount));
+	{
+		// Set position in the scene
+		navNode->SetPostion(pos);
+
+		// Create and attach a renderer
+		RenderComponent::Sptr renderer = navNode->Add<RenderComponent>();
+		renderer->SetMesh(mesh);
+		renderer->SetMaterial(material);
+
+		NavNode::Sptr behaviour = navNode->Add<NavNode>();
+
+	}
+	return navNode;
+}
+
 void DefaultSceneLayer::_CreateScene()
 {
 	using namespace Gameplay;
@@ -111,6 +133,30 @@ void DefaultSceneLayer::_CreateScene()
 	if (loadScene && std::filesystem::exists("level2.json")) {
 		app.LoadScene("level2.json");
 
+
+		//GameObject::Sptr navMesh = app.CurrentScene()->CreateGameObject("[NavMesh]");
+
+
+		//ShaderProgram::Sptr basicShader = ResourceManager::CreateAsset<ShaderProgram>(std::unordered_map<ShaderPartType, std::string>{
+		//	{ ShaderPartType::Vertex, "shaders/vertex_shaders/basic.glsl" },
+		//	{ ShaderPartType::Fragment, "shaders/fragment_shaders/frag_blinn_phong_textured.glsl" }
+		//});
+		//Texture2D::Sptr    nodeTex = ResourceManager::CreateAsset<Texture2D>("textures/pink.jpg");
+		//Material::Sptr nodeMaterial = ResourceManager::CreateAsset<Material>(basicShader);
+		//{
+		//	nodeMaterial->Name = "Node";
+		//	nodeMaterial->Set("u_Material.Diffuse", nodeTex);
+		//	nodeMaterial->Set("u_Material.Shininess", 0.0f);
+		//}
+		//MeshResource::Sptr nodeMesh = ResourceManager::CreateAsset<MeshResource>("Puck.obj");
+		////Generate Nodes
+		//for (int x = -2; x < 18; x++)
+		//{
+		//	for (int y = -2; y < 18; y++)
+		//	{
+		//		navMesh->AddChild(createNavNode(glm::vec3(x * 5, y * 5, 1.0f), nodeMesh, nodeMaterial));
+		//	}
+		//}
 	}
 	else {
 		// This time we'll have 2 different shaders, and share data between both of them using the UBO

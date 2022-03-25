@@ -101,7 +101,7 @@ void NoteSystem::interact() {
 		//if (GetGameObject()->GetScene()->FindObjectByName("Main Camera"))
 			//GetGameObject()->GetScene()->FindObjectByName("Main Camera")->Get<SimpleCameraControl>()->IsEnabled = true;
 		//app.isGamePaused = false;
-	}
+	} 
 	else
 	{
 		isOpen = true;
