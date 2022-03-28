@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{83b62657-a40c-488c-9990-de86a1355582}">
+		<property name="name">
+			<value>Lowpass Mix</value>
+		</property>
+		<relationship name="folder">
+			<destination>{d9279e59-cd92-4a4e-969b-ef5fa60c6fe5}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{1dcc5857-15fb-4b60-8428-dc406d0a9619}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{1dcc5857-15fb-4b60-8428-dc406d0a9619}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

@@ -4,8 +4,8 @@ Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
 
 This software is provided 'as-is', without any express or implied warranty.
 In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose,
-including commercial applications, and to alter it and redistribute it freely,
+Permission is granted to anyone to use this software for any purpose, 
+including commercial applications, and to alter it and redistribute it freely, 
 subject to the following restrictions:
 
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
@@ -137,7 +137,7 @@ public:
 		CF_HAS_CONTACT_STIFFNESS_DAMPING = 128,
 		CF_HAS_CUSTOM_DEBUG_RENDERING_COLOR = 256,
 		CF_HAS_FRICTION_ANCHOR = 512,
-		CF_HAS_COLLISION_SOUND_TRIGGER = 1024,
+		CF_HAS_COLLISION_SOUND_TRIGGER = 1024
 	};
 
 	enum CollisionObjectTypes
@@ -170,7 +170,7 @@ public:
 	{
 		return m_anisotropicFriction;
 	}
-	void setAnisotropicFriction(const btVector3 & anisotropicFriction, int frictionMode = CF_ANISOTROPIC_FRICTION)
+	void setAnisotropicFriction(const btVector3& anisotropicFriction, int frictionMode = CF_ANISOTROPIC_FRICTION)
 	{
 		m_anisotropicFriction = anisotropicFriction;
 		bool isUnity = (anisotropicFriction[0] != 1.f) || (anisotropicFriction[1] != 1.f) || (anisotropicFriction[2] != 1.f);
@@ -233,7 +233,7 @@ public:
 		return m_collisionShape;
 	}
 
-	void setIgnoreCollisionCheck(const btCollisionObject * co, bool ignoreCollisionCheck)
+	void setIgnoreCollisionCheck(const btCollisionObject* co, bool ignoreCollisionCheck)
 	{
 		if (ignoreCollisionCheck)
 		{
@@ -251,7 +251,7 @@ public:
 		m_checkCollideWith = m_objectsWithoutCollisionCheck.size() > 0;
 	}
 
-	int getNumObjectsWithoutCollision() const
+        int getNumObjectsWithoutCollision() const
 	{
 		return m_objectsWithoutCollisionCheck.size();
 	}
@@ -261,7 +261,7 @@ public:
 		return m_objectsWithoutCollisionCheck[index];
 	}
 
-	virtual bool checkCollideWithOverride(const btCollisionObject * co) const
+	virtual bool checkCollideWithOverride(const btCollisionObject* co) const
 	{
 		int index = m_objectsWithoutCollisionCheck.findLinearSearch(co);
 		if (index < m_objectsWithoutCollisionCheck.size())
@@ -324,6 +324,7 @@ public:
 	{
 		return m_friction;
 	}
+
 	void setRollingFriction(btScalar frict)
 	{
 		m_updateRevision++;
@@ -383,7 +384,7 @@ public:
 		return m_worldTransform;
 	}
 
-	void setWorldTransform(const btTransform & worldTrans)
+	void setWorldTransform(const btTransform& worldTrans)
 	{
 		m_updateRevision++;
 		m_worldTransform = worldTrans;
@@ -414,19 +415,19 @@ public:
 		return m_interpolationWorldTransform;
 	}
 
-	void setInterpolationWorldTransform(const btTransform & trans)
+	void setInterpolationWorldTransform(const btTransform& trans)
 	{
 		m_updateRevision++;
 		m_interpolationWorldTransform = trans;
 	}
 
-	void setInterpolationLinearVelocity(const btVector3 & linvel)
+	void setInterpolationLinearVelocity(const btVector3& linvel)
 	{
 		m_updateRevision++;
 		m_interpolationLinearVelocity = linvel;
 	}
 
-	void setInterpolationAngularVelocity(const btVector3 & angvel)
+	void setInterpolationAngularVelocity(const btVector3& angvel)
 	{
 		m_updateRevision++;
 		m_interpolationAngularVelocity = angvel;
@@ -569,7 +570,7 @@ public:
 		return m_updateRevision;
 	}
 
-	void setCustomDebugColor(const btVector3 & colorRGB)
+	void setCustomDebugColor(const btVector3& colorRGB)
 	{
 		m_customDebugColorRGB = colorRGB;
 		m_collisionFlags |= CF_HAS_CUSTOM_DEBUG_RENDERING_COLOR;
@@ -590,7 +591,7 @@ public:
 		return hasCustomColor;
 	}
 
-	inline bool checkCollideWith(const btCollisionObject * co) const
+	inline bool checkCollideWith(const btCollisionObject* co) const
 	{
 		if (m_checkCollideWith)
 			return checkCollideWithOverride(co);
@@ -603,7 +604,7 @@ public:
 	///fills the dataBuffer and returns the struct name (and 0 on failure)
 	virtual const char* serialize(void* dataBuffer, class btSerializer* serializer) const;
 
-	virtual void serializeSingleObject(class btSerializer* serializer) const;
+	virtual void serializeSingleObject(class btSerializer * serializer) const;
 };
 
 // clang-format off
@@ -611,24 +612,24 @@ public:
 ///do not change those serialization structures, it requires an updated sBulletDNAstr/sBulletDNAstr64
 struct	btCollisionObjectDoubleData
 {
-	void* m_broadphaseHandle;
-	void* m_collisionShape;
-	btCollisionShapeData* m_rootCollisionShape;
-	char* m_name;
+	void					*m_broadphaseHandle;
+	void					*m_collisionShape;
+	btCollisionShapeData	*m_rootCollisionShape;
+	char					*m_name;
 
 	btTransformDoubleData	m_worldTransform;
 	btTransformDoubleData	m_interpolationWorldTransform;
 	btVector3DoubleData		m_interpolationLinearVelocity;
 	btVector3DoubleData		m_interpolationAngularVelocity;
 	btVector3DoubleData		m_anisotropicFriction;
-	double					m_contactProcessingThreshold;
+	double					m_contactProcessingThreshold;	
 	double					m_deactivationTime;
 	double					m_friction;
 	double					m_rollingFriction;
 	double                  m_contactDamping;
 	double                  m_contactStiffness;
 	double					m_restitution;
-	double					m_hitFraction;
+	double					m_hitFraction; 
 	double					m_ccdSweptSphereRadius;
 	double					m_ccdMotionThreshold;
 	int						m_hasAnisotropicFriction;
@@ -646,24 +647,24 @@ struct	btCollisionObjectDoubleData
 ///do not change those serialization structures, it requires an updated sBulletDNAstr/sBulletDNAstr64
 struct	btCollisionObjectFloatData
 {
-	void* m_broadphaseHandle;
-	void* m_collisionShape;
-	btCollisionShapeData* m_rootCollisionShape;
-	char* m_name;
+	void					*m_broadphaseHandle;
+	void					*m_collisionShape;
+	btCollisionShapeData	*m_rootCollisionShape;
+	char					*m_name;
 
 	btTransformFloatData	m_worldTransform;
 	btTransformFloatData	m_interpolationWorldTransform;
 	btVector3FloatData		m_interpolationLinearVelocity;
 	btVector3FloatData		m_interpolationAngularVelocity;
 	btVector3FloatData		m_anisotropicFriction;
-	float					m_contactProcessingThreshold;
+	float					m_contactProcessingThreshold;	
 	float					m_deactivationTime;
 	float					m_friction;
 	float					m_rollingFriction;
 	float                   m_contactDamping;
-	float                   m_contactStiffness;
+    float                   m_contactStiffness;
 	float					m_restitution;
-	float					m_hitFraction;
+	float					m_hitFraction; 
 	float					m_ccdSweptSphereRadius;
 	float					m_ccdMotionThreshold;
 	int						m_hasAnisotropicFriction;
