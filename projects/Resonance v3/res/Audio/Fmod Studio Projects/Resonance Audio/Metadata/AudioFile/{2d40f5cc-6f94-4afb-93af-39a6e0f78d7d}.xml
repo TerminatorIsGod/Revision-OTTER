@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{2d40f5cc-6f94-4afb-93af-39a6e0f78d7d}">
+		<property name="assetPath">
+			<value>keyPickup.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.53845804988662127</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{02f933e2-251a-4637-af6c-a92960a43cb0}</destination>
+		</relationship>
+	</object>
+</objects>
