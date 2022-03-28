@@ -73,17 +73,17 @@
 // Layers
 #include "Layers/RenderLayer.h"
 #include "Layers/InterfaceLayer.h"
-#include "Layers/DefaultSceneLayer.h"
+#include "Layers/DefaultSceneLayer.h" 
 #include "Layers/LogicUpdateLayer.h"
 #include "Layers/ImGuiDebugLayer.h"
 #include "Layers/InstancedRenderingTestLayer.h"
 #include "Layers/ParticleLayer.h"
-#include "Layers/PostProcessingLayer.h"
+#include "Layers/PostProcessingLayer.h"  
 
 Application* Application::_singleton = nullptr;
 std::string Application::_applicationName = "Resonance";
 
-#define DEFAULT_WINDOW_WIDTH 1920
+#define DEFAULT_WINDOW_WIDTH 1920 
 #define DEFAULT_WINDOW_HEIGHT 1080
 
 Application::Application() :

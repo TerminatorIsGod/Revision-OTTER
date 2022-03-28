@@ -19,12 +19,7 @@ void main() {
     vec3 specular = texture(s_SpecularAccumulation, inUV).rgb;
     vec4 emissive = texture(s_Emissive, inUV);
 
-    if (emissive != vec4(0.0,0.0,0.0,1.0))
-    {
-        outColor = (emissive);
-    }
-    else
-    {
-	    outColor = vec4(albedo * (diffuse + specular + (emissive.rgb * emissive.a)), 1.0);
-    }
+
+	outColor = vec4(albedo * (diffuse + specular + (emissive.rgb * emissive.a)), 1.0);
+    
 }

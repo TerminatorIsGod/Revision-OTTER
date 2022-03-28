@@ -259,6 +259,7 @@ void GuiBatcher::__StaticInit()
 					uniform layout(binding=0) sampler2D s_Texture;
   
 					void main() {
+						outColor = texture(s_Texture, inUV) * inColor;
 						emissive = texture(s_Texture, inUV) * inColor;
 					}
 				)LIT", ShaderPartType::Fragment);
