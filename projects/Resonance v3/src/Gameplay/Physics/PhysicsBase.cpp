@@ -45,6 +45,13 @@ int PhysicsBase::_editorSelectedColliderType = 0;
 				continue;
 			}
 
+			static char nameBuff[256];
+			memcpy(nameBuff, collider->_name.c_str(), collider->_name.size());
+			nameBuff[collider->_name.size()] = '\0';
+			if (ImGui::InputText("", nameBuff, 256)) {
+				collider->_name = nameBuff;
+			}
+
 			collider->_isDirty |= LABEL_LEFT(ImGui::DragFloat3, "Position", &collider->_position.x, 0.01f);
 			collider->_isDirty |= LABEL_LEFT(ImGui::DragFloat3, "Rotation", &collider->_rotation.x, 1.0f);
 			collider->_isDirty |= LABEL_LEFT(ImGui::DragFloat3, "Scale   ", &collider->_scale.x, 0.01f);
@@ -79,6 +86,7 @@ int PhysicsBase::_editorSelectedColliderType = 0;
 			blob["position"] = (collider->_position);
 			blob["rotation"] = (collider->_rotation);
 			blob["scale"]    = (collider->_scale);
+			blob["name"]     = (collider->_name);
 			collider->ToJson(blob);
 			output["colliders"].push_back(blob);
 		}
@@ -104,6 +112,7 @@ int PhysicsBase::_editorSelectedColliderType = 0;
 					collider->_position = JsonGet(blob, "position", collider->_position);
 					collider->_rotation = JsonGet(blob, "rotation", collider->_rotation);
 					collider->_scale    = JsonGet(blob, "scale", collider->_scale);
+					collider->_name = JsonGet(blob, "name", collider->_name);
 					// Allow the derived loading
 					collider->FromJson(blob);
 					// Mark dirty and store

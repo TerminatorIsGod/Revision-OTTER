@@ -66,12 +66,13 @@ public:
 	glm::vec3 interactionObjectPos;
 	bool holdingBreath = false;
 
+	glm::vec2 _mouseSensitivity;
+
 protected:
 	glm::vec2 centerPos;
 	int windx, windy;
-
 	float _shiftMultipler;
-	glm::vec2 _mouseSensitivity;
+
 	glm::vec3 _moveSpeeds;
 	glm::dvec2 _prevMousePos;
 	glm::vec2 _currentRot;

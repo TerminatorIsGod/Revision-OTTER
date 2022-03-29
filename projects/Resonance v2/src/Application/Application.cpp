@@ -270,6 +270,10 @@ void Application::_Run()
 			}
 		}
 
+		if (isGamePaused && showPauseScreen) {
+			//sensitivity stuff
+		}
+
 		if (isInteracting && glfwGetKey(_window, GLFW_KEY_E) != GLFW_PRESS)
 			isInteracting = false;
 

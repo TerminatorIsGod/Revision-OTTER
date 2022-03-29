@@ -72,6 +72,7 @@
 #include "Application/Layers/ImGuiDebugLayer.h"
 #include "Application/Windows/DebugWindow.h"
 #include "Gameplay/Components/ShadowCamera.h"
+#include <Gameplay/Components/UIElement.h>
 
 DefaultSceneLayer::DefaultSceneLayer() :
 	ApplicationLayer()
@@ -352,6 +353,33 @@ void DefaultSceneLayer::_CreateScene()
 			// Make sure that the camera is set as the scene's main camera!
 			//scene->MainCamera = cam;
 		}
+
+		GameObject::Sptr sensitivityMeter = scene->CreateGameObject("Sensitivity Meter"); 
+		{
+			RectTransform::Sptr transform = sensitivityMeter->Add<RectTransform>();
+			transform->SetMin({ 16, 16 });
+			transform->SetMax({ 256, 256 });
+
+			//GuiPanel::Sptr guiPanel = sensitivityMeter->Add<GuiPanel>();
+
+			UIElement::Sptr uiElement = sensitivityMeter->Add<UIElement>();
+
+			GameObject::Sptr sensitivityMeterSubItem = scene->CreateGameObject("Sensitivity Meter Sub Item");
+			{
+				RectTransform::Sptr transformSub = sensitivityMeterSubItem->Add<RectTransform>();
+				transformSub->SetMin({ 16, 16 });
+				transformSub->SetMax({ 256, 256 });
+
+				GuiPanel::Sptr guiPanelSub = sensitivityMeterSubItem->Add<GuiPanel>();
+				guiPanelSub->SetTexture(solidGreyTex);
+
+			}
+
+			sensitivityMeter->AddChild(sensitivityMeterSubItem);
+
+		}
+
+		
 
 
 		// Set up all our sample objects

@@ -165,5 +165,6 @@ namespace Gameplay::Physics {
 		glm::vec3 _rotation;
 		glm::vec3 _scale;
 		Guid      _guid;
+		std::string _name;
 	};
 }

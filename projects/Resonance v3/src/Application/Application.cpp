@@ -210,6 +210,8 @@ void Application::_Run()
 
 	bool isSwappingScenesCur = false; //used in order to update UI for loading screen
 
+	bool isBeingInteracted = false;
+
 	// Infinite loop as long as the application is running
 	while (_isRunning) {
 		// Handle scene switching
@@ -265,6 +267,36 @@ void Application::_Run()
 				menuenablething->IsEnabled = false;
 			}
 		}
+
+
+		//do sensitivity stuff
+		if (isGamePaused && showPauseScreen && _currentScene->FindObjectByName("Main Camera")) {
+
+			if ((glfwGetKey(_window, GLFW_KEY_LEFT) == GLFW_PRESS) || (glfwGetKey(_window, GLFW_KEY_RIGHT) == GLFW_PRESS)) {
+
+				if (!isBeingInteracted) {
+					isBeingInteracted = true;
+
+					glm::vec2 sens = _currentScene->FindObjectByName("Main Camera")->Get<SimpleCameraControl>()->_mouseSensitivity;
+
+					if (glfwGetKey(_window, GLFW_KEY_LEFT) == GLFW_PRESS)
+						sens += glm::vec2(-0.025, -0.025);
+
+					if (glfwGetKey(_window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+						sens += glm::vec2(0.025, 0.025);
+
+					_currentScene->FindObjectByName("Main Camera")->Get<SimpleCameraControl>()->_mouseSensitivity = sens;
+
+					std::cout << "New Sensitivity: " << sens.x << " " << sens.y << std::endl;
+				}
+
+			}
+			else {
+				isBeingInteracted = false;
+			}
+				
+		}
+
 
 		if (isInteracting && glfwGetKey(_window, GLFW_KEY_E) != GLFW_PRESS)
 			isInteracting = false;
