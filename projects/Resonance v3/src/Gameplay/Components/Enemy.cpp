@@ -37,7 +37,7 @@ void Enemy::Awake()
 	soundLight->SetRadius(-listeningRadius * 8.0f);
 	soundLight->SetColor(blue);
 
-	player = scene->MainCamera->GetGameObject();
+	player = scene->MainCamera->GetGameObject()->GetParent();
 	pathManager = scene->pathManager;
 
 }

@@ -43,13 +43,13 @@
 #include "Gameplay/Components/IComponent.h"
 #include "Gameplay/Components/Camera.h"
 #include "Gameplay/Components/RotatingBehaviour.h"
-#include "Gameplay/Components/JumpBehaviour.h"
-#include "Gameplay/Components/RenderComponent.h"
+#include "Gameplay/Components/JumpBehaviour.h" 
+#include "Gameplay/Components/RenderComponent.h" 
 #include "Gameplay/Components/MaterialSwapBehaviour.h"
 #include "Gameplay/Components/TriggerVolumeEnterBehaviour.h"
 #include "Gameplay/Components/SimpleCameraControl.h"
 
-// Physics  
+// Physics        
 #include "Gameplay/Physics/RigidBody.h"
 #include "Gameplay/Physics/Colliders/BoxCollider.h"
 #include "Gameplay/Physics/Colliders/PlaneCollider.h"
@@ -96,8 +96,8 @@ void DefaultSceneLayer::_CreateScene()
 
 	bool loadScene = true;
 	// For now we can use a toggle to generate our scene vs load from file
-	if (loadScene && std::filesystem::exists("level1.json")) {
-		app.LoadScene("level1.json");
+	if (loadScene && std::filesystem::exists("level2.json")) {
+		app.LoadScene("level2.json");
 	}
 	else {
 
@@ -354,7 +354,7 @@ void DefaultSceneLayer::_CreateScene()
 			//scene->MainCamera = cam;
 		}
 
-		GameObject::Sptr sensitivityMeter = scene->CreateGameObject("Sensitivity Meter"); 
+		GameObject::Sptr sensitivityMeter = scene->CreateGameObject("Sensitivity Meter");
 		{
 			RectTransform::Sptr transform = sensitivityMeter->Add<RectTransform>();
 			transform->SetMin({ 16, 16 });
@@ -379,7 +379,7 @@ void DefaultSceneLayer::_CreateScene()
 
 		}
 
-		
+
 
 
 		// Set up all our sample objects

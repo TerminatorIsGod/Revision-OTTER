@@ -124,8 +124,8 @@ void SoundEmmiter::Attack(float deltaTime)
 
 void SoundEmmiter::MoveToPlayer()
 {
-	GetGameObject()->SetPostion(scene->MainCamera->GetGameObject()->GetPosition() + soundLightOffset);
-	soundLight->GetGameObject()->SetPostion(scene->MainCamera->GetGameObject()->GetPosition() + soundLightOffset);
+	GetGameObject()->SetPostion(scene->MainCamera->GetGameObject()->GetParent()->GetPosition() + soundLightOffset);
+	soundLight->GetGameObject()->SetPostion(scene->MainCamera->GetGameObject()->GetParent()->GetPosition() + soundLightOffset);
 }
 
 void SoundEmmiter::MoveToPos(glm::vec3 pos)
