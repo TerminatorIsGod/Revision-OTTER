@@ -90,8 +90,8 @@ void ThrowableItem::Update(float deltaTime)
 		glm::vec4 newOffset2 = glm::vec4(offset2, 1.0);
 		glm::vec3 localOffset2 = glm::vec3(newOffset2 * player->GetInverseTransform());
 
-		GetGameObject()->SetPostion(player->GetParent()->GetPosition() + localOffset * 2.0f);
-		GetGameObject()->LookAt(player->GetParent()->GetPosition() + localOffset2);
+		GetGameObject()->SetPostion(player->GetPosition() + localOffset * 2.0f);
+		GetGameObject()->LookAt(player->GetPosition() + localOffset2);
 
 		//Throw
 		if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_LEFT))
