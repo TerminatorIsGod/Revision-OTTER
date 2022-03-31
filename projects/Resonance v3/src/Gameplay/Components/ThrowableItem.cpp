@@ -10,7 +10,7 @@
 void ThrowableItem::Awake()
 {
 	scene = GetGameObject()->GetScene();
-	player = scene->MainCamera->GetGameObject();
+	player = scene->MainCamera->GetGameObject()->GetParent();
 	Application& app = Application::Get();
 	_window = app.GetWindow();
 
@@ -84,14 +84,14 @@ void ThrowableItem::Update(float deltaTime)
 	{
 		player->Get<SimpleCameraControl>()->ShowDropThrow();
 		glm::vec4 newOffset = glm::vec4(0.0f, 0.0f, -1.0f, 1.0f);
-		glm::vec3 localOffset = glm::vec3(newOffset * player->GetInverseTransform());
+		glm::vec3 localOffset = glm::vec3(newOffset * player->GetChildren()[0]->GetInverseTransform());
 
 		glm::vec3 offset2 = glm::vec3(0, 0, 780);
 		glm::vec4 newOffset2 = glm::vec4(offset2, 1.0);
-		glm::vec3 localOffset2 = glm::vec3(newOffset2 * player->GetInverseTransform());
+		glm::vec3 localOffset2 = glm::vec3(newOffset2 * player->GetChildren()[0]->GetInverseTransform());
 
-		GetGameObject()->SetPostion(player->GetParent()->GetPosition() + localOffset * 2.0f);
-		GetGameObject()->LookAt(player->GetParent()->GetPosition() + localOffset2);
+		GetGameObject()->SetPostion(player->GetPosition() + localOffset * 2.0f);
+		GetGameObject()->LookAt(player->GetPosition() + localOffset2);
 
 		//Throw
 		if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_LEFT))

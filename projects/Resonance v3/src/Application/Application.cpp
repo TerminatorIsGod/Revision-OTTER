@@ -294,7 +294,7 @@ void Application::_Run()
 			else {
 				isBeingInteracted = false;
 			}
-				
+
 		}
 
 

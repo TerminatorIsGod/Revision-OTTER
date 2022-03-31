@@ -11,7 +11,7 @@
 
 void InteractSystem::Awake()
 {
-	_player = GetGameObject()->GetScene()->FindObjectByName("Main Camera");
+	_player = GetGameObject()->GetScene()->FindObjectByName("Main Camera")->GetParent();
 	_lerpS = GetGameObject()->Get<LerpSystem>();
 	Application& app = Application::Get();
 	_window = app.GetWindow();
@@ -58,7 +58,7 @@ InteractSystem::Sptr InteractSystem::FromJson(const nlohmann::json & blob) {
 
 void InteractSystem::Update(float deltaTime) {
 
-	glm::vec3 ppos = _player->GetParent()->GetPosition();
+	glm::vec3 ppos = _player->GetPosition();
 	glm::vec3 opos = GetGameObject()->GetPosition();
 
 	glm::vec3 tpos = ppos - opos;
@@ -111,7 +111,7 @@ void InteractSystem::interact() {
 
 	_distance = (_player->GetPosition().length() - GetGameObject()->GetPosition().length());
 
-	glm::vec3 ppos = _player->GetParent()->GetPosition();
+	glm::vec3 ppos = _player->GetPosition();
 	glm::vec3 opos = GetGameObject()->GetPosition();
 
 	glm::vec3 tpos = ppos - opos;
