@@ -8,9 +8,9 @@
 #include "utils/JsonGlmHelpers.h"
 
 namespace Gameplay::Physics {
-int PhysicsBase::_editorSelectedColliderType = 0;
+	int PhysicsBase::_editorSelectedColliderType = 0;
 
-	PhysicsBase::PhysicsBase() : 
+	PhysicsBase::PhysicsBase() :
 		IComponent(),
 		_scene(nullptr),
 		_colliders(std::vector<ICollider::Sptr>()),
@@ -76,7 +76,7 @@ int PhysicsBase::_editorSelectedColliderType = 0;
 
 	void PhysicsBase::ToJsonBase(nlohmann::json& output) const {
 		output["group"] = _collisionGroup;
-		output["mask"]  = _collisionMask;
+		output["mask"] = _collisionMask;
 		// Make an array and store all the colliders
 		output["colliders"] = std::vector<nlohmann::json>();
 		for (auto& collider : _colliders) {
@@ -85,8 +85,8 @@ int PhysicsBase::_editorSelectedColliderType = 0;
 			blob["type"] = ~collider->_type;
 			blob["position"] = (collider->_position);
 			blob["rotation"] = (collider->_rotation);
-			blob["scale"]    = (collider->_scale);
-			blob["name"]     = (collider->_name);
+			blob["scale"] = (collider->_scale);
+			blob["name"] = (collider->_name);
 			collider->ToJson(blob);
 			output["colliders"].push_back(blob);
 		}
@@ -95,7 +95,7 @@ int PhysicsBase::_editorSelectedColliderType = 0;
 	void PhysicsBase::FromJsonBase(const nlohmann::json& input) {
 		// Only the group and mask are common for all collision types
 		_collisionGroup = input["group"];
-		_collisionMask  = input["mask"];
+		_collisionMask = input["mask"];
 
 		// There should always be colliders, but just to be safe...
 		if (input.contains("colliders") && input["colliders"].is_array()) {
@@ -111,7 +111,7 @@ int PhysicsBase::_editorSelectedColliderType = 0;
 					collider->_guid = Guid(blob["guid"]);
 					collider->_position = JsonGet(blob, "position", collider->_position);
 					collider->_rotation = JsonGet(blob, "rotation", collider->_rotation);
-					collider->_scale    = JsonGet(blob, "scale", collider->_scale);
+					collider->_scale = JsonGet(blob, "scale", collider->_scale);
 					collider->_name = JsonGet(blob, "name", collider->_name);
 					// Allow the derived loading
 					collider->FromJson(blob);
@@ -130,7 +130,7 @@ int PhysicsBase::_editorSelectedColliderType = 0;
 	}
 
 	void PhysicsBase::SetCollisionGroupMulti(int value) {
-		_collisionGroup   = value;
+		_collisionGroup = value;
 		_isGroupMaskDirty = true;
 	}
 
@@ -217,7 +217,7 @@ int PhysicsBase::_editorSelectedColliderType = 0;
 		// If the group or mask have changed, notify bullet
 		if (_isGroupMaskDirty) {
 			_GetBroadphaseHandle()->m_collisionFilterGroup = _collisionGroup;
-			_GetBroadphaseHandle()->m_collisionFilterMask  = _collisionMask;
+			_GetBroadphaseHandle()->m_collisionFilterMask = _collisionMask;
 
 			_isGroupMaskDirty = false;
 			return true;
@@ -231,7 +231,7 @@ int PhysicsBase::_editorSelectedColliderType = 0;
 
 		// Copy our transform info from OpenGL
 		transform.setIdentity();
-		transform.setOrigin(ToBt(context->GetPosition()));	 
+		transform.setOrigin(ToBt(context->GetPosition()));
 		transform.setRotation(ToBt(context->GetRotation()));
 		if (context->GetScale() != _prevScale) {
 			_shape->setLocalScaling(ToBt(context->GetScale()));
