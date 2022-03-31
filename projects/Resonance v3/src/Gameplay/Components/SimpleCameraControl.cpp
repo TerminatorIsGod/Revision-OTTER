@@ -44,8 +44,8 @@ void SimpleCameraControl::Awake() {
 	_scene = GetGameObject()->GetScene();
 	Application& app = Application::Get();
 	_window = app.GetWindow();
-	GetGameObject()->SetPostion(startingPos);
-	GetGameObject()->SetRotation(glm::vec3(0.0));
+	GetGameObject()->GetParent()->SetPostion(startingPos);
+	GetGameObject()->GetParent()->SetRotation(glm::vec3(0.0));
 	//Prompt Textures
 	if (p_PickUp == nullptr)
 	{
@@ -115,7 +115,7 @@ void SimpleCameraControl::Movement(float deltaTime)
 	//	return;
 
 
-	auto _body = GetGameObject()->Get<Gameplay::Physics::RigidBody>();
+	auto _body = GetGameObject()->GetParent()->Get<Gameplay::Physics::RigidBody>();
 
 	if (glfwGetKey(_window, GLFW_KEY_M) && _allowMouse == false) {
 		_isMousePressed = !_isMousePressed;
@@ -159,7 +159,7 @@ void SimpleCameraControl::Movement(float deltaTime)
 
 
 
-		GetGameObject()->GetChildren()[0]->SetRotation(currentRot);
+		GetGameObject()->SetRotation(currentRot);
 
 		_prevMousePos = currentMousePos;
 
@@ -356,11 +356,11 @@ void SimpleCameraControl::LerpHeight(float heightOffset, float deltaTime, float 
 {
 	if (freecam)
 		return;
-	glm::vec3 playerPos = GetGameObject()->GetPosition();
+	glm::vec3 playerPos = GetGameObject()->GetParent()->GetPosition();
 	//if (heightOffset != 0 && glm::abs(playerPos.z - (baseHeight + heightOffset) < 0.01f))
 	//	return;
 
-	GetGameObject()->SetPostion(glm::lerp(playerPos, glm::vec3(playerPos.x, playerPos.y, baseHeight + heightOffset), speed * deltaTime));
+	GetGameObject()->GetParent()->SetPostion(glm::lerp(playerPos, glm::vec3(playerPos.x, playerPos.y, baseHeight + heightOffset), speed * deltaTime));
 
 }
 
@@ -388,8 +388,8 @@ void SimpleCameraControl::SwitchState(float deltaTime)
 
 void SimpleCameraControl::Interact(float deltaTime)
 {
-	btCollisionWorld::ClosestRayResultCallback hit(ToBt(GetGameObject()->GetPosition()), ToBt(GetGameObject()->GetPosition() + (viewDir * 5.0f)));
-	_scene->GetPhysicsWorld()->rayTest(ToBt(GetGameObject()->GetPosition()), ToBt(GetGameObject()->GetPosition() + (viewDir * 5.0f)), hit);
+	btCollisionWorld::ClosestRayResultCallback hit(ToBt(GetGameObject()->GetParent()->GetPosition()), ToBt(GetGameObject()->GetParent()->GetPosition() + (viewDir * 5.0f)));
+	_scene->GetPhysicsWorld()->rayTest(ToBt(GetGameObject()->GetParent()->GetPosition()), ToBt(GetGameObject()->GetParent()->GetPosition() + (viewDir * 5.0f)), hit);
 
 	if (!hit.hasHit())
 	{
@@ -426,7 +426,7 @@ void SimpleCameraControl::EmitSound(float deltaTime)
 		if (soundDelayTimer <= 0.0f)
 		{
 			if (playerState != Idle)
-				_scene->audioManager->Get<AudioManager>()->PlayFootstepSound(GetGameObject()->GetPosition() - glm::vec3(0, 0, -5.0f), playerEmmiters[playerEmmiterIndex]->targetVolume / 5.0f);
+				_scene->audioManager->Get<AudioManager>()->PlayFootstepSound(GetGameObject()->GetParent()->GetPosition() - glm::vec3(0, 0, -5.0f), playerEmmiters[playerEmmiterIndex]->targetVolume / 5.0f);
 			startSoundDelay = false;
 		}
 	}

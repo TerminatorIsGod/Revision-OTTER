@@ -21,7 +21,7 @@ public:
 
 	//Properties
 	Scene* scene;
-	GameObject::Sptr player;
+	GameObject* player;
 	GLFWwindow* _window;
 	float prevVel = 0.0f;
 	glm::vec3 temp = glm::vec3(0.0f);

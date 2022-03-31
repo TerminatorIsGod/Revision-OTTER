@@ -16,7 +16,7 @@ void Ladder::Awake()
 
 void Ladder::Update(float deltaTime)
 {
-	SimpleCameraControl::Sptr player = _scene->MainCamera->GetGameObject()->GetParent()->Get<SimpleCameraControl>();
+	SimpleCameraControl::Sptr player = _scene->MainCamera->GetGameObject()->Get<SimpleCameraControl>();
 	if (player->interactionObjectPos != GetGameObject()->GetPosition())
 		return;
 
@@ -30,7 +30,7 @@ void Ladder::Update(float deltaTime)
 			if (!isEPressed)
 			{
 				_scene->audioManager->Get<AudioManager>()->PlaySoundByName("LadderClimb");
-				player->GetGameObject()->SetPostion(teleportPos);
+				player->GetGameObject()->GetParent()->SetPostion(teleportPos);
 				player->baseHeight = teleportPos.z;
 				isEPressed = true;
 			}
