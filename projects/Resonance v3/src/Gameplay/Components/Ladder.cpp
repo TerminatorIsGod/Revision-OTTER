@@ -30,7 +30,7 @@ void Ladder::Update(float deltaTime)
 			if (!isEPressed)
 			{
 				_scene->audioManager->Get<AudioManager>()->PlaySoundByName("LadderClimb");
-				player->GetGameObject()->GetParent()->SetPostion(teleportPos);
+				player->GetGameObject()->SetPostion(teleportPos);
 				player->baseHeight = teleportPos.z;
 				isEPressed = true;
 			}

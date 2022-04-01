@@ -26,7 +26,7 @@ public:
 
 	std::vector<GameObject*> lastHeardSounds;
 	std::vector<glm::vec3> lastHeardPositions;
-	GameObject::Sptr player;
+	GameObject* player;
 	Scene* scene;
 	GLFWwindow* window;
 	Gameplay::Physics::RigidBody::Sptr body;

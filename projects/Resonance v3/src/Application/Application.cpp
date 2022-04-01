@@ -1,6 +1,6 @@
 #include "Application/Application.h"
 
-#include <Windows.h> 
+#include <Windows.h>
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
