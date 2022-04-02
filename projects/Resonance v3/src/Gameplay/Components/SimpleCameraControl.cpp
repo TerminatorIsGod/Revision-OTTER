@@ -402,6 +402,19 @@ void SimpleCameraControl::Interact(float deltaTime)
 	interactionObjectPos = objectPos;
 }
 
+glm::vec3 SimpleCameraControl::WhatAreYouLookingAt() {
+	btCollisionWorld::ClosestRayResultCallback hit(ToBt(GetGameObject()->GetPosition()), ToBt(GetGameObject()->GetPosition() + (viewDir * 5.0f)));
+	_scene->GetPhysicsWorld()->rayTest(ToBt(GetGameObject()->GetPosition()), ToBt(GetGameObject()->GetPosition() + (viewDir * 5.0f)), hit);
+
+	if (!hit.hasHit())
+	{
+		return glm::vec3(0.0f);
+	}
+	
+	glm::vec3 objectPos = ToGlm(hit.m_hitPointWorld);//ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
+	return objectPos;
+}
+
 void SimpleCameraControl::EmitSound(float deltaTime)
 {
 	if (playerPulseTimer <= 0.f)

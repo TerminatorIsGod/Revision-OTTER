@@ -17,6 +17,7 @@ void GLAppLayer::OnAppLoad(const nlohmann::json& config) {
 
 	Application& app = Application::Get();
 
+	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -31,6 +32,14 @@ void GLAppLayer::OnAppLoad(const nlohmann::json& config) {
 	LOG_ASSERT(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress) != 0, "Failed to initialize glad");
 
 	glEnable(GL_PROGRAM_POINT_SIZE);
+
+	glEnable(GL_DEBUG_OUTPUT);
+	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+	glDebugMessageCallback(GlDebugMessageCallback, &app);
+
+	// Display our GPU and OpenGL version
+	LOG_INFO(glGetString(GL_RENDERER));
+	LOG_INFO(glGetString(GL_VERSION));
 }
 
 void GLAppLayer::OnAppUnload()

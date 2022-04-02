@@ -44,24 +44,19 @@ void main() {
         // Handling emitters
         case TYPE_EMITTER:
             int emitted = 1;
-            // If the lifetime is at 0, we emit a particle
+
+            float startLife = lifetime;
+            int toEmit = 0;
+            
             while ((lifetime < 0) && (emitted < 32)) {
-                out_Type = TYPE_PARTICLE;
-                out_Position = (u_ModelMatrix * vec4(inPosition[0] + inVelocity[0] * (-lifetime), 1.0f)).xyz;
-                out_Velocity = mat3(u_ModelMatrix) * inVelocity[0];
-                out_Lifetime = meta.z + (meta.w - meta.z) * rand(vec2(inPosition[0].x, u_DeltaTime));
-                out_Metadata = vec4(out_Lifetime, 0, 0, 0);
-                out_Color    = inColor[0];
-                
-                EmitVertex();
-                EndPrimitive();
 
                 lifetime += meta.x;
+                toEmit ++;
                 emitted++;
             }
 
             // Push the emitter back into the output stream
-            out_Type = TYPE_EMITTER;
+            out_Type     = TYPE_EMITTER;
             out_Position = inPosition[0];
             out_Velocity = inVelocity[0];
             out_Color    = inColor[0];
@@ -71,7 +66,21 @@ void main() {
             EmitVertex();
             EndPrimitive();
 
-            break;
+            // If the lifetime is at 0, we emit a particle
+            for (int ix = 0; ix < toEmit; ix++) {
+                float timeAdjust = (-startLife + (ix * meta.x));
+                out_Type = TYPE_PARTICLE;
+                out_Position = (u_ModelMatrix * vec4(inPosition[0] + inVelocity[0] * timeAdjust, 1.0f)).xyz;
+                out_Velocity = mat3(u_ModelMatrix) * inVelocity[0];
+                out_Lifetime = meta.z + (meta.w - meta.z) * rand(vec2(inPosition[0].x, u_DeltaTime));
+                out_Metadata = vec4(out_Lifetime, meta.y, 0, 0);
+                out_Color    = inColor[0];
+                
+                EmitVertex();
+                EndPrimitive();
+            }
+
+            return;
 
         // Handling particles
         case TYPE_PARTICLE:
@@ -94,8 +103,30 @@ void main() {
                 EmitVertex();
                 EndPrimitive();
             }
-            break;
+            return;
+            // Anything else, for debug purposes
         default:
-            break;
+            out_Type     = inType[0];
+            out_Position = inPosition[0];
+            out_Velocity = inVelocity[0];
+            out_Color    = inColor[0];
+            out_Lifetime = lifetime;
+            out_Metadata = inMetadata[0];
+            
+            // Emit into vertex stream
+            EmitVertex();
+            EndPrimitive();
+            return;
     }
+
+    out_Type     = inType[0];
+    out_Position = inPosition[0];
+    out_Velocity = inVelocity[0];
+    out_Color    = inColor[0];
+    out_Lifetime = lifetime;
+    out_Metadata = inMetadata[0];
+    
+    // Emit into vertex stream
+    EmitVertex();
+    EndPrimitive();
 }

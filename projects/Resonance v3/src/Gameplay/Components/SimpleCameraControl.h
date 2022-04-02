@@ -56,6 +56,8 @@ public:
 	void WalkState(float deltaTime);
 	void RunState(float deltaTime);
 
+	glm::vec3 SimpleCameraControl::WhatAreYouLookingAt();
+
 	void SetSpeed(float newSpeed);
 	void MoveUI(float deltaTime);
 	void PlaceUI(int index, float xSize, float ySize, float xRatio = 1, float xMultiplier = 0, float yRatio = 1, float yMultiplier = 0);

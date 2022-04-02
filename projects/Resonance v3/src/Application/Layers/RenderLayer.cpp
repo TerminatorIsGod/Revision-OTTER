@@ -108,7 +108,7 @@ void RenderLayer::OnRender(const Framebuffer::Sptr & prevLayer)
 	Camera::Sptr camera = app.CurrentScene()->MainCamera;
 
 	// We can now render all our scene elements via the helper function
-	_RenderScene(camera->GetView(), camera->GetProjection());
+	_RenderScene(camera->GetView(), camera->GetProjection(), _primaryFBO->GetSize());
 
 	// Use our cubemap to draw our skybox
 	app.CurrentScene()->DrawSkybox();
@@ -238,7 +238,7 @@ void RenderLayer::_AccumulateLighting()
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glViewport(0, 0, shadowCam->GetBufferResolution().x, shadowCam->GetBufferResolution().y);
 
-		_RenderScene(shadowCam->GetGameObject()->GetInverseTransform(), shadowCam->GetProjection());
+		_RenderScene(shadowCam->GetGameObject()->GetInverseTransform(), shadowCam->GetProjection(), shadowCam->GetDepthBuffer()->GetSize());
 
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 		});
@@ -526,6 +526,7 @@ void RenderLayer::_InitFrameUniforms()
 	// Upload frame level uniforms
 	auto& frameData = _frameUniforms->GetData();
 	frameData.u_Projection = camera->GetProjection();
+	frameData.u_InvProjection = glm::inverse(camera->GetProjection());
 	frameData.u_View = camera->GetView();
 	frameData.u_ViewProjection = camera->GetViewProjection();
 	frameData.u_CameraPos = glm::vec4(camera->GetGameObject()->GetPosition(), 1.0f);
@@ -534,10 +535,15 @@ void RenderLayer::_InitFrameUniforms()
 	frameData.u_RenderFlags = _renderFlags;
 	frameData.u_ZNear = camera->GetNearPlane();
 	frameData.u_ZFar = camera->GetFarPlane();
+	frameData.u_Viewport = { 0.0f, 0.0f, _primaryFBO->GetWidth(), _primaryFBO->GetHeight() };
+
+	frameData.u_Aperture = camera->Aperture;
+	frameData.u_LensDepth = camera->LensDepth;
+	frameData.u_FocalDepth = camera->FocalDepth;
 	_frameUniforms->Update();
 }
 
-void RenderLayer::_RenderScene(const glm::mat4 & view, const glm::mat4 & projection)
+void RenderLayer::_RenderScene(const glm::mat4& view, const glm::mat4& projection, const glm::ivec2& screenSize)
 {
 	using namespace Gameplay;
 
@@ -556,6 +562,7 @@ void RenderLayer::_RenderScene(const glm::mat4 & view, const glm::mat4 & project
 	frameData.u_View = view;
 	frameData.u_ViewProjection = viewProj;
 	frameData.u_CameraPos = view * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	frameData.u_Viewport = { 0.0f, 0.0f, screenSize.x, screenSize.y };
 	_frameUniforms->Update();
 
 	// Render all our objects
@@ -604,3 +611,8 @@ void RenderLayer::_RenderScene(const glm::mat4 & view, const glm::mat4 & project
 
 }
 
+
+const UniformBuffer<RenderLayer::FrameLevelUniforms>::Sptr& RenderLayer::GetFrameUniforms() const
+{
+	return _frameUniforms;
+}

@@ -4,6 +4,8 @@ layout (std140, binding = 0) uniform b_FrameLevelUniforms {
     uniform mat4 u_View;
     // The camera's projection matrix
     uniform mat4 u_Projection;
+    // Inverse of the camera's projection
+    uniform mat4 u_InvProjection;
     // The combined viewProject matrix
     uniform mat4 u_ViewProjection;
     // The position of the camera in world space
@@ -18,6 +20,20 @@ layout (std140, binding = 0) uniform b_FrameLevelUniforms {
     uniform float u_ZNear;
     // Camera's far plane
     uniform float u_ZFar;
+
+    
+    //Depth Of Field
+
+    // Distance to focus camera to in world units
+    uniform float u_FocalDepth;
+    // Distance from lense to sensor in world units
+    uniform float u_LensDepth;
+    // Aperture (inverse of F-Stop)
+    uniform float u_Aperture;
+
+    // New for fun, the viewport rectangle on the output (x, y, w, h)
+    uniform vec4 u_Viewport;
+
 };
 
 // Stores uniforms that change every object/instance
