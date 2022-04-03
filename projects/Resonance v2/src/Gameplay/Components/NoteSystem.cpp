@@ -101,14 +101,14 @@ void NoteSystem::interact() {
 		//if (GetGameObject()->GetScene()->FindObjectByName("Main Camera"))
 			//GetGameObject()->GetScene()->FindObjectByName("Main Camera")->Get<SimpleCameraControl>()->IsEnabled = true;
 		//app.isGamePaused = false;
-	} 
+	}
 	else
 	{
 		isOpen = true;
 		GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("NotePickup", 1.0f);
 		GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<GuiPanel>()->IsEnabled = true;
 		GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<RectTransform>()->SetPosition(glm::vec2(windx / 2, windy / 2));
-		GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<RectTransform>()->SetSize(glm::vec2((windx / 4), (windy / 4.5)));
+		GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<RectTransform>()->SetSize(glm::vec2((1920 / 4), (1080 / 4.5)));
 		std::cout << "Note enabled\n\n";
 		app.isInteracting = true;
 	}

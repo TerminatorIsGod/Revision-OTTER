@@ -13,7 +13,7 @@
 #include "Utils/ResourceManager/ResourceManager.h"
 #include "Utils/ImGuiHelper.h"
 
-// Graphics
+// Graphics 
 #include "Graphics/Buffers/IndexBuffer.h"
 #include "Graphics/Buffers/VertexBuffer.h"
 #include "Graphics/VertexArrayObject.h"
@@ -32,7 +32,7 @@
 #include "Gameplay/GameObject.h"
 #include "Gameplay/Scene.h"
 
-// Components
+// Components      
 #include "Gameplay/Components/IComponent.h"
 #include "Gameplay/Components/Camera.h"
 #include "Gameplay/Components/RotatingBehaviour.h"
@@ -389,7 +389,7 @@ void Application::_Run()
 			else {
 				isBeingInteracted = false;
 			}
-				
+
 		}
 
 

@@ -2,18 +2,18 @@
 
 #include <Windows.h>
 #include <GLFW/glfw3.h>
-#include <glad/glad.h>
+#include <glad/glad.h> 
 
-#include "Logging.h"
+#include "Logging.h"   
 #include "Gameplay/InputEngine.h"
 #include "Application/Timing.h"
-#include <filesystem>
+#include <filesystem>  
 #include "Layers/GLAppLayer.h"
 #include "Utils/FileHelpers.h"
 #include "Utils/ResourceManager/ResourceManager.h"
-#include "Utils/ImGuiHelper.h"
+#include "Utils/ImGuiHelper.h" 
 
-// Graphics
+// Graphics 
 #include "Graphics/Buffers/IndexBuffer.h"
 #include "Graphics/Buffers/VertexBuffer.h"
 #include "Graphics/VertexArrayObject.h"
@@ -90,7 +90,7 @@ Application::Application() :
 	_window(nullptr),
 	_windowSize({ DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT }),
 	_isRunning(false),
-	_isEditor(true),
+	_isEditor(false),
 	_windowTitle("Resonance"),
 	_currentScene(nullptr),
 	_targetScene(nullptr),
@@ -108,6 +108,7 @@ void Application::Start(int argCount, char** arguments) {
 	LOG_ASSERT(_singleton == nullptr, "Application has already been started!");
 	_singleton = new Application();
 	_singleton->_Run();
+	_singleton->ResizeWindow(glm::ivec2(1920, 960));
 }
 
 GLFWwindow* Application::GetWindow() { return _window; }
@@ -191,6 +192,10 @@ void Application::_Run()
 	// We'll grab these since we'll need them!
 	_windowSize.x = JsonGet(_appSettings, "window_width", DEFAULT_WINDOW_WIDTH);
 	_windowSize.y = JsonGet(_appSettings, "window_height", DEFAULT_WINDOW_HEIGHT);
+
+	_windowSize.x = 1920;
+	_windowSize.y = 960;
+
 
 	// By default, we want our viewport to be the whole screen
 	_primaryViewport = { 0, 0, _windowSize.x, _windowSize.y };
