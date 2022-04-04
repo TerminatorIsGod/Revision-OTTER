@@ -543,7 +543,7 @@ void RenderLayer::_InitFrameUniforms()
 	_frameUniforms->Update();
 }
 
-void RenderLayer::_RenderScene(const glm::mat4& view, const glm::mat4& projection, const glm::ivec2& screenSize)
+void RenderLayer::_RenderScene(const glm::mat4 & view, const glm::mat4 & projection, const glm::ivec2 & screenSize)
 {
 	using namespace Gameplay;
 

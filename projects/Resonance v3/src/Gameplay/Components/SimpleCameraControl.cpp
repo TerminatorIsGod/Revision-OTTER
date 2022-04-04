@@ -14,8 +14,7 @@
 #include "Gameplay/Components/GUI/RectTransform.h"
 #include "Gameplay/Components/GUI/GuiPanel.h"
 #include "Gameplay/Components/AudioManager.h"
-
-
+#include "Camera.h"
 SimpleCameraControl::SimpleCameraControl() :
 	IComponent(),
 	_mouseSensitivity({ 0.5f, 0.3f }),
@@ -289,6 +288,8 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 		{
 			oxygenMeter -= oxygenDecaySpeed * deltaTime;
 
+			float lerpedDistortion = glm::lerp(_scene->MainCamera->LensDepth, 0.0f, deltaTime);
+			_scene->MainCamera->LensDepth = lerpedDistortion;
 			if (outOfBreath)
 			{
 				outOfBreath = false;
@@ -303,6 +304,10 @@ void SimpleCameraControl::OxygenSystem(float deltaTime)
 				outOfBreathChannel = _scene->audioManager->Get<AudioManager>()->PlaySoundByName("OutOfBreath", 0.3f);
 				outOfBreath = true;
 			}
+
+			float lerpedDistortion = glm::lerp(_scene->MainCamera->LensDepth, 2.0f, deltaTime * 0.5f);
+			_scene->MainCamera->LensDepth = lerpedDistortion;
+
 			playerEmmiters[playerEmmiterIndex]->targetVolume = chokeVol;
 		}
 
@@ -410,7 +415,7 @@ glm::vec3 SimpleCameraControl::WhatAreYouLookingAt() {
 	{
 		return glm::vec3(0.0f);
 	}
-	
+
 	glm::vec3 objectPos = ToGlm(hit.m_hitPointWorld);//ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
 	return objectPos;
 }

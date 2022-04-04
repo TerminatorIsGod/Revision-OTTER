@@ -17,14 +17,14 @@ namespace Gameplay {
 			return std::make_shared<Camera>();
 		}
 
-	// IComponent implementation
+		// IComponent implementation
 	public:
 		virtual void RenderImGui() override;
 
 		MAKE_TYPENAME(Camera);
 
-		float Aperture = 20.0f;
-		float LensDepth = 0.5f;
+		float Aperture = 5.0f;
+		float LensDepth = 4.0f;
 		float FocalDepth = 10.0f;
 
 		virtual nlohmann::json ToJson() const override;
