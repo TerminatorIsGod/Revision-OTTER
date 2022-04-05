@@ -9,12 +9,16 @@
 
 void AnimationSystemManager::Awake()
 {
+	
+	loadAnims();
 
+}
+
+void AnimationSystemManager::loadAnims() {
 	for (int i = 0; i < frames; i++) {
 		std::string tempName = filePrefix + std::to_string(i) + ".obj";
 		meshes.push_back(ResourceManager::CreateAsset<MeshResource>(tempName));
 	}
-
 }
 
 void AnimationSystemManager::RenderImGui() {

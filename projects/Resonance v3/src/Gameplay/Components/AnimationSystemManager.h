@@ -2,6 +2,7 @@
 #include "IComponent.h"
 #include "Gameplay/Physics/RigidBody.h"
 #include "Gameplay/MeshResource.h"
+#include <thread>
 
 /// <summary>
 /// A simple behaviour that applies an impulse along the Z axis to the 
@@ -16,6 +17,8 @@ public:
 
 	virtual void Awake() override;
 	virtual void Update(float deltaTime) override;
+
+	void loadAnims();
 
 
 public:
@@ -34,6 +37,8 @@ public:
 
 	std::string filePrefix = "";
 	int frames = 0;
+
+	bool isLoaded = false;
 
 protected:
 

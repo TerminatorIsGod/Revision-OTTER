@@ -12,13 +12,17 @@
 #include "Graphics/VertexTypes.h"
 #include "Utils/StringUtils.h"
 
+static std::map <std::string, VertexArrayObject::Sptr> dataMap;
+
 class ObjLoader
 {
 public:
 	template <typename VertexType = VertexPosNormTexColTangents>
 	static VertexArrayObject::Sptr LoadFromFile(const std::string& filename, bool calcTangents = true);
 
+
 protected:
+
 	ObjLoader() = default;
 	~ObjLoader() = default;
 };
@@ -26,11 +30,16 @@ protected:
 
 template <typename VertexType>
 VertexArrayObject::Sptr ObjLoader::LoadFromFile(const std::string& filename, bool calcTangents) {
+
+	if (dataMap.find(filename) != dataMap.end()) {
+		return dataMap[filename];
+	}
+
 	// Open our file in binary mode
 	std::ifstream file;
 	file.open(filename, std::ios::binary);
 
-	// If our file fails to open, we will throw an error
+		// If our file fails to open, we will throw an error
 	if (!file) {
 		throw std::runtime_error("Failed to open file");
 	}
@@ -155,6 +164,7 @@ VertexArrayObject::Sptr ObjLoader::LoadFromFile(const std::string& filename, boo
 				indices.push_back(edges[0]);
 				indices.push_back(edges[2]);
 				indices.push_back(edges[3]);
+
 			}
 		}
 	}
@@ -185,5 +195,11 @@ VertexArrayObject::Sptr ObjLoader::LoadFromFile(const std::string& filename, boo
 	LOG_TRACE("Loaded OBJ file \"{}\" in {} seconds ({} vertices, {} indices)", filename, endTime - startTime, mesh.GetVertexCount(), mesh.GetIndexCount());
 
 	// Move our data into a VAO and return it
-	return mesh.Bake();
+
+	VertexArrayObject::Sptr meshBaked = mesh.Bake();
+
+	if(!(dataMap.find(filename) != dataMap.end()))
+		dataMap.insert({ filename, meshBaked });
+
+	return meshBaked;
 }

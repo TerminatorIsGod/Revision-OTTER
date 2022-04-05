@@ -66,6 +66,7 @@ void AnimationSystem::Update(float deltaTime) {
 				meshes = GetGameObject()->GetScene()->FindObjectByName(objectLoadName)->Get<AnimationSystemManager>()->meshes;
 				frames = meshes.size();
 				isMeshesLoaded = true;
+				
 			}
 		}
 				
