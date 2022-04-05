@@ -101,7 +101,7 @@ void ThrowableItem::Update(float deltaTime)
 			GetComponent<Gameplay::Physics::RigidBody>()->SetType(RigidBodyType::Dynamic);
 			GetComponent<Gameplay::Physics::RigidBody>()->SetLinearVelocity(glm::vec3(0.0f));
 			//GetComponent<Gameplay::Physics::RigidBody>()->IsEnabled = true;
-			GetComponent<Gameplay::Physics::RigidBody>()->ApplyForce(player->Get<SimpleCameraControl>()->viewDir * 850.0f);
+			GetComponent<Gameplay::Physics::RigidBody>()->SetLinearVelocity(player->Get<Gameplay::Physics::RigidBody>()->GetLinearVelocity() + (player->Get<SimpleCameraControl>()->viewDir * 18.0f));
 			player->Get<SimpleCameraControl>()->allowInteraction = true;
 			player->Get<SimpleCameraControl>()->promptShown = false; //Makes sure the ui size is reset so the pickup prompt doesn't look stretched
 
