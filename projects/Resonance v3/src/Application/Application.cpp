@@ -212,22 +212,10 @@ void Application::_Run()
 
 	bool isBeingInteracted = false;
 
-	//Texture3D::Sptr warmLut = ResourceManager::CreateAsset<Texture3D>("luts/warm.CUBE");
-	//Texture3D::Sptr coolLut = ResourceManager::CreateAsset<Texture3D>("luts/cool.CUBE");
-	//Texture3D::Sptr defaultLut = ResourceManager::CreateAsset<Texture3D>("luts/default.CUBE");
-	//Texture3D::Sptr eyeVomiterLut = ResourceManager::CreateAsset<Texture3D>("luts/eyeVomiter.CUBE");
+	if (_currentScene->FindObjectByName("Main Camera"))
+		if(globalSens != glm::vec2(0.0f))
+			_currentScene->FindObjectByName("Main Camera")->Get<SimpleCameraControl>()->_mouseSensitivity = globalSens;
 
-	//Texture3D::Sptr defLut = _currentScene->GetColorLUT();
-
-	//ShaderProgram::Sptr shad;
-
-	//bool isAKeyPressed = false;
-
-	//Guid shadGuid = Guid("aa62175ebe-49e2-4e4c-8847-73ed1c9f85f9");
-
-	//if (shadGuid.isValid()) {
-	//	shad = ResourceManager::Get<ShaderProgram>(shadGuid);
-	//}
 
 	// Infinite loop as long as the application is running
 	while (_isRunning) {
@@ -235,71 +223,6 @@ void Application::_Run()
 		if (_targetScene != nullptr) {
 			_HandleSceneChange();
 		}
-
-		/*if (shadGuid.isValid()) {
-			
-			if (glfwGetKey(_window, GLFW_KEY_0)) {
-				if (!isAKeyPressed) {
-					if (_currentScene->GetColorLUT() == eyeVomiterLut)
-						_currentScene->SetColorLUT(defaultLut);
-					else
-						_currentScene->SetColorLUT(eyeVomiterLut);
-				}
-				isAKeyPressed = true;
-			}
-			else if (glfwGetKey(_window, GLFW_KEY_9)) {
-				if (!isAKeyPressed) {
-					if (_currentScene->GetColorLUT() == coolLut)
-						_currentScene->SetColorLUT(defaultLut);
-					else
-						_currentScene->SetColorLUT(coolLut);
-				}
-				isAKeyPressed = true;
-			}
-			else if (glfwGetKey(_window, GLFW_KEY_8)) {
-				if (!isAKeyPressed) {
-					if (_currentScene->GetColorLUT() == warmLut)
-						_currentScene->SetColorLUT(defaultLut);
-					else
-						_currentScene->SetColorLUT(warmLut);
-				}
-				isAKeyPressed = true;
-			}
-			else if (glfwGetKey(_window, GLFW_KEY_1)) {
-				if (!isAKeyPressed) {
-					//shad->SetUniform("uniform", 1);
-					std::cout << "doAmbient set to 1" << std::endl;
-				}
-				isAKeyPressed = true;
-			}
-			else if (glfwGetKey(_window, GLFW_KEY_2)) {
-				if (!isAKeyPressed) {
-					std::cout << "doAmbient set to 2" << std::endl;
-				}
-				isAKeyPressed = true;
-			}
-			else if (glfwGetKey(_window, GLFW_KEY_3)) {
-				if (!isAKeyPressed) {
-					std::cout << "doAmbient set to 3" << std::endl;
-				}
-				isAKeyPressed = true;
-			}
-			else if (glfwGetKey(_window, GLFW_KEY_4)) {
-				if (!isAKeyPressed) {
-					std::cout << "doAmbient set to 4" << std::endl;
-				}
-				isAKeyPressed = true;
-			}
-			else if (glfwGetKey(_window, GLFW_KEY_5)) {
-				if (!isAKeyPressed) {
-					std::cout << "doAmbient set to 5" << std::endl;
-				}
-				isAKeyPressed = true;
-			}
-			else {
-				isAKeyPressed = false;
-			}
-		}*/	
 
 		if ((_currentScene->FindObjectByName("StartScreenPlane") && glfwGetKey(_window, GLFW_KEY_SPACE) == GLFW_PRESS) || isSwappingScenesCur) {
 			_currentScene->FindObjectByName("StartScreenPlane")->Get<RenderComponent>()->IsEnabled = false;
@@ -374,13 +297,14 @@ void Application::_Run()
 
 					glm::vec2 sens = _currentScene->FindObjectByName("Main Camera")->Get<SimpleCameraControl>()->_mouseSensitivity;
 
-					if (glfwGetKey(_window, GLFW_KEY_LEFT) == GLFW_PRESS)
+					if ((glfwGetKey(_window, GLFW_KEY_LEFT) == GLFW_PRESS) && (sens.x >= 0.026))
 						sens += glm::vec2(-0.025, -0.025);
 
-					if (glfwGetKey(_window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+					if ((glfwGetKey(_window, GLFW_KEY_RIGHT) == GLFW_PRESS))
 						sens += glm::vec2(0.025, 0.025);
 
 					_currentScene->FindObjectByName("Main Camera")->Get<SimpleCameraControl>()->_mouseSensitivity = sens;
+					globalSens = sens;
 
 					std::cout << "New Sensitivity: " << sens.x << " " << sens.y << std::endl;
 				}
