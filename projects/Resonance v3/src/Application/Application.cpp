@@ -212,9 +212,7 @@ void Application::_Run()
 
 	bool isBeingInteracted = false;
 
-	if (_currentScene->FindObjectByName("Main Camera"))
-		if(globalSens != glm::vec2(0.0f))
-			_currentScene->FindObjectByName("Main Camera")->Get<SimpleCameraControl>()->_mouseSensitivity = globalSens;
+	bool changeSensToGlobal = true;
 
 
 	// Infinite loop as long as the application is running
@@ -288,6 +286,16 @@ void Application::_Run()
 
 
 		//do sensitivity stuff
+		if (changeSensToGlobal) {
+			if (_currentScene->FindObjectByName("Main Camera")) {
+				if (globalSens != glm::vec2(0.0f, 0.0f)) {
+					_currentScene->FindObjectByName("Main Camera")->Get<SimpleCameraControl>()->_mouseSensitivity = globalSens;
+				}
+			}
+			changeSensToGlobal = false;
+		}
+
+
 		if (isGamePaused && showPauseScreen && _currentScene->FindObjectByName("Main Camera")) {
 
 			if ((glfwGetKey(_window, GLFW_KEY_LEFT) == GLFW_PRESS) || (glfwGetKey(_window, GLFW_KEY_RIGHT) == GLFW_PRESS)) {

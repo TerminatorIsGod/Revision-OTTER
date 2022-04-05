@@ -115,7 +115,7 @@ public:
 	std::string scenePath;
 	nlohmann::json _backupState;
 
-	glm::vec2 globalSens = glm::vec2(0.0f);
+	glm::vec2 globalSens = glm::vec2(0.0f, 0.0f);
 
 protected:
 	// The GL driver layer is a special friend that can access our protected members (mainly window info)
