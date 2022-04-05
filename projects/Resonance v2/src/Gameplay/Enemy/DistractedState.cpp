@@ -157,7 +157,6 @@ void DistractedState::Pathfind(Enemy* e, float deltaTime)
 
 	if (!e->pathRequested)
 	{
-
 		e->pathSet.clear();
 		//std::cout << "\nCalculated Path to: " << patrolPos.x << ", " << patrolPos.y << ", " << patrolPos.z;
 		e->pathSet = e->pathManager->Get<pathfindingManager>()->requestPath(enemyPos, e->lastHeardPositions[0]);

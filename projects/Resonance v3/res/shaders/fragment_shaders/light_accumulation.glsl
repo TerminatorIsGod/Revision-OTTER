@@ -59,7 +59,7 @@ vec3 lightViewPos = light.PositionIntensity.xyz;
 
         // Dot product between normal and light
         float NdotL = max(dot(normal, lightDir), 0.0);
-        diffuse += NdotL * attenuation * light.PositionIntensity.w * light.ColorAttenuation.rgb;
+        diffuse += round(NdotL) * attenuation * light.PositionIntensity.w * light.ColorAttenuation.rgb;
 
         vec3 reflectDir = reflect(lightDir, normal);
 
@@ -72,7 +72,7 @@ vec3 lightViewPos = light.PositionIntensity.xyz;
         {
             VdotR = pow(max(dot(normalize(-viewPos), reflectDir), 0.0), pow(2, -50));
         }
-        specular += round(VdotR) * light.ColorAttenuation.rgb * shininess * attenuation * light.PositionIntensity.w;
+        specular += round(VdotR) * light.ColorAttenuation.rgb * round(shininess) * attenuation * light.PositionIntensity.w;
 }
 
 void main() {

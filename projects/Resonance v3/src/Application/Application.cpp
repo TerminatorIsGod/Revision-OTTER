@@ -1,19 +1,19 @@
 #include "Application/Application.h"
 
 #include <Windows.h>
-#include <GLFW/glfw3.h>
-#include <glad/glad.h>
+#include <GLFW/glfw3.h> 
+#include <glad/glad.h> 
 
-#include "Logging.h" 
+#include "Logging.h"     
 #include "Gameplay/InputEngine.h"
-#include "Application/Timing.h"
+#include "Application/Timing.h" 
 #include <filesystem>
 #include "Layers/GLAppLayer.h"
 #include "Utils/FileHelpers.h"
 #include "Utils/ResourceManager/ResourceManager.h"
 #include "Utils/ImGuiHelper.h"
 
-// Graphics 
+// Graphics  
 #include "Graphics/Buffers/IndexBuffer.h"
 #include "Graphics/Buffers/VertexBuffer.h"
 #include "Graphics/VertexArrayObject.h"
@@ -237,7 +237,7 @@ void Application::_Run()
 		}
 
 		/*if (shadGuid.isValid()) {
-			
+
 			if (glfwGetKey(_window, GLFW_KEY_0)) {
 				if (!isAKeyPressed) {
 					if (_currentScene->GetColorLUT() == eyeVomiterLut)
@@ -299,7 +299,7 @@ void Application::_Run()
 			else {
 				isAKeyPressed = false;
 			}
-		}*/	
+		}*/
 
 		if ((_currentScene->FindObjectByName("StartScreenPlane") && glfwGetKey(_window, GLFW_KEY_SPACE) == GLFW_PRESS) || isSwappingScenesCur) {
 			_currentScene->FindObjectByName("StartScreenPlane")->Get<RenderComponent>()->IsEnabled = false;
@@ -322,7 +322,7 @@ void Application::_Run()
 			glm::vec3 v1 = cam->GetGameObject()->GetPosition();
 			glm::vec3 v2 = cam->GetComponent<SimpleCameraControl>()->WhatAreYouLookingAt();
 
-			float dist = sqrt( ( pow((v2.x-v1.x),2) + pow((v2.y - v1.y), 2)) + pow((v2.z - v1.z), 2) );
+			float dist = sqrt((pow((v2.x - v1.x), 2) + pow((v2.y - v1.y), 2)) + pow((v2.z - v1.z), 2));
 
 			if (v2 == glm::vec3(0.0f))
 				dist = 100.0f;
@@ -520,7 +520,7 @@ void Application::_Load() {
 		}
 	}
 
-	//glfwSwapInterval(1);//Locks framerate to monitors refresh rate
+	glfwSwapInterval(1);//Locks framerate to monitors refresh rate
 
 	// Pass the window to the input engine and let it initialize itself
 	InputEngine::Init(_window);

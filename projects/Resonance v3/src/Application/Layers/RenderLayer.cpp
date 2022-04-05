@@ -165,10 +165,12 @@ void RenderLayer::_AccumulateLighting()
 
 	// Update our lighting UBO for any shaders that need it
 	LightingUboStruct& data = _lightingUbo->GetData();
-	data.AmbientCol = scene->GetAmbientLight();
+	data.AmbientCol = glm::vec3(0.0f);
 	data.EnvironmentRotation = scene->GetSkyboxRotation() * glm::inverse(glm::mat3(scene->MainCamera->GetView()));
 
-	const glm::vec3& ambient = scene->GetAmbientLight();
+	//const glm::vec3& ambient = scene->GetAmbientLight();
+	const glm::vec3& ambient = glm::vec3(0.0f);
+
 	const glm::vec4 colors[2] = {
 		{ ambient, 1.0f },         // diffuse (multiplicative)
 		{ 0.0f, 0.0f, 0.0f, 1.0f } // specular (additive)
@@ -191,7 +193,7 @@ void RenderLayer::_AccumulateLighting()
 
 
 	// Send in how many active lights we have and the global lighting settings
-	data.AmbientCol = glm::vec3(0.1f);
+	data.AmbientCol = glm::vec3(0.0f);
 	int ix = 0;
 	app.CurrentScene()->Components().Each<Light>([&](const Light::Sptr& light) {
 		// Get the light's position in view space, since we're doing view space lighting

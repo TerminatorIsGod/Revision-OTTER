@@ -277,8 +277,8 @@ std::vector<glm::vec3> pathfindingManager::requestPath(glm::vec3 startPos, glm::
 		}
 	}
 	startNode = minNode;
-
 	minDistance = 999999;
+
 	//Find End Node
 	for (int i = 0; i < navNodes.size(); i++)
 	{
@@ -297,8 +297,9 @@ std::vector<glm::vec3> pathfindingManager::requestPath(glm::vec3 startPos, glm::
 	RunPathfind();
 	if (pathSet.size() > 0)
 		return pathSet;
-	else //Returns a weird position to signify no path could be found
+	else
 	{
+		//Returns a weird position to signify no path could be found
 		pathSet.push_back(glm::vec3(69420.0f, 69420.0f, 69420.0f));
 		return pathSet;
 	}
@@ -323,5 +324,4 @@ void pathfindingManager::CalculatePath()
 	CompareOpen();
 
 	cIndex++;
-
 }

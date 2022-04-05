@@ -36,7 +36,7 @@ void ImGuiDebugLayer::OnAppLoad(const nlohmann::json & config)
 	RegisterWindow<HierarchyWindow>();
 	RegisterWindow<InspectorWindow>();
 	RegisterWindow<MaterialsWindow>();
-	RegisterWindow<TextureWindow>(); //This breaks scene reloading for whatever reason. Keeping this commented out.
+	//RegisterWindow<TextureWindow>(); //This breaks scene reloading for whatever reason. Keeping this commented out.
 	RegisterWindow<DebugWindow>();
 	RegisterWindow<GBufferPreviews>();
 	RegisterWindow<PostProcessingSettingsWindow>();

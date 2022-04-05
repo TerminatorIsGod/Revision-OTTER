@@ -131,7 +131,6 @@ void PatrollingState::Pathfind(Enemy* e, float deltaTime)
 	if (!e->pathRequested)
 	{
 		e->pathSet.clear();
-		std::cout << "\n[Enemy] " << e->GetGameObject()->Name << " Calculated Path to Patrol Point " << e->pIndex << " (" << patrolPos.x << ", " << patrolPos.y << ", " << patrolPos.z << ")";
 		e->pathSet = e->pathManager->Get<pathfindingManager>()->requestPath(enemyPos, patrolPos);
 
 		//This if statement runs if a path could not be found

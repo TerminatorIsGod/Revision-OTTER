@@ -210,7 +210,7 @@ void SimpleCameraControl::Movement(float deltaTime)
 		else
 			isJPressed = false;
 
-		//input *= deltaTime;
+		input *= deltaTime;
 
 		glm::vec3 worldMovement = currentRot * glm::vec4(input, 1.0f);
 
