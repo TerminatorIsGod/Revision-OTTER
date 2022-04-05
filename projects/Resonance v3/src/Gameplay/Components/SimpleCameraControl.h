@@ -102,7 +102,7 @@ protected:
 	float sneakSpeed = 6.f; //
 	float walkSpeed = 8.f; //2
 	float runSpeed = 10.f; //3
-	float speedScale = 100.5f; //was 1.5 before //scaled with volume of light //50 //This was 80 before
+	float speedScale = 1.5f; //was 1.5 before //scaled with volume of light //50 //This was 80 before
 
 	float idleTimerDefault = 2.0f;
 	float idleTimer = idleTimerDefault;
