@@ -105,7 +105,7 @@ void ThrowableItem::Update(float deltaTime)
 			player->Get<SimpleCameraControl>()->allowInteraction = true;
 			player->Get<SimpleCameraControl>()->promptShown = false; //Makes sure the ui size is reset so the pickup prompt doesn't look stretched
 
-		}
+		} 
 	}
 	else
 	{

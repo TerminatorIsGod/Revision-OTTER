@@ -23,7 +23,7 @@ namespace Gameplay {
 
 		MAKE_TYPENAME(Camera);
 
-		float Aperture = 5.0f;
+		float Aperture = 0.0f;
 		float LensDepth = 4.0f;
 		float FocalDepth = 10.0f;
 

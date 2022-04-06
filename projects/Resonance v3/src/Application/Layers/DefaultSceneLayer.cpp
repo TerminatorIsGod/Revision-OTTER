@@ -22,7 +22,7 @@
 #include "Graphics/GuiBatcher.h"
 #include "Graphics/Framebuffer.h"
 
-// Utilities
+// Utilities 
 #include "Utils/MeshBuilder.h"
 #include "Utils/MeshFactory.h"
 #include "Utils/ObjLoader.h"
@@ -97,7 +97,7 @@ void DefaultSceneLayer::_CreateScene()
 	bool loadScene = true;
 	// For now we can use a toggle to generate our scene vs load from file
 	if (loadScene && std::filesystem::exists("level2.json")) {
-		app.LoadScene("levelMenu.json");
+		app.LoadScene("level2.json");
 
 	}
 	else {
