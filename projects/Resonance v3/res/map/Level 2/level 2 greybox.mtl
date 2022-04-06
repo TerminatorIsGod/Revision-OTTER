@@ -1,5 +1,5 @@
 # Blender MTL File: 'Resonance Levels.blend'
-# Material Count: 13
+# Material Count: 17
 
 newmtl Ceiling
 Ns 250.000000
@@ -10,7 +10,6 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd F:\\OTU\\Year 2\\GDW\\Revision-OTTER\\projects\\Resonance v3\\res\\textures\\light_projection.png
 
 newmtl Door
 Ns 250.000000
@@ -27,6 +26,21 @@ map_Ke F:\\OTU\\Year 2\\GDW\\Textures\\PBR Metallic Roughness\\Resonance Levels 
 map_Ns F:\\OTU\\Year 2\\GDW\\Textures\\PBR Metallic Roughness\\Resonance Levels Substance_low_Door_Roughness.png
 refl F:\\OTU\\Year 2\\GDW\\Textures\\PBR Metallic Roughness\\Resonance Levels Substance_low_Door_Metallic.png
 
+newmtl E_Light
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.003494 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump F:\\OTU\\Year 2\\GDW\\Textures\\PBR Metallic Roughness\\Resonance Levels Substance_low_E Light_Normal.png
+map_Kd F:\\OTU\\Year 2\\GDW\\Textures\\PBR Metallic Roughness\\Resonance Levels Substance_low_E Light_BaseColor.png
+map_Ke F:\\OTU\\Year 2\\GDW\\Textures\\PBR Metallic Roughness\\Resonance Levels Substance_low_E Light_Emissive.png
+map_Ns F:\\OTU\\Year 2\\GDW\\Textures\\PBR Metallic Roughness\\Resonance Levels Substance_low_E Light_Roughness.png
+refl F:\\OTU\\Year 2\\GDW\\Textures\\PBR Metallic Roughness\\Resonance Levels Substance_low_E Light_Metallic.png
+
 newmtl Floor
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
@@ -36,8 +50,16 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Bump -bm 2.000000 F:\\OTU\\Year 2\\GDW\\Revision-OTTER\\projects\\Resonance v2\\res\\textures\\normal_map.png
-map_Kd F:\\OTU\\Year 2\\GDW\\Revision-OTTER\\projects\\Resonance v2\\res\\textures\\box-diffuse.png
+
+newmtl Glass_Panels
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.077232 0.163607 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
 
 newmtl Glass_Walls_and_Doors
 Ns 250.000000
@@ -48,8 +70,16 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Bump -bm 2.600000 F:\\OTU\\Year 2\\GDW\\Revision-OTTER\\projects\\Resonance v2\\res\\textures\\normal_map.png
-map_Kd F:\\OTU\\Year 2\\GDW\\Revision-OTTER\\projects\\Resonance v2\\res\\textures\\box-diffuse.png
+
+newmtl Growth_Pods
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
 
 newmtl Lab_Counters
 Ns 250.000000
@@ -60,6 +90,33 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
+
+newmtl Leafling
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump F:\\OTU\\Year 2\\GDW\\Revision-OTTER\\projects\\Resonance v3\\res\\textures\\Leafling_Normal.png
+map_Kd F:\\OTU\\Year 2\\GDW\\Revision-OTTER\\projects\\Resonance v3\\res\\textures\\Leafling-texture.png
+
+newmtl Misc_Assets_1
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.175935 0.067717 0.220256
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump F:\\OTU\\Year 2\\GDW\\Textures\\PBR Metallic Roughness\\Resonance Levels Substance_low_Misc Assets 1_Normal.png
+map_Kd F:\\OTU\\Year 2\\GDW\\Textures\\PBR Metallic Roughness\\Resonance Levels Substance_low_Misc Assets 1_BaseColor.png
+map_Ke F:\\OTU\\Year 2\\GDW\\Textures\\PBR Metallic Roughness\\Resonance Levels Substance_low_Misc Assets 1_Emissive.png
+map_Ns F:\\OTU\\Year 2\\GDW\\Textures\\PBR Metallic Roughness\\Resonance Levels Substance_low_Misc Assets 1_Roughness.png
+refl F:\\OTU\\Year 2\\GDW\\Textures\\PBR Metallic Roughness\\Resonance Levels Substance_low_Misc Assets 1_Metallic.png
 
 newmtl Misc_Assets_2
 Ns 250.000000
@@ -83,6 +140,20 @@ Ks 0.8 0.8 0.8
 d 1
 illum 2
 
+newmtl Pipes_2
+Ns 53.496214
+Ka 0.880952 0.880952 0.880952
+Kd 0.472490 0.462857 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Bump F:\\OTU\\Year 2\\GDW\\Textures\\PBR Metallic Roughness\\Resonance Levels Substance_low_Pipes 2_Normal.png
+map_Kd F:\\OTU\\Year 2\\GDW\\Textures\\PBR Metallic Roughness\\Resonance Levels Substance_low_Pipes 2_BaseColor.png
+map_Ns F:\\OTU\\Year 2\\GDW\\Textures\\PBR Metallic Roughness\\Resonance Levels Substance_low_Pipes 2_Roughness.png
+refl F:\\OTU\\Year 2\\GDW\\Textures\\PBR Metallic Roughness\\Resonance Levels Substance_low_Pipes 2_Metallic.png
+
 newmtl Railings_And_Stairs
 Ns 195.520392
 Ka 1.000000 1.000000 1.000000
@@ -97,32 +168,6 @@ map_Kd F:\\OTU\\Year 2\\GDW\\Textures\\PBR Metallic Roughness\\Resonance Levels 
 map_Ns F:\\OTU\\Year 2\\GDW\\Textures\\PBR Metallic Roughness\\Resonance Levels Substance_low_Railings And Stairs_Roughness.png
 refl F:\\OTU\\Year 2\\GDW\\Textures\\PBR Metallic Roughness\\Resonance Levels Substance_low_Railings And Stairs_Metallic.png
 
-newmtl Shipping_Containers
-Ns 77.791675
-Ka 0.452381 0.452381 0.452381
-Kd 0.152325 0.011274 0.011358
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 3
-map_Bump F:\\OTU\\Year 2\\GDW\\Textures\\PBR Metallic Roughness\\Resonance Levels Substance_low_Shipping Containers_Normal.png
-map_Kd F:\\OTU\\Year 2\\GDW\\Textures\\PBR Metallic Roughness\\Resonance Levels Substance_low_Shipping Containers_BaseColor.png
-map_Ns F:\\OTU\\Year 2\\GDW\\Textures\\PBR Metallic Roughness\\Resonance Levels Substance_low_Shipping Containers_Roughness.png
-refl F:\\OTU\\Year 2\\GDW\\Textures\\PBR Metallic Roughness\\Resonance Levels Substance_low_Shipping Containers_Metallic.png
-
-newmtl Temp
-Ns 250.000000
-Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 2
-map_Bump -bm 2.000000 F:\\OTU\\Year 2\\GDW\\Revision-OTTER\\projects\\Resonance v2\\res\\textures\\normal_map.png
-map_Kd F:\\OTU\\Year 2\\GDW\\Revision-OTTER\\projects\\Resonance v2\\res\\textures\\box-diffuse.png
-
 newmtl Walls_Lab
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
@@ -132,8 +177,6 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Bump -bm 2.000000 F:\\OTU\\Year 2\\GDW\\Revision-OTTER\\projects\\Resonance v2\\res\\textures\\normal_map.png
-map_Kd F:\\OTU\\Year 2\\GDW\\Revision-OTTER\\projects\\Resonance v2\\res\\textures\\box-diffuse.png
 
 newmtl Walls_Ship
 Ns 250.000000
@@ -144,8 +187,6 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Bump -bm 2.000000 F:\\OTU\\Year 2\\GDW\\Revision-OTTER\\projects\\Resonance v2\\res\\textures\\normal_map.png
-map_Kd F:\\OTU\\Year 2\\GDW\\Revision-OTTER\\projects\\Resonance v2\\res\\textures\\sendhelp\\Engine_occlusionRoughnessMetallic.png
 
 newmtl computers
 Ns 250.000000
