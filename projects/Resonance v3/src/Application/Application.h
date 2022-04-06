@@ -28,7 +28,7 @@ public:
 	} EditorState;
 
 
-	static bool PassiveLoadFiles(std::string const& file);
+	static bool PassiveLoadFiles();
 
 
 	static Application& Get();

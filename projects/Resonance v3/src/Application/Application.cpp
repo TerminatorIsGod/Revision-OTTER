@@ -85,16 +85,38 @@
 
 Application* Application::_singleton = nullptr;
 std::string Application::_applicationName = "Resonance";
+static std::string asyncFileName = "";
+int currentAsyncItem = 0;
+static std::vector<std::string> asyncObjectFileNames;
 
 #define DEFAULT_WINDOW_WIDTH 1920 
 #define DEFAULT_WINDOW_HEIGHT 1080
 
-bool Application::PassiveLoadFiles(std::string const& file) {
+bool Application::PassiveLoadFiles() {
 
 	//ObjLoader loader;
-	std::cout << "starting async thread for file: " << file << "    on thread: " << std::this_thread::get_id() << std::endl;
+	std::cout << "starting async thread: " << std::this_thread::get_id() << std::endl;
 
-	if (std::filesystem::exists(file)) {
+	bool wasAbleToLoad = true;
+
+	if (asyncObjectFileNames.empty()) {
+		wasAbleToLoad = false;
+		LOG_ERROR("Unable to load async, vector was empty!");
+		return false;
+	}
+		
+
+	while (!asyncObjectFileNames.empty()) {
+
+		std::string str;
+		str = asyncObjectFileNames.front();
+		asyncObjectFileNames.erase(asyncObjectFileNames.begin());
+
+		std::cout << "Loading asset async, Object: " << str << "    Thread number: " << std::this_thread::get_id() << std::endl;
+		ObjLoader::LoadFromFile(str, true, true);
+	}
+
+	/*if (std::filesystem::exists(file)) {
 
 		std::ifstream in(file);
 		std::string str;
@@ -110,10 +132,12 @@ bool Application::PassiveLoadFiles(std::string const& file) {
 		}
 
 	}
-
+		
 	LOG_ERROR("Unable to load async, file doesn't exist! File: " + file);
+	
+	*/
 
-	return false;
+	return true;
 
 }
 
@@ -202,11 +226,31 @@ void Application::SaveSettings()
 void Application::_Run()
 {
 
-	std::future<bool> loadAsync1 = std::async(std::launch::async, PassiveLoadFiles, "async/task1.txt");
-	std::future<bool> loadAsync2 = std::async(std::launch::async, PassiveLoadFiles, "async/task2.txt");
-	std::future<bool> loadAsync3 = std::async(std::launch::async, PassiveLoadFiles, "async/task3.txt");
-	std::future<bool> loadAsync4 = std::async(std::launch::async, PassiveLoadFiles, "async/task4.txt");
-	std::future<bool> loadAsync5 = std::async(std::launch::async, PassiveLoadFiles, "async/task5.txt");
+	asyncFileName = "async/allAssetsList.txt";
+
+
+	if (std::filesystem::exists(asyncFileName)) {
+
+		std::ifstream in(asyncFileName);
+		std::string str;
+
+		if (in) {
+			while (std::getline(in, str)) {
+				asyncObjectFileNames.push_back(str);
+			}
+		}
+
+	}
+	else {
+		LOG_ERROR("Unable to load async, file doesn't exist! File: " + asyncFileName);
+	}
+
+
+	std::future<bool> loadAsync1 = std::async(std::launch::async, PassiveLoadFiles);
+	std::future<bool> loadAsync2 = std::async(std::launch::async, PassiveLoadFiles);
+	std::future<bool> loadAsync3 = std::async(std::launch::async, PassiveLoadFiles);
+	std::future<bool> loadAsync4 = std::async(std::launch::async, PassiveLoadFiles);
+	std::future<bool> loadAsync5 = std::async(std::launch::async, PassiveLoadFiles);
 	
 	// TODO: Register layers
 	_layers.push_back(std::make_shared<GLAppLayer>());
