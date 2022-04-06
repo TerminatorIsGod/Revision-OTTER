@@ -204,7 +204,7 @@ VertexArrayObject::Sptr ObjLoader::LoadFromFile(const std::string& filename, boo
 		}
 	}
 	else {
-		LOG_TRACE("Mesh already built, loading from map" + filename);
+		LOG_TRACE("Mesh already built, loading from " + filename);
 		mesh = meshMap<VertexType>[filename];
 	}
 

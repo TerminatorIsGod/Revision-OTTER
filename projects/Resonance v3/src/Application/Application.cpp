@@ -87,7 +87,8 @@ Application* Application::_singleton = nullptr;
 std::string Application::_applicationName = "Resonance";
 static std::string asyncFileName = "";
 int currentAsyncItem = 0;
-static std::vector<std::string> asyncObjectFileNames;
+//static std::vector<std::string> asyncObjectFileNames;
+static std::list<std::string> asyncObjectFileNames;
 
 #define DEFAULT_WINDOW_WIDTH 1920 
 #define DEFAULT_WINDOW_HEIGHT 1080
@@ -110,32 +111,11 @@ bool Application::PassiveLoadFiles() {
 
 		std::string str;
 		str = asyncObjectFileNames.front();
-		asyncObjectFileNames.erase(asyncObjectFileNames.begin());
+		asyncObjectFileNames.remove(str);
 
 		std::cout << "Loading asset async, Object: " << str << "    Thread number: " << std::this_thread::get_id() << std::endl;
 		ObjLoader::LoadFromFile(str, true, true);
 	}
-
-	/*if (std::filesystem::exists(file)) {
-
-		std::ifstream in(file);
-		std::string str;
-
-		if (in) {
-			while (std::getline(in, str)) {
-				std::cout << "Loading asset async: " << file << " Object: " << str << "    Thread number: " << std::this_thread::get_id() << std::endl;
-				ObjLoader::LoadFromFile(str, true, true);
-				//ResourceManager::CreateAsset<MeshResource>(str);
-			}
-
-			return true;
-		}
-
-	}
-		
-	LOG_ERROR("Unable to load async, file doesn't exist! File: " + file);
-	
-	*/
 
 	return true;
 
@@ -239,19 +219,17 @@ void Application::_Run()
 				asyncObjectFileNames.push_back(str);
 			}
 		}
-
 	}
 	else {
 		LOG_ERROR("Unable to load async, file doesn't exist! File: " + asyncFileName);
 	}
-
 
 	std::future<bool> loadAsync1 = std::async(std::launch::async, PassiveLoadFiles);
 	std::future<bool> loadAsync2 = std::async(std::launch::async, PassiveLoadFiles);
 	std::future<bool> loadAsync3 = std::async(std::launch::async, PassiveLoadFiles);
 	std::future<bool> loadAsync4 = std::async(std::launch::async, PassiveLoadFiles);
 	std::future<bool> loadAsync5 = std::async(std::launch::async, PassiveLoadFiles);
-	
+
 	// TODO: Register layers
 	_layers.push_back(std::make_shared<GLAppLayer>());
 	_layers.push_back(std::make_shared<LogicUpdateLayer>());
@@ -284,14 +262,6 @@ void Application::_Run()
 	// Load all layers
 	_Load();
 
-
-
-	//do multithreaded loading
-	//std::future<bool> loadAsync1 = std::async(std::launch::async, PassiveLoadFiles, "async/task1.txt");
-
-	//std::future<bool> loadAsync2 = std::async(std::launch::async, PassiveLoadFiles, "async/task2.txt");
-
-
 	// Grab current time as the previous frame
 	double lastFrame = glfwGetTime();
 
@@ -314,7 +284,8 @@ void Application::_Run()
 		}
 
 		if ((_currentScene->FindObjectByName("StartScreenPlane") && glfwGetKey(_window, GLFW_KEY_SPACE) == GLFW_PRESS) || isSwappingScenesCur) {
-			_currentScene->FindObjectByName("StartScreenPlane")->Get<RenderComponent>()->IsEnabled = false;
+			if(_currentScene->FindObjectByName("StartScreenPlane"))
+				_currentScene->FindObjectByName("StartScreenPlane")->Get<RenderComponent>()->IsEnabled = false;
 			_currentScene->FindObjectByName("LoadingScreenPlane")->Get<RenderComponent>()->IsEnabled = true;
 			if (isSwappingScenesCur) { //makes sure loading screen is showing before actually loading
 				isSwappingScenesCur = false;
