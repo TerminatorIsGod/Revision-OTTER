@@ -79,12 +79,43 @@
 #include "Layers/InstancedRenderingTestLayer.h"
 #include "Layers/ParticleLayer.h"
 #include "Layers/PostProcessingLayer.h"  
+#include <future>
+#include <fstream>
+#include "Utils/ObjLoader.h"
 
 Application* Application::_singleton = nullptr;
 std::string Application::_applicationName = "Resonance";
 
 #define DEFAULT_WINDOW_WIDTH 1920 
 #define DEFAULT_WINDOW_HEIGHT 1080
+
+bool Application::PassiveLoadFiles(std::string const& file) {
+
+	//ObjLoader loader;
+	std::cout << "starting async thread for file: " << file << "    on thread: " << std::this_thread::get_id() << std::endl;
+
+	if (std::filesystem::exists(file)) {
+
+		std::ifstream in(file);
+		std::string str;
+
+		if (in) {
+			while (std::getline(in, str)) {
+				std::cout << "Loading asset async: " << file << " Object: " << str << "    Thread number: " << std::this_thread::get_id() << std::endl;
+				ObjLoader::LoadFromFile(str, true, true);
+				//ResourceManager::CreateAsset<MeshResource>(str);
+			}
+
+			return true;
+		}
+
+	}
+
+	LOG_ERROR("Unable to load async, file doesn't exist! File: " + file);
+
+	return false;
+
+}
 
 Application::Application() :
 	_window(nullptr),
@@ -170,6 +201,13 @@ void Application::SaveSettings()
 
 void Application::_Run()
 {
+
+	std::future<bool> loadAsync1 = std::async(std::launch::async, PassiveLoadFiles, "async/task1.txt");
+	std::future<bool> loadAsync2 = std::async(std::launch::async, PassiveLoadFiles, "async/task2.txt");
+	std::future<bool> loadAsync3 = std::async(std::launch::async, PassiveLoadFiles, "async/task3.txt");
+	std::future<bool> loadAsync4 = std::async(std::launch::async, PassiveLoadFiles, "async/task4.txt");
+	std::future<bool> loadAsync5 = std::async(std::launch::async, PassiveLoadFiles, "async/task5.txt");
+	
 	// TODO: Register layers
 	_layers.push_back(std::make_shared<GLAppLayer>());
 	_layers.push_back(std::make_shared<LogicUpdateLayer>());
@@ -202,6 +240,14 @@ void Application::_Run()
 	// Load all layers
 	_Load();
 
+
+
+	//do multithreaded loading
+	//std::future<bool> loadAsync1 = std::async(std::launch::async, PassiveLoadFiles, "async/task1.txt");
+
+	//std::future<bool> loadAsync2 = std::async(std::launch::async, PassiveLoadFiles, "async/task2.txt");
+
+
 	// Grab current time as the previous frame
 	double lastFrame = glfwGetTime();
 
@@ -219,6 +265,7 @@ void Application::_Run()
 	while (_isRunning) {
 		// Handle scene switching
 		if (_targetScene != nullptr) {
+			changeSensToGlobal = true;
 			_HandleSceneChange();
 		}
 
@@ -238,7 +285,7 @@ void Application::_Run()
 			}
 		}
 
-		if (_currentScene->MainCamera) {
+		/*if (_currentScene->FindObjectByName("Main Camera")) {
 			const auto& cam = _currentScene->MainCamera;
 			glm::vec3 v1 = cam->GetGameObject()->GetPosition();
 			glm::vec3 v2 = cam->GetComponent<SimpleCameraControl>()->WhatAreYouLookingAt();
@@ -249,7 +296,7 @@ void Application::_Run()
 				dist = 100.0f;
 
 			cam->FocalDepth = dist;
-		}
+		}*/
 
 		//if (glfwGetKey(_window, GLFW_KEY_0) == GLFW_PRESS) {
 		//	LoadScene("levelMenu.json");
@@ -292,6 +339,7 @@ void Application::_Run()
 					_currentScene->FindObjectByName("Main Camera")->Get<SimpleCameraControl>()->_mouseSensitivity = globalSens;
 				}
 			}
+
 			changeSensToGlobal = false;
 		}
 

@@ -27,6 +27,10 @@ public:
 		Gameplay::GameObject::Wptr SelectedObject;
 	} EditorState;
 
+
+	static bool PassiveLoadFiles(std::string const& file);
+
+
 	static Application& Get();
 	/**
 	 * Called by the entry point to begin the application, creating the singleton

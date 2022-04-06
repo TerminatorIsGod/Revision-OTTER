@@ -1,5 +1,6 @@
 #include "IBuffer.h"
 #include "Logging.h"
+#include <GLFW/glfw3.h>
 
 IBuffer::IBuffer(BufferType type, BufferUsage usage) :
 	IGraphicsResource(),
