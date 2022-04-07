@@ -92,6 +92,7 @@ void pathfindingManager::resetGrid()
 
 void pathfindingManager::UpdateNbors()
 {
+	std::cout << "\n\nGRAPH SIZE: " << navNodes.size();
 	for (int i = 0; i < navNodes.size(); i++)
 	{
 		navNodes[i]->Get<NavNode>()->neighbors.clear();

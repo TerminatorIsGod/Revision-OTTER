@@ -63,7 +63,7 @@ AudioManager::~AudioManager()
 
 void AudioManager::Update(float deltaTime) {
 
-	GameObject* player = GetGameObject()->GetScene()->MainCamera->GetGameObject();
+	GameObject::Sptr player = GetGameObject()->GetScene()->MainCamera->GetGameObject()->GetParent();
 	if (player->Has<SimpleCameraControl>())
 	{
 		glm::quat dir = player->Get<SimpleCameraControl>()->currentRot;

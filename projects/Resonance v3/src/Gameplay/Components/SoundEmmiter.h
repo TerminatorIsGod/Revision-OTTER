@@ -28,7 +28,7 @@ public:
 	float lerpSpeed;
 	glm::vec3 soundLightOffset = glm::vec3(0, 0, 0);
 	Scene* scene;
-	GameObject* player;
+	GameObject::Sptr player;
 	GLFWwindow* _window;
 
 	bool isDecaying = true;

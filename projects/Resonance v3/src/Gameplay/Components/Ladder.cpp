@@ -16,7 +16,7 @@ void Ladder::Awake()
 
 void Ladder::Update(float deltaTime)
 {
-	SimpleCameraControl::Sptr player = _scene->MainCamera->GetGameObject()->Get<SimpleCameraControl>();
+	SimpleCameraControl::Sptr player = _scene->MainCamera->GetGameObject()->GetParent()->Get<SimpleCameraControl>();
 	if (player->interactionObjectPos != GetGameObject()->GetPosition())
 		return;
 
