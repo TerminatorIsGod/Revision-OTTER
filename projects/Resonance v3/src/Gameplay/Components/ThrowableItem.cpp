@@ -44,7 +44,7 @@ void ThrowableItem::Update(float deltaTime)
 		else
 			isEPressed = false;
 	}
-	else if (!thrown)
+	else if (!thrown && isHeld)
 	{
 		if (glfwGetKey(_window, GLFW_KEY_E))
 		{
