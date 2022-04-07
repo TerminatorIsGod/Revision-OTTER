@@ -77,7 +77,7 @@ void SimpleCameraControl::Awake() {
 			playerEmmiters.push_back(emmiter);
 		}
 	}
-	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 }
 
 void SimpleCameraControl::Update(float deltaTime)
@@ -236,8 +236,7 @@ void SimpleCameraControl::Movement(float deltaTime)
 
 
 		glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-	}
-	else {
+	} else {
 		glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 
