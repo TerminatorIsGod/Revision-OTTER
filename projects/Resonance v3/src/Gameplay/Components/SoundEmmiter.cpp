@@ -12,7 +12,7 @@ void SoundEmmiter::Awake()
 	lerpSpeed = attackSpeed;
 
 	scene = GetGameObject()->GetScene();
-	player = scene->MainCamera->GetGameObject();
+	player = scene->MainCamera->GetGameObject()->GetParent();
 	Application& app = Application::Get();
 	_window = app.GetWindow();
 
@@ -124,8 +124,8 @@ void SoundEmmiter::Attack(float deltaTime)
 
 void SoundEmmiter::MoveToPlayer()
 {
-	GetGameObject()->SetPostion(scene->MainCamera->GetGameObject()->GetPosition() + soundLightOffset);
-	soundLight->GetGameObject()->SetPostion(scene->MainCamera->GetGameObject()->GetPosition() + soundLightOffset);
+	GetGameObject()->SetPostion(player->GetPosition() + soundLightOffset);
+	soundLight->GetGameObject()->SetPostion(player->GetPosition() + soundLightOffset);
 }
 
 void SoundEmmiter::MoveToPos(glm::vec3 pos)

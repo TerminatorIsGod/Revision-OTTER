@@ -13,7 +13,7 @@
 
 void NoteSystem::Awake()
 {
-	_player = GetGameObject()->GetScene()->FindObjectByName("Main Camera");
+	_player = GetGameObject()->GetScene()->MainCamera->GetGameObject()->GetParent();
 	_lerpS = GetGameObject()->Get<LerpSystem>();
 	Application& app = Application::Get();
 	_window = app.GetWindow();
@@ -101,7 +101,7 @@ void NoteSystem::interact() {
 		//if (GetGameObject()->GetScene()->FindObjectByName("Main Camera"))
 			//GetGameObject()->GetScene()->FindObjectByName("Main Camera")->Get<SimpleCameraControl>()->IsEnabled = true;
 		//app.isGamePaused = false;
-	} 
+	}
 	else
 	{
 		isOpen = true;

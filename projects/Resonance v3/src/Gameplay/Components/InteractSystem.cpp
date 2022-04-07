@@ -11,7 +11,7 @@
 
 void InteractSystem::Awake()
 {
-	_player = GetGameObject()->GetScene()->FindObjectByName("Main Camera");
+	_player = GetGameObject()->GetScene()->MainCamera->GetGameObject()->GetParent();
 	_lerpS = GetGameObject()->Get<LerpSystem>();
 	Application& app = Application::Get();
 	_window = app.GetWindow();

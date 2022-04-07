@@ -87,7 +87,7 @@ void SimpleCameraControl::Update(float deltaTime)
 		ShowBlack();
 		_scene->audioManager->Get<AudioManager>()->PlaySoundByName("Gasp", 0.5f);
 		_scene->MainCamera->Aperture = 3.0f;
-
+		GetGameObject()->SetRotation(glm::vec3(0.0f));
 		updateStarted = true;
 	}
 	else
@@ -159,8 +159,7 @@ void SimpleCameraControl::Movement(float deltaTime)
 		currentRot = rotX * rotY;
 
 
-
-		GetGameObject()->SetRotation(currentRot);
+		GetGameObject()->GetChildren()[0]->SetRotation(currentRot);
 
 		_prevMousePos = currentMousePos;
 

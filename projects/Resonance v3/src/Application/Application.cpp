@@ -284,7 +284,7 @@ void Application::_Run()
 		}
 
 		if ((_currentScene->FindObjectByName("StartScreenPlane") && glfwGetKey(_window, GLFW_KEY_SPACE) == GLFW_PRESS) || isSwappingScenesCur) {
-			if(_currentScene->FindObjectByName("StartScreenPlane"))
+			if (_currentScene->FindObjectByName("StartScreenPlane"))
 				_currentScene->FindObjectByName("StartScreenPlane")->Get<RenderComponent>()->IsEnabled = false;
 			_currentScene->FindObjectByName("LoadingScreenPlane")->Get<RenderComponent>()->IsEnabled = true;
 			if (isSwappingScenesCur) { //makes sure loading screen is showing before actually loading
