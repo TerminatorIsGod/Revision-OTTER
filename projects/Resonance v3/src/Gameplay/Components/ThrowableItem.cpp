@@ -97,8 +97,8 @@ void ThrowableItem::Update(float deltaTime)
 		glm::vec3 localOffset2 = glm::vec3(newOffset2 * player->GetChildren()[0]->GetInverseTransform());
 
 		//Raycast to make sure player isn't sticking a throwable thru a wall
-		btCollisionWorld::ClosestRayResultCallback hit(ToBt(player->GetChildren()[0]->GetPosition()), ToBt(player->GetChildren()[0]->GetPosition() + player->Get<SimpleCameraControl>()->viewDir * 2.0f));
-		scene->GetPhysicsWorld()->rayTest(ToBt(player->GetChildren()[0]->GetPosition()), ToBt(player->GetChildren()[0]->GetPosition() + player->Get<SimpleCameraControl>()->viewDir * 2.0f), hit);
+		btCollisionWorld::ClosestRayResultCallback hit(ToBt(player->GetPosition()), ToBt(player->GetPosition() + player->Get<SimpleCameraControl>()->viewDir * 2.0f));
+		scene->GetPhysicsWorld()->rayTest(ToBt(player->GetPosition()), ToBt(player->GetPosition() + player->Get<SimpleCameraControl>()->viewDir * 2.0f), hit);
 
 		glm::vec3 newPos;
 

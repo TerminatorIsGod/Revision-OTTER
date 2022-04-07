@@ -9,14 +9,14 @@
 #include <Gameplay/Components/AnimationSystemManager.h>
 
 void AnimationSystem::Awake()
-{ 
+{
 
 	//for (int i = 0; i < frames; i++) {
 	//	std::string tempName = filePrefix + std::to_string(i) + ".obj";
 	//	meshes.push_back(ResourceManager::CreateAsset<MeshResource>(tempName));
 	//}
 
-} 
+}
 
 void AnimationSystem::RenderImGui() {
 
@@ -27,7 +27,7 @@ void AnimationSystem::RenderImGui() {
 	if (LABEL_LEFT(ImGui::Button, "List Meshes")) {
 		listMeshes = true;
 	}
-} 
+}
 
 nlohmann::json AnimationSystem::ToJson() const {
 	return {
@@ -66,10 +66,10 @@ void AnimationSystem::Update(float deltaTime) {
 				meshes = GetGameObject()->GetScene()->FindObjectByName(objectLoadName)->Get<AnimationSystemManager>()->meshes;
 				frames = meshes.size();
 				isMeshesLoaded = true;
-				
+
 			}
 		}
-				
+
 	}
 	else {
 
