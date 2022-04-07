@@ -5,6 +5,7 @@
 #include "Gameplay/Components/AudioManager.h"
 #include "Gameplay/Components/SimpleCameraControl.h"
 #include "Application/Application.h"
+#include "Utils\GlmBulletConversions.h"
 
 
 void ThrowableItem::Awake()
@@ -33,7 +34,7 @@ void ThrowableItem::Update(float deltaTime)
 			{
 				isHeld = true;
 				scene->audioManager->Get<AudioManager>()->PlaySoundByName("GlassPickup", 1.0f);
-				GetComponent<Gameplay::Physics::RigidBody>()->SetType(RigidBodyType::Kinematic);
+				GetComponent<Gameplay::Physics::RigidBody>()->SetType(RigidBodyType::Unknown);
 				GetComponent<Gameplay::Physics::RigidBody>()->SetLinearVelocity(glm::vec3(0.0f));
 				thrown = false;
 				player->Get<SimpleCameraControl>()->allowInteraction = false;
@@ -70,7 +71,8 @@ void ThrowableItem::Update(float deltaTime)
 			GetGameObject()->Get<SoundEmmiter>()->targetVolume = GetGameObject()->Get<SoundEmmiter>()->distractionVolume;
 			GetGameObject()->Get<SoundEmmiter>()->isDecaying = false;
 			GetGameObject()->Get<SoundEmmiter>()->lerpSpeed = 4.0f;
-			thrown = false;
+
+			//thrown = false;
 
 			if (destroyOnImpact)
 			{
@@ -78,6 +80,10 @@ void ThrowableItem::Update(float deltaTime)
 			}
 		}
 		prevVel = glm::length(GetComponent<Gameplay::Physics::RigidBody>()->GetLinearVelocity());
+	}
+	else
+	{
+		GetGameObject()->Get<SoundEmmiter>()->MoveToPos(GetGameObject()->GetPosition());
 	}
 
 	if (isHeld)
@@ -90,7 +96,19 @@ void ThrowableItem::Update(float deltaTime)
 		glm::vec4 newOffset2 = glm::vec4(offset2, 1.0);
 		glm::vec3 localOffset2 = glm::vec3(newOffset2 * player->GetInverseTransform());
 
-		GetGameObject()->SetPostion(player->GetPosition() + localOffset * 2.0f);
+		//Raycast to make sure player isn't sticking a throwable thru a wall
+		btCollisionWorld::ClosestRayResultCallback hit(ToBt(player->GetPosition()), ToBt(player->GetPosition() + player->Get<SimpleCameraControl>()->viewDir * 2.0f));
+		scene->GetPhysicsWorld()->rayTest(ToBt(player->GetPosition()), ToBt(player->GetPosition() + player->Get<SimpleCameraControl>()->viewDir * 2.0f), hit);
+
+		glm::vec3 newPos;
+
+		if (!hit.hasHit() || glm::round(GetGameObject()->GetPosition()) == glm::round(ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin())))
+			newPos = player->GetPosition() + localOffset * 2.0f;
+
+		if (hit.hasHit() && glm::round(GetGameObject()->GetPosition()) != glm::round(ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin())))
+			newPos = player->GetPosition() + localOffset * (glm::length(ToGlm(hit.m_hitPointWorld) - player->GetPosition()));
+
+		GetGameObject()->SetPostion(glm::mix(GetGameObject()->GetPosition(), newPos, deltaTime * 50.0f));
 		GetGameObject()->LookAt(player->GetPosition() + localOffset2);
 
 		//Throw
@@ -102,10 +120,11 @@ void ThrowableItem::Update(float deltaTime)
 			GetComponent<Gameplay::Physics::RigidBody>()->SetLinearVelocity(glm::vec3(0.0f));
 			//GetComponent<Gameplay::Physics::RigidBody>()->IsEnabled = true;
 			GetComponent<Gameplay::Physics::RigidBody>()->SetLinearVelocity((player->Get<Gameplay::Physics::RigidBody>()->GetLinearVelocity() / 2.0f) + (player->Get<SimpleCameraControl>()->viewDir * 18.0f));
+			prevVel = glm::length(GetComponent<Gameplay::Physics::RigidBody>()->GetLinearVelocity()); //Resetting PrevVel for if it has been caught in mid air
 			player->Get<SimpleCameraControl>()->allowInteraction = true;
 			player->Get<SimpleCameraControl>()->promptShown = false; //Makes sure the ui size is reset so the pickup prompt doesn't look stretched
 
-		} 
+		}
 	}
 	else
 	{

@@ -105,7 +105,7 @@ bool Application::PassiveLoadFiles() {
 		LOG_ERROR("Unable to load async, vector was empty!");
 		return false;
 	}
-		
+
 
 	while (!asyncObjectFileNames.empty()) {
 
