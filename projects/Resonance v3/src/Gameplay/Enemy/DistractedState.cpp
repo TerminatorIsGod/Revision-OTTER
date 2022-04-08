@@ -100,6 +100,9 @@ void DistractedState::Listen(Enemy* e, float deltaTime)
 			btCollisionWorld::ClosestRayResultCallback hit2(ToBt(e->GetGameObject()->GetPosition() + glm::vec3(0.0f, 0.0f, 2.0f)), ToBt(e->player->GetPosition()));
 			e->scene->GetPhysicsWorld()->rayTest(ToBt(e->GetGameObject()->GetPosition() + glm::vec3(0.0f, 0.0f, 2.0f)), ToBt(e->player->GetPosition()), hit2);
 
+			if (!hit2.hasHit())
+				return;
+
 			glm::vec3 objectPos = ToGlm(hit2.m_collisionObject->getWorldTransform().getOrigin());
 			if (glm::round(objectPos) == glm::round(e->player->GetPosition()))
 			{
