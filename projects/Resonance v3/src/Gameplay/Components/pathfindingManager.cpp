@@ -102,13 +102,13 @@ void pathfindingManager::UpdateNbors()
 			if (navNodes[x] == navNodes[i])
 				continue;
 
-			glm::vec3 dir = navNodes[x]->GetPosition() - navNodes[i]->GetPosition();
+			glm::vec3 dir = navNodes[x]->GetWorldPosition() - navNodes[i]->GetWorldPosition();
 			float dirLength = glm::sqrt((dir.x * dir.x) + (dir.y * dir.y));
 
 			if (dirLength <= nborRange && dirLength > 0)
 			{
-				btCollisionWorld::ClosestRayResultCallback hit(ToBt(navNodes[i]->GetPosition()), ToBt(navNodes[x]->GetPosition()));
-				scene->GetPhysicsWorld()->rayTest(ToBt(navNodes[i]->GetPosition()), ToBt(navNodes[x]->GetPosition()), hit);
+				btCollisionWorld::ClosestRayResultCallback hit(ToBt(navNodes[i]->GetWorldPosition()), ToBt(navNodes[x]->GetWorldPosition()));
+				scene->GetPhysicsWorld()->rayTest(ToBt(navNodes[i]->GetWorldPosition()), ToBt(navNodes[x]->GetWorldPosition()), hit);
 
 				if (!hit.hasHit())
 					navNodes[i]->Get<NavNode>()->neighbors.push_back(navNodes[x]);
@@ -131,13 +131,13 @@ bool pathfindingManager::StartAndEndCheck()
 
 float pathfindingManager::g(GameObject* n, GameObject* p)
 {
-	glm::vec3 dir = n->GetPosition() - p->GetPosition();
+	glm::vec3 dir = n->GetWorldPosition() - p->GetWorldPosition();
 	return SquareMagnitude(dir) + p->Get<NavNode>()->gCost;
 }
 
 void pathfindingManager::h(GameObject* n1)
 {
-	glm::vec3 dir = n1->GetPosition() - endNode->GetPosition();
+	glm::vec3 dir = n1->GetWorldPosition() - endNode->GetWorldPosition();
 	n1->Get<NavNode>()->hCost = SquareMagnitude(dir);
 }
 
@@ -240,7 +240,7 @@ void pathfindingManager::OpenNbors(int nbor)
 
 void pathfindingManager::SequencePath()
 {
-	pathSet.push_back(endNode->GetPosition());
+	pathSet.push_back(endNode->GetWorldPosition());
 
 	GameObject* current = endNode;
 	current = current->Get<NavNode>()->parent;
@@ -254,7 +254,7 @@ void pathfindingManager::SequencePath()
 		}
 		else
 		{
-			pathSet.push_back(current->GetPosition());
+			pathSet.push_back(current->GetWorldPosition());
 			current = current->Get<NavNode>()->parent;;
 		}
 	}
@@ -270,7 +270,7 @@ std::vector<glm::vec3> pathfindingManager::requestPath(glm::vec3 startPos, glm::
 	//Find Start Node
 	for (int i = 0; i < navNodes.size(); i++)
 	{
-		distance = glm::sqrt(SquareMagnitude(navNodes[i]->GetPosition() - startPos));
+		distance = glm::sqrt(SquareMagnitude(navNodes[i]->GetWorldPosition() - startPos));
 		if (distance < minDistance)
 		{
 			minDistance = distance;
@@ -283,7 +283,7 @@ std::vector<glm::vec3> pathfindingManager::requestPath(glm::vec3 startPos, glm::
 	//Find End Node
 	for (int i = 0; i < navNodes.size(); i++)
 	{
-		distance = glm::sqrt(SquareMagnitude(navNodes[i]->GetPosition() - targetPos));
+		distance = glm::sqrt(SquareMagnitude(navNodes[i]->GetWorldPosition() - targetPos));
 		if (navNodes[i] == startNode)
 			continue;
 
@@ -309,6 +309,7 @@ void pathfindingManager::CalculatePath()
 {
 	for (int nbor = 0; nbor < closedSet[cIndex]->Get<NavNode>()->neighbors.size(); nbor++)
 	{
+		//std::cout << "\n\n# NEIGHBORS OF NODE " << closedSet[cIndex]->Name << ": " << nbor;
 		CheckIfEnd(nbor);
 		OpenNbors(nbor);
 		CalculateFCosts(nbor);

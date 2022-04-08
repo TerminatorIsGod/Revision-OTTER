@@ -4,7 +4,6 @@
 #include "Utils/JsonGlmHelpers.h"
 
 void NavNode::Awake() {
-
 	GetGameObject()->GetScene()->navNodes.push_back(GetGameObject());
 }
 
