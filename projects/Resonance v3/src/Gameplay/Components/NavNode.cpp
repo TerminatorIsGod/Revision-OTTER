@@ -24,6 +24,12 @@ void NavNode::ClearCosts() {
 
 void NavNode::RenderImGui() {
 	LABEL_LEFT(ImGui::DragFloat3, "Speed", &speed.x);
+
+	for (int i = 0; i < neighbors.size(); i++)
+	{
+		ImGui::Text(neighbors[i]->Name.c_str());
+	}
+
 }
 
 nlohmann::json NavNode::ToJson() const {

@@ -99,18 +99,19 @@ void AggravatedState::Pathfind(Enemy* e, float deltaTime)
 	glm::vec3 enemyPos = e->GetGameObject()->GetPosition();
 	glm::vec3 soundPos = e->player->GetPosition();
 
-	btCollisionWorld::ClosestRayResultCallback hit(ToBt(enemyPos), ToBt(soundPos));
-	e->scene->GetPhysicsWorld()->rayTest(ToBt(enemyPos), ToBt(soundPos), hit);
+	//btCollisionWorld::ClosestRayResultCallback hit(ToBt(enemyPos), ToBt(soundPos));
+	//e->scene->GetPhysicsWorld()->rayTest(ToBt(enemyPos), ToBt(soundPos), hit);
 
-	if (!hit.hasHit())
-		return;
+	//if (!hit.hasHit())
+	//	return;
 
-	glm::vec3 objectPos = ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
-	if (glm::round(objectPos) == glm::round(e->player->GetPosition()))
-	{
-		e->target = soundPos;
-		return;
-	}
+	//glm::vec3 objectPos = ToGlm(hit.m_collisionObject->getWorldTransform().getOrigin());
+	//if (glm::round(objectPos) == glm::round(e->player->GetPosition()))
+	//{
+
+	//	e->target = soundPos;
+	//	return;
+	//}
 
 	if (!e->pathRequested)
 	{

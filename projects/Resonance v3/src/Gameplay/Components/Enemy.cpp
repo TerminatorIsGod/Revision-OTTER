@@ -299,8 +299,8 @@ void Enemy::AvoidanceReflect(glm::vec3 dir, float deltaTime)
 	dir = glm::normalize(dir);
 
 	//Perform Raycast
-	const glm::vec3 startPoint = GetGameObject()->GetPosition();
-	const glm::vec3 endPoint = GetGameObject()->GetPosition() + (dir * avoidanceRange);
+	const glm::vec3 startPoint = GetGameObject()->GetPosition() + glm::vec3(0.0f, 0.0f, 2.0f);
+	const glm::vec3 endPoint = startPoint + (dir * avoidanceRange);
 	btCollisionWorld::ClosestRayResultCallback hit(ToBt(startPoint), ToBt(endPoint));
 	scene->GetPhysicsWorld()->rayTest(ToBt(startPoint), ToBt(endPoint), hit);
 
@@ -333,8 +333,8 @@ void Enemy::Avoidance(glm::vec3 dir, float deltaTime)
 	dir = glm::normalize(dir);
 
 	//Perform Raycast
-	const glm::vec3 startPoint = GetGameObject()->GetPosition();
-	const glm::vec3 endPoint = GetGameObject()->GetPosition() + (dir * avoidanceRange);
+	const glm::vec3 startPoint = GetGameObject()->GetPosition() + glm::vec3(0.0f, 0.0f, 2.0f);
+	const glm::vec3 endPoint = startPoint + (dir * avoidanceRange);
 
 	btCollisionWorld::ClosestRayResultCallback hit(ToBt(startPoint), ToBt(endPoint));
 	scene->GetPhysicsWorld()->rayTest(ToBt(startPoint), ToBt(endPoint), hit);
