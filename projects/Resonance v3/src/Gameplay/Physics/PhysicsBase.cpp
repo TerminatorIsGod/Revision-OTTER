@@ -68,7 +68,7 @@ namespace Gameplay::Physics {
 			// Since the combo box contains all valid items (and Unknown is 0)
 			// we need to add 1 to the resulting selection index
 			ColliderType type = (ColliderType)(_editorSelectedColliderType + 1);
-			AddCollider(ICollider::Create(type));
+			AddCollider(ICollider::Create(type))->_isDirty = true;
 		}
 		ImGui::Unindent();
 	}

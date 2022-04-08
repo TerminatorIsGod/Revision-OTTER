@@ -38,6 +38,7 @@ void PostProcessingLayer::OnAppLoad(const nlohmann::json & config)
 	_effects.push_back(std::make_shared<FilmGrain>());
 	_effects.push_back(std::make_shared<DepthOfField>());
 
+	GetEffect<OutlineEffect>()->Enabled = false;
 
 	Application& app = Application::Get();
 	const glm::uvec4& viewport = app.GetPrimaryViewport();
@@ -125,7 +126,15 @@ void PostProcessingLayer::OnPostRender()
 		MagFilter::Linear
 	);
 
-	current->Unbind();
+	gBuffer->Bind(FramebufferBinding::Read);
+	current->Blit(
+		{ 0, 0, gBuffer->GetWidth(), gBuffer->GetHeight() },
+		{ viewport.x, viewport.y, viewport.x + viewport.z, viewport.y + viewport.w },
+		BufferFlags::Depth,
+		MagFilter::Nearest
+	);
+
+	gBuffer->Unbind();
 }
 
 void PostProcessingLayer::OnSceneLoad()
