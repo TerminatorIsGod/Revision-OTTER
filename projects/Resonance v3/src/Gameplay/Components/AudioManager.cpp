@@ -63,17 +63,21 @@ AudioManager::~AudioManager()
 
 void AudioManager::Update(float deltaTime) {
 
-	GameObject::Sptr player = GetGameObject()->GetScene()->MainCamera->GetGameObject()->GetParent();
-	if (player->Has<SimpleCameraControl>())
+	if (GetGameObject()->GetScene()->MainCamera->GetGameObject()->GetParent() != NULL)
 	{
-		glm::quat dir = player->Get<SimpleCameraControl>()->currentRot;
-		FMOD_3D_ATTRIBUTES listenerAttributes;
-		listenerAttributes.position = GlmVectorToFmodVector(player->GetPosition());
-		listenerAttributes.velocity = GlmVectorToFmodVector(player->Get<Gameplay::Physics::RigidBody>()->GetLinearVelocity());
-		listenerAttributes.forward = GlmVectorToFmodVector(dir * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f));
-		listenerAttributes.up = GlmVectorToFmodVector(dir * glm::vec4(0.0f, -1.0f, 0.0f, 1.0f));
+		GameObject::Sptr player = GetGameObject()->GetScene()->MainCamera->GetGameObject()->GetParent();
 
-		studioSystem->setListenerAttributes(0, &listenerAttributes);
+		if (player->Has<SimpleCameraControl>())
+		{
+			glm::quat dir = player->Get<SimpleCameraControl>()->currentRot;
+			FMOD_3D_ATTRIBUTES listenerAttributes;
+			listenerAttributes.position = GlmVectorToFmodVector(player->GetPosition());
+			listenerAttributes.velocity = GlmVectorToFmodVector(player->Get<Gameplay::Physics::RigidBody>()->GetLinearVelocity());
+			listenerAttributes.forward = GlmVectorToFmodVector(dir * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f));
+			listenerAttributes.up = GlmVectorToFmodVector(dir * glm::vec4(0.0f, -1.0f, 0.0f, 1.0f));
+
+			studioSystem->setListenerAttributes(0, &listenerAttributes);
+		}
 	}
 	studioSystem->update();
 
