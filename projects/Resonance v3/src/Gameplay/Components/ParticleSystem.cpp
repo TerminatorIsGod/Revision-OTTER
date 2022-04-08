@@ -54,6 +54,7 @@ void ParticleSystem::Update()
 
 		for (int ix = 0; ix < 2; ix++) {
 			glBindVertexArray(_updateVaos[ix]);
+
 			// Set up our first transform feedback buffer to write to the first buffer
 			glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, _feedbackBuffers[ix]);
 			glBindBuffer(GL_ARRAY_BUFFER, _particleBuffers[ix]);
@@ -69,7 +70,7 @@ void ParticleSystem::Update()
 			glEnableVertexAttribArray(5);
 			glEnableVertexAttribArray(6);
 			glEnableVertexAttribArray(7);
-		
+
 			glVertexAttribIPointer(0, 1, GL_UNSIGNED_INT, sizeof(ParticleData), (const GLvoid*)offsetof(ParticleData, Type)); // type
 			glVertexAttribIPointer(1, 1, GL_UNSIGNED_INT, sizeof(ParticleData), (const GLvoid*)offsetof(ParticleData, TexID)); // tex ID
 			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(ParticleData), (const GLvoid*)offsetof(ParticleData, Position)); // position
@@ -80,7 +81,6 @@ void ParticleSystem::Update()
 			glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(ParticleData), (const GLvoid*)offsetof(ParticleData, Metadata2)); // metadata 
 
 
-
 			glBindVertexArray(_renderVaos[ix]);
 			glBindBuffer(GL_ARRAY_BUFFER, _particleBuffers[ix]);
 
@@ -88,7 +88,7 @@ void ParticleSystem::Update()
 			glEnableVertexAttribArray(0);
 			glEnableVertexAttribArray(1);
 			glEnableVertexAttribArray(2);
-			glEnableVertexAttribArray(4);
+			glEnableVertexAttribArray(4); 
 			glEnableVertexAttribArray(6);
 			glEnableVertexAttribArray(7);
 			glVertexAttribIPointer(0, 1, GL_UNSIGNED_INT, sizeof(ParticleData), (const GLvoid*)offsetof(ParticleData, Type)); // type
@@ -131,6 +131,7 @@ void ParticleSystem::Update()
 		for (int ix = 0; ix < 2; ix++) {
 			glNamedBufferSubData(_particleBuffers[ix], 0, dataSize, data);
 		}
+
 		// We no longer need the CPU copy
 		delete[] data;
 	}
@@ -148,14 +149,13 @@ void ParticleSystem::Update()
 	// Bind the buffer and transform feedback
 	glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, _feedbackBuffers[_currentFeedbackBuffer]);
 
-
 	// Our particles are points that we're simulating
-	glBeginQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN, _query);
+	glBeginQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN, _query); 
 	glBeginTransformFeedback(GL_POINTS);
 
 	// If this is our first pass, or we have fresh emitter data, we use drawArrays 
 	// to get the initial state, otherwise we use transform feedback for updating
-	if (!_hasInit || _needsUpload) {
+	if (!_hasInit || _needsUpload ) {
 		glDrawArrays(GL_POINTS, 0, _emitters.size());
 	}
 	else {
@@ -164,7 +164,7 @@ void ParticleSystem::Update()
 
 	// End of transform feedback
 	glEndTransformFeedback();
-	glEndQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN);
+	glEndQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN); 
 
 	// Use our query to get the number of particles
 	glGetQueryObjectuiv(_query, GL_QUERY_RESULT, &_numParticles);
@@ -207,7 +207,7 @@ void ParticleSystem::Render()
 		glBindVertexArray(_renderVaos[_currentVertexBuffer]);
 
 		//glDisable(GL_DEPTH_TEST);
-
+		
 		glDisable(GL_BLEND);
 		glEnablei(GL_BLEND, 0);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -216,7 +216,6 @@ void ParticleSystem::Render()
 
 		// Bind the current feedback buffer as our drawing buffer
 		glBindBuffer(GL_ARRAY_BUFFER, _particleBuffers[_currentVertexBuffer]); 
-
 
 		// Draw our particles using whatever data we have in transform feedback buffer
 		glDrawTransformFeedback(GL_POINTS, _feedbackBuffers[_currentVertexBuffer]);
@@ -241,9 +240,10 @@ void ParticleSystem::SetMaxParticles(uint32_t value)
 uint32_t ParticleSystem::GetMaxParticles() const {
 	return _maxParticles;
 }
+
 void ParticleSystem::AddEmitter(const ParticleData& emitter)
 {
-	_emitters.push_back(emitter);
+	_emitters.push_back(emitter); 
 	_needsUpload = true;
 }
 
@@ -266,8 +266,8 @@ void ParticleSystem::RenderImGui()
 		}
 	}
 
+
 	// We can't add or edit emitters once the system has started
-	
 	for (int ix = 0; ix < _emitters.size(); ix++) {
 		auto& emitter = _emitters[ix];
 
@@ -296,7 +296,7 @@ void ParticleSystem::RenderImGui()
 				break;
 			}
 		}
-
+	
 		if (open) {
 
 			_needsUpload |= LABEL_LEFT(ImGui::DragFloat3, "Position  ", &emitter.Position.x, 0.1f);
@@ -322,46 +322,46 @@ void ParticleSystem::RenderImGui()
 
 			switch (emitter.Type)
 			{
-			case ParticleType::StreamEmitter:
-			{
-				float spawnRate = 1.0f / emitter.StreamEmitterData.Timer;
-				if (LABEL_LEFT(ImGui::DragFloat, "Spawn Rate", &spawnRate, 0.1f, 0.1f)) {
-					emitter.Lifetime = 1.0f / spawnRate;
-					emitter.StreamEmitterData.Timer = emitter.Lifetime;
-					_needsUpload = true;
+			case ParticleType::StreamEmitter: 
+				{
+					float spawnRate = 1.0f / emitter.StreamEmitterData.Timer;
+					if (LABEL_LEFT(ImGui::DragFloat, "Spawn Rate", &spawnRate, 0.1f, 0.1f)) {
+						emitter.Lifetime = 1.0f / spawnRate;
+						emitter.StreamEmitterData.Timer = emitter.Lifetime;
+						_needsUpload = true;
+					}
+
+					_needsUpload |= LABEL_LEFT(ImGui::DragFloat3, "Velocity  ", &emitter.StreamEmitterData.Velocity.x, 0.01f);
+					_needsUpload |= LABEL_LEFT(ImGui::DragFloat2, "Size      ", &emitter.StreamEmitterData.SizeRange.x, 0.1f, 0.01f);
+					_needsUpload |= LABEL_LEFT(ImGui::DragFloat2, "Lifetime  ", &emitter.StreamEmitterData.LifeRange.x, 0.1f, 0.0f);
+
+					glm::vec4 pos4 = GetGameObject()->GetTransform() * glm::vec4(emitter.Position, 1.0f);
+					glm::vec3 pos = pos4 / pos4.w;
+					glm::vec3 p2 = pos + emitter.StreamEmitterData.Velocity;
+					DebugDrawer::Get().DrawLine(pos, p2);
 				}
-
-				_needsUpload |= LABEL_LEFT(ImGui::DragFloat3, "Velocity  ", &emitter.StreamEmitterData.Velocity.x, 0.01f);
-				_needsUpload |= LABEL_LEFT(ImGui::DragFloat2, "Size      ", &emitter.StreamEmitterData.SizeRange.x, 0.1f, 0.01f);
-				_needsUpload |= LABEL_LEFT(ImGui::DragFloat2, "Lifetime  ", &emitter.StreamEmitterData.LifeRange.x, 0.1f, 0.0f);
-
-				glm::vec4 pos4 = GetGameObject()->GetTransform() * glm::vec4(emitter.Position, 1.0f);
-				glm::vec3 pos = pos4 / pos4.w;
-				glm::vec3 p2 = pos + emitter.StreamEmitterData.Velocity;
-				DebugDrawer::Get().DrawLine(pos, p2);
-			}
-			break;
+				break;
 			case ParticleType::SphereEmitter:
-			{
-				float spawnRate = 1.0f / emitter.SphereEmitterData.Timer;
-				if (LABEL_LEFT(ImGui::DragFloat, "Spawn Rate", &spawnRate, 0.1f, 0.1f)) {
-					emitter.Lifetime = 1.0f / spawnRate;
-					emitter.SphereEmitterData.Timer = emitter.Lifetime;
-					_needsUpload = true;
+				{
+					float spawnRate = 1.0f / emitter.SphereEmitterData.Timer;
+					if (LABEL_LEFT(ImGui::DragFloat, "Spawn Rate", &spawnRate, 0.1f, 0.1f)) {
+						emitter.Lifetime = 1.0f / spawnRate;
+						emitter.SphereEmitterData.Timer = emitter.Lifetime;
+						_needsUpload = true;
+					}
+
+					_needsUpload |= LABEL_LEFT(ImGui::DragFloat,  "Velocity  ", &emitter.SphereEmitterData.Velocity, 0.01f);
+					_needsUpload |= LABEL_LEFT(ImGui::DragFloat,  "Radius    ", &emitter.SphereEmitterData.Radius, 0.01f);
+					_needsUpload |= LABEL_LEFT(ImGui::DragFloat2, "Size      ", &emitter.SphereEmitterData.SizeRange.x, 0.1f, 0.01f);
+					_needsUpload |= LABEL_LEFT(ImGui::DragFloat2, "Lifetime  ", &emitter.SphereEmitterData.LifeRange.x, 0.1f, 0.0f);
+
+					glm::vec4 pos4 = GetGameObject()->GetTransform() * glm::vec4(emitter.Position, 1.0f);
+					glm::vec3 pos = pos4 / pos4.w;
+					DebugDrawer::Get().DrawWireCircle(pos, glm::vec3(1.0f, 0.0f, 0.0f), emitter.SphereEmitterData.Radius);
+					DebugDrawer::Get().DrawWireCircle(pos, glm::vec3(0.0f, 1.0f, 0.0f), emitter.SphereEmitterData.Radius);
+					DebugDrawer::Get().DrawWireCircle(pos, glm::vec3(0.0f, 0.0f, 1.0f), emitter.SphereEmitterData.Radius);
 				}
-
-				_needsUpload |= LABEL_LEFT(ImGui::DragFloat, "Velocity  ", &emitter.SphereEmitterData.Velocity, 0.01f);
-				_needsUpload |= LABEL_LEFT(ImGui::DragFloat, "Radius    ", &emitter.SphereEmitterData.Radius, 0.01f);
-				_needsUpload |= LABEL_LEFT(ImGui::DragFloat2, "Size      ", &emitter.SphereEmitterData.SizeRange.x, 0.1f, 0.01f);
-				_needsUpload |= LABEL_LEFT(ImGui::DragFloat2, "Lifetime  ", &emitter.SphereEmitterData.LifeRange.x, 0.1f, 0.0f);
-
-				glm::vec4 pos4 = GetGameObject()->GetTransform() * glm::vec4(emitter.Position, 1.0f);
-				glm::vec3 pos = pos4 / pos4.w;
-				DebugDrawer::Get().DrawWireCircle(pos, glm::vec3(1.0f, 0.0f, 0.0f), emitter.SphereEmitterData.Radius);
-				DebugDrawer::Get().DrawWireCircle(pos, glm::vec3(0.0f, 1.0f, 0.0f), emitter.SphereEmitterData.Radius);
-				DebugDrawer::Get().DrawWireCircle(pos, glm::vec3(0.0f, 0.0f, 1.0f), emitter.SphereEmitterData.Radius);
-			}
-			break;
+				break;
 			case ParticleType::BoxEmitter:
 			{
 				float spawnRate = 1.0f / emitter.BoxEmitterData.Timer;
@@ -431,15 +431,15 @@ void ParticleSystem::RenderImGui()
 	ImGui::SameLine();
 	if (ImGui::Button("Add")) {
 		ParticleData emitter;
-		emitter.TexID = 0;
-		emitter.Position = glm::vec3(0.0f);
-		emitter.Color = glm::vec4(1.0f);
-		emitter.Lifetime = 1.0f;
+		emitter.TexID      = 0;
+		emitter.Position   = glm::vec3(0.0f);
+		emitter.Color      = glm::vec4(1.0f);
+		emitter.Lifetime   = 1.0f;
 		emitter.Metadata.x = 1.0f;
 
 		if (i == 0) {
-			emitter.Type = ParticleType::StreamEmitter;
-			emitter.StreamEmitterData.Velocity = glm::vec3(0.0f);
+			emitter.Type                        = ParticleType::StreamEmitter;
+			emitter.StreamEmitterData.Velocity  = glm::vec3(0.0f);
 			emitter.StreamEmitterData.LifeRange = { 1.0f, 1.0f };
 			emitter.StreamEmitterData.SizeRange = { 1.0f, 1.0f };
 			_emitters.push_back(emitter);
@@ -447,10 +447,10 @@ void ParticleSystem::RenderImGui()
 		}
 
 		else if (i == 1) {
-			emitter.Type = ParticleType::SphereEmitter;
-			emitter.SphereEmitterData.Velocity = 0.0f;
-			emitter.SphereEmitterData.Radius = 1.0f;
-			emitter.SphereEmitterData.Timer = 1.0f;
+			emitter.Type                        = ParticleType::SphereEmitter;
+			emitter.SphereEmitterData.Velocity  = 0.0f;
+			emitter.SphereEmitterData.Radius    = 1.0f;
+			emitter.SphereEmitterData.Timer     = 1.0f;
 			emitter.SphereEmitterData.SizeRange = { 1.0f, 1.0f };
 			emitter.SphereEmitterData.LifeRange = { 1.0f, 1.0f };
 			_emitters.push_back(emitter);
@@ -458,18 +458,18 @@ void ParticleSystem::RenderImGui()
 		}
 
 		else if (i == 2) {
-			emitter.Type = ParticleType::BoxEmitter;
-			emitter.BoxEmitterData.Velocity = { 1.0f, 1.0f, 1.0f };
-			emitter.BoxEmitterData.LifeRange = { 1.0f, 1.0f };
-			emitter.BoxEmitterData.SizeRange = { 1.0f, 1.0f };
+			emitter.Type                       = ParticleType::BoxEmitter;
+			emitter.BoxEmitterData.Velocity    = { 1.0f, 1.0f, 1.0f };
+			emitter.BoxEmitterData.LifeRange   = { 1.0f, 1.0f };
+			emitter.BoxEmitterData.SizeRange   = { 1.0f, 1.0f };
 			emitter.BoxEmitterData.HalfExtents = { 1.0f, 1.0f, 1.0f };
 			_emitters.push_back(emitter);
 			_needsUpload = true;
 		}
 		else if (i == 3) {
 			emitter.Type = ParticleType::ConeEmitter;
-			emitter.ConeEmitterData.Velocity = glm::vec3(0.0f, 0.0f, 1.0f);
-			emitter.ConeEmitterData.Angle = glm::radians(30.0f);
+			emitter.ConeEmitterData.Velocity  = glm::vec3(0.0f, 0.0f, 1.0f);
+			emitter.ConeEmitterData.Angle     = glm::radians(30.0f);
 			emitter.ConeEmitterData.LifeRange = { 1.0f, 1.0f };
 			emitter.ConeEmitterData.SizeRange = { 1.0f, 1.0f };
 			_emitters.push_back(emitter);
@@ -479,7 +479,7 @@ void ParticleSystem::RenderImGui()
 
 }
 
-void ParticleSystem::Awake()
+void ParticleSystem::OnLoad()
 {
 	// There are the things we want the feedback buffers to track
 	const char const* varyings[8] = {
@@ -508,7 +508,7 @@ void ParticleSystem::Awake()
 	_renderShader->Link();
 }
 
-void ParticleSystem::Awake()
+void ParticleSystem::Awake() 
 {
 
 	_needsUpload = true;
@@ -520,7 +520,7 @@ nlohmann::json ParticleSystem::ToJson() const {
 		{ "max_particles", _maxParticles },
 		{ "atlas", Atlas ? Atlas->GetGUID().str() : "null" }
 	};
-	
+
 	std::vector<float> metaData;
 	metaData.resize(4 + 4 + 3);
 
@@ -558,8 +558,8 @@ ParticleSystem::Sptr ParticleSystem::FromJson(const nlohmann::json& blob) {
 	if (blob.contains("emitters") && blob["emitters"].is_array()) {
 		for (const auto& data : blob["emitters"]) {
 			ParticleData emitter;
-			emitter.Type = JsonParseEnum(ParticleType, blob, "type", ParticleType::SphereEmitter);
-			emitter.TexID = JsonGet(data, "tex_id", 0);
+			emitter.Type     = JsonParseEnum(ParticleType, blob, "type", ParticleType::SphereEmitter);
+			emitter.TexID    = JsonGet(data, "tex_id", 0);
 			emitter.Position = JsonGet(data, "position", glm::vec3(0.0f));
 			emitter.Color    = JsonGet(data, "color", glm::vec4(1.0f));
 			emitter.Lifetime = JsonGet(data, "spawn_rate", 1.0f);

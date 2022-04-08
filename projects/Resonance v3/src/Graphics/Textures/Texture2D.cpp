@@ -237,11 +237,10 @@ void Texture2D::_SetTextureParams() {
 			_description.Format == InternalFormat::Depth16 ||
 			_description.Format == InternalFormat::Depth24 ||
 			_description.Format == InternalFormat::Depth32)
-			) {
+		) {
 			glTextureParameteri(_rendererId, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
 			glTextureParameteri(_rendererId, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
 		}
-
 	}
 }
 

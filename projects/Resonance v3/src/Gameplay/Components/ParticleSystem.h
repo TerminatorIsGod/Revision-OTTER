@@ -6,9 +6,9 @@
 ENUM(ParticleType, uint32_t,
 	StreamEmitter = 0,
 	SphereEmitter = 1,
-	BoxEmitter = 2,
-	ConeEmitter = 3,
-	Particle = 1 << 17
+	BoxEmitter    = 2,
+	ConeEmitter   = 3,
+	Particle      = 1 << 17
 );
 
 class ParticleSystem : public Gameplay::IComponent{
@@ -67,7 +67,6 @@ public:
 			} ConeEmitterData;
 		};
 	};
-
 
 	ParticleSystem();
 	~ParticleSystem();

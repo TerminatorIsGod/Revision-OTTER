@@ -15,6 +15,7 @@
 #include "Gameplay/Components/GUI/GuiPanel.h"
 #include "Gameplay/Components/AudioManager.h"
 #include "Camera.h"
+#include <Gameplay/InputEngine.h>
 SimpleCameraControl::SimpleCameraControl() :
 	IComponent(),
 	_mouseSensitivity({ 0.5f, 0.3f }),
