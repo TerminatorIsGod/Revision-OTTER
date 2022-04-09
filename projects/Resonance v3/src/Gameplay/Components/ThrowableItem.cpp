@@ -17,6 +17,7 @@ void ThrowableItem::Awake()
 
 	GetComponent<Gameplay::Physics::RigidBody>()->SetAngularDamping(0.5f);
 	GetComponent<Gameplay::Physics::RigidBody>()->SetLinearDamping(0.2f);
+	GetComponent<Gameplay::Physics::RigidBody>()->SetType(RigidBodyType::Kinematic);
 
 	GetGameObject()->Get<SoundEmmiter>()->isThrowable = true;
 }

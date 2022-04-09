@@ -37,7 +37,7 @@ public:
 	bool linearLerp = false;
 	bool isEPressed = false;
 	bool isThrowable = false;
-
+	bool isSirenSound = false;
 	glm::vec3 defaultColour = glm::vec3(0.03f, 0.03f, 0.03f);
 	glm::vec3 colour = defaultColour;
 	float t = 0.0f;

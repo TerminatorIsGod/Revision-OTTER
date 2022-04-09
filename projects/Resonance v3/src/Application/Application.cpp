@@ -312,7 +312,6 @@ void Application::_Run()
 			const auto& cam = _currentScene->MainCamera;
 			glm::vec3 v1 = cam->GetGameObject()->GetPosition();
 			glm::vec3 v2 = cam->GetComponent<SimpleCameraControl>()->WhatAreYouLookingAt();
-
 			float dist = sqrt((pow((v2.x - v1.x), 2) + pow((v2.y - v1.y), 2)) + pow((v2.z - v1.z), 2));
 
 			if (v2 == glm::vec3(0.0f))
@@ -510,6 +509,7 @@ void Application::_RegisterClasses()
 	ComponentManager::RegisterType<AudioManager>();
 	ComponentManager::RegisterType<NoteSystem>();
 	ComponentManager::RegisterType<ThrowableItem>();
+
 
 
 	ComponentManager::RegisterType<AnimationSystem>();

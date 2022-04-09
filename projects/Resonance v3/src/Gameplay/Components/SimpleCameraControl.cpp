@@ -237,7 +237,8 @@ void SimpleCameraControl::Movement(float deltaTime)
 
 		_body->SetLinearVelocity(glm::vec3(physicsMovement));
 
-	} else {
+	}
+	else {
 		glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 

@@ -18,6 +18,13 @@ void AggravatedState::Start(Enemy* e)
 	e->myChannel = e->scene->audioManager->Get<AudioManager>()->PlaySoundByName("LeaflingAgro", 2.0f, e->GetGameObject()->GetPosition(), true);
 	//e->myChannel->addDSP(FMOD_CHANNELCONTROL_DSP_HEAD, e->myDSP);
 
+	if (e->isSiren)
+	{
+		e->GetGameObject()->Get<SoundEmmiter>()->targetVolume = e->GetGameObject()->Get<SoundEmmiter>()->distractionVolume;
+		e->GetGameObject()->Get<SoundEmmiter>()->isDecaying = false;
+		e->GetGameObject()->Get<SoundEmmiter>()->lerpSpeed = 3.0f;
+	}
+
 	e->pathRequested = false;
 	e->agroTimer = agroTimerMax;
 	e->maxVelocity = e->AgroVelocity;

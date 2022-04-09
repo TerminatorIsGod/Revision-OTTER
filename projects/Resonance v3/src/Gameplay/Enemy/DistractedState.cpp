@@ -35,7 +35,7 @@ void DistractedState::End(Enemy* e)
 void DistractedState::Listen(Enemy* e, float deltaTime)
 {
 	//Sound Light Lerping
-	e->listeningRadius = glm::mix(e->listeningRadius, e->patrolListeningRadius, 2.0f * deltaTime);
+	e->listeningRadius = glm::mix(e->listeningRadius, e->distractedListeningRadius, 2.0f * deltaTime);
 	e->soundLight->SetColor(glm::mix(e->soundLight->GetColor(), e->yellow, 4.0f * deltaTime));
 
 	//Backup distraction timer
@@ -57,6 +57,9 @@ void DistractedState::Listen(Enemy* e, float deltaTime)
 		if (s->Get<SoundEmmiter>()->volume <= -1.0f)
 			continue;
 
+		if (s->Get<SoundEmmiter>()->isSirenSound && e->isSiren)
+			continue;
+
 		glm::vec3 SoundPos = s->Get<SoundEmmiter>()->soundLight->GetGameObject()->GetPosition();
 
 		//Checking if any sounds are in listening Radius
@@ -68,11 +71,11 @@ void DistractedState::Listen(Enemy* e, float deltaTime)
 			continue;
 
 		//Raycasting toward heard sound to determine state change
-		btCollisionWorld::ClosestRayResultCallback hit(ToBt(e->GetGameObject()->GetPosition()), ToBt(SoundPos));
-		e->scene->GetPhysicsWorld()->rayTest(ToBt(e->GetGameObject()->GetPosition()), ToBt(SoundPos), hit);
+		btCollisionWorld::ClosestRayResultCallback hit(ToBt(e->GetGameObject()->GetPosition() + glm::vec3(0.0f, 0.0f, 1.0f)), ToBt(SoundPos + glm::vec3(0.0f, 0.0f, 1.0f)));
+		e->scene->GetPhysicsWorld()->rayTest(ToBt(e->GetGameObject()->GetPosition() + glm::vec3(0.0f, 0.0f, 1.0f)), ToBt(SoundPos + glm::vec3(0.0f, 0.0f, 1.0f)), hit);
 
 
-		if (hit.hasHit() && hit.m_collisionObject->isStaticObject() && glm::length(ToGlm(hit.m_hitPointWorld) - SoundPos) > 0.1f)
+		if (hit.hasHit() && hit.m_collisionObject->isStaticObject() && glm::length(ToGlm(hit.m_hitPointWorld) - SoundPos) > 0.1f && !s->Get<SoundEmmiter>()->isSirenSound)
 			continue;
 
 		//Adding the heard sound to our lists (removing them if already there)
@@ -106,6 +109,9 @@ void DistractedState::Listen(Enemy* e, float deltaTime)
 			e->GetGameObject()->GetScene()->requestSceneReload = true;
 			e->scene->IsPlaying = false;
 		}
+
+		if (s->Get<SoundEmmiter>()->isSirenSound)
+			e->SetState(AggravatedState::getInstance());
 
 		if (!e->player->Get<SimpleCameraControl>()->holdingBreath && s->Get<SoundEmmiter>()->isPlayerLight)
 		{
