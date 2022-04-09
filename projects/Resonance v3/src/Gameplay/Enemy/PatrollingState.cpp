@@ -37,7 +37,7 @@ void PatrollingState::Listen(Enemy* e, float deltaTime)
 	for each (GameObject * s in e->scene->soundEmmiters)
 	{
 		//if muted, skip over the light
-		if (s->Get<SoundEmmiter>()->volume <= -1.0f)
+		if (s->Get<SoundEmmiter>()->volume <= 0.0f)
 			continue;
 
 		glm::vec3 SoundPos = s->Get<SoundEmmiter>()->soundLight->GetGameObject()->GetPosition();
