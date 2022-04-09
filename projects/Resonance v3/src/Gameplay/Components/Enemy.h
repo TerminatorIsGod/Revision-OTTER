@@ -80,7 +80,7 @@ public:
 	float patrolListeningRadius = 4.0f; // this is normmally 4
 
 	float AgroVelocity = 13.0f;
-	float IdleVelocity = 6.0f;
+	float IdleVelocity = 7.0f;
 
 	float agroTimer = 5.0f;
 	float distractedBackupTimer = 20.0f, distractedTimer = 5.0f; //dont use this
