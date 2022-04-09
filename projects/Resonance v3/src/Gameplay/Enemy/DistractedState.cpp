@@ -84,7 +84,7 @@ void DistractedState::Listen(Enemy* e, float deltaTime)
 				e->lastHeardSounds.erase(e->lastHeardSounds.begin() + i);
 			}
 		}
-		 
+
 		e->lastHeardSounds.insert(e->lastHeardSounds.begin(), s);
 
 		if (!s->Get<SoundEmmiter>()->isPlayerLight)
@@ -95,7 +95,19 @@ void DistractedState::Listen(Enemy* e, float deltaTime)
 
 		e->pathRequested = false;
 
-		if (s->Get<SoundEmmiter>()->isPlayerLight)
+		if (glm::length((e->player->GetPosition() - glm::vec3(0.0f, 0.0f, 2.0f)) - e->GetGameObject()->GetPosition()) < 3.8f) //Kill player
+		{
+			e->player->Get<SimpleCameraControl>()->ShowGameOver();
+			FMOD::ChannelGroup* cGroup;
+			e->scene->audioManager->Get<AudioManager>()->system->getMasterChannelGroup(&cGroup);
+			cGroup->stop();
+			e->scene->audioManager->Get<AudioManager>()->PlaySoundByName("Death");
+			e->scene->audioManager->Get<AudioManager>()->studioSystem->update();
+			e->GetGameObject()->GetScene()->requestSceneReload = true;
+			e->scene->IsPlaying = false;
+		}
+
+		if (!e->player->Get<SimpleCameraControl>()->holdingBreath && s->Get<SoundEmmiter>()->isPlayerLight)
 		{
 			btCollisionWorld::ClosestRayResultCallback hit2(ToBt(e->GetGameObject()->GetPosition() + glm::vec3(0.0f, 0.0f, 1.0f)), ToBt(e->player->GetPosition()));
 			e->scene->GetPhysicsWorld()->rayTest(ToBt(e->GetGameObject()->GetPosition() + glm::vec3(0.0f, 0.0f, 1.0f)), ToBt(e->player->GetPosition()), hit2);
