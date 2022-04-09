@@ -52,8 +52,8 @@ void PatrollingState::Listen(Enemy* e, float deltaTime)
 
 
 		//Raycasting toward heard sound to determine state change
-		btCollisionWorld::ClosestRayResultCallback hit(ToBt(e->GetGameObject()->GetPosition()), ToBt(SoundPos));
-		e->scene->GetPhysicsWorld()->rayTest(ToBt(e->GetGameObject()->GetPosition()), ToBt(SoundPos), hit);
+		btCollisionWorld::ClosestRayResultCallback hit(ToBt(e->GetGameObject()->GetPosition() + glm::vec3(0.0f, 0.0f, 2.0f)), ToBt(SoundPos));
+		e->scene->GetPhysicsWorld()->rayTest(ToBt(e->GetGameObject()->GetPosition() + glm::vec3(0.0f, 0.0f, 2.0f)), ToBt(SoundPos), hit);
 
 		//Should do the second raycast from sound source to enemy to make sure theres no static objects in the way
 
