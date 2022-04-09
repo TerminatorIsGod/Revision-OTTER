@@ -98,7 +98,7 @@ void SwitchIndex(Enemy* e)
 		e->pathRequested = false;
 	}
 }
- 
+
 void PatrollingState::Pathfind(Enemy* e, float deltaTime)
 {
 	//If the enemy has no patrol points, just stay where you are.
