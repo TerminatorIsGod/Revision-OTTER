@@ -33,7 +33,7 @@ nlohmann::json InteractSystem::ToJson() const {
 		{ "RequiresKey", _requiresKey},
 		{ "RequiredKey", _requiredKey},
 		{ "IsKey", _iskey},
-		{"IsGenerator", _isGenerator}
+		{ "IsGenerator", _isGenerator}
 	};
 }
 
@@ -56,7 +56,8 @@ InteractSystem::Sptr InteractSystem::FromJson(const nlohmann::json & blob) {
 	result->_requiredKey = blob["RequiredKey"];
 	result->_requiresKey = blob["RequiresKey"];
 	result->_iskey = blob["IsKey"];
-	result->_isGenerator = JsonGet(blob, "IsGenerator", false);
+	result->_isGenerator = JsonGet(blob, "IsGenerator", result->_isGenerator);
+
 	return result;
 }
 
