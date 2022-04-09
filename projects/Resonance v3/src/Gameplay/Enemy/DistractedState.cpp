@@ -84,7 +84,7 @@ void DistractedState::Listen(Enemy* e, float deltaTime)
 				e->lastHeardSounds.erase(e->lastHeardSounds.begin() + i);
 			}
 		}
-
+		 
 		e->lastHeardSounds.insert(e->lastHeardSounds.begin(), s);
 
 		if (!s->Get<SoundEmmiter>()->isPlayerLight)
@@ -95,7 +95,7 @@ void DistractedState::Listen(Enemy* e, float deltaTime)
 
 		e->pathRequested = false;
 
-		if (!e->player->Get<SimpleCameraControl>()->holdingBreath && s->Get<SoundEmmiter>()->isPlayerLight)
+		if (s->Get<SoundEmmiter>()->isPlayerLight)
 		{
 			btCollisionWorld::ClosestRayResultCallback hit2(ToBt(e->GetGameObject()->GetPosition() + glm::vec3(0.0f, 0.0f, 1.0f)), ToBt(e->player->GetPosition()));
 			e->scene->GetPhysicsWorld()->rayTest(ToBt(e->GetGameObject()->GetPosition() + glm::vec3(0.0f, 0.0f, 1.0f)), ToBt(e->player->GetPosition()), hit2);
