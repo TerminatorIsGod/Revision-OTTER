@@ -129,7 +129,7 @@ void ThrowableItem::Update(float deltaTime)
 	else
 	{
 		//Gravity
-		GetComponent<Gameplay::Physics::RigidBody>()->ApplyForce(glm::vec3(0.0f, 0.0f, -12.0f));
+		GetComponent<Gameplay::Physics::RigidBody>()->SetLinearVelocity(GetComponent<Gameplay::Physics::RigidBody>()->GetLinearVelocity() + (glm::vec3(0.0f, 0.0f, -12.0f) * deltaTime));
 	}
 
 }

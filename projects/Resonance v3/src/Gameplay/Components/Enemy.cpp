@@ -24,10 +24,10 @@ void Enemy::Awake()
 {
 	scene = GetGameObject()->GetScene();
 	body = GetComponent<Gameplay::Physics::RigidBody>();
-	body->SetAngularFactor(glm::vec3(0, 0, 0));
+	body->SetAngularFactor(glm::vec3(0, 0, 1));
 	body->SetLinearVelocity(glm::vec3(0));
-	body->SetAngularDamping(100.0f);
-	//body->SetLinearDamping(0.2f);
+	body->SetAngularDamping(0.25f);
+	//body->SetLinearDamping(0.0f);
 	GetGameObject()->SetPostion(startPos);
 
 	//Light Stuff
