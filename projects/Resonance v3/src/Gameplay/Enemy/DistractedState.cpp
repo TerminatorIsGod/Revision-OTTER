@@ -35,7 +35,7 @@ void DistractedState::End(Enemy* e)
 void DistractedState::Listen(Enemy* e, float deltaTime)
 {
 	//Sound Light Lerping
-	e->listeningRadius = glm::mix(e->listeningRadius, e->patrolListeningRadius, 2.0f * deltaTime);
+	e->listeningRadius = glm::mix(e->listeningRadius, e->distractedListeningRadius, 2.0f * deltaTime);
 	e->soundLight->SetColor(glm::mix(e->soundLight->GetColor(), e->yellow, 4.0f * deltaTime));
 
 	//Backup distraction timer

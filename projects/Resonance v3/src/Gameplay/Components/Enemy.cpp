@@ -30,6 +30,16 @@ void Enemy::Awake()
 	//body->SetLinearDamping(0.0f);
 	GetGameObject()->SetPostion(startPos);
 
+	if (isSiren)
+	{
+		IdleVelocity = 3.0f;
+		AgroVelocity = 4.0f;
+		agroMovingListeningRadius = 12.0f;
+		agroStationaryListeningRadius = 12.0f;
+		distractedListeningRadius = 11.0f;
+		patrolListeningRadius = 8.0f; // this is normmally 4
+	}
+
 	//Light Stuff
 	GameObject::Sptr light = scene->CreateGameObject("Sound Light");
 	light->isGenerated = true;
@@ -44,6 +54,8 @@ void Enemy::Awake()
 
 	patrolLists.push_back(&patrolPoints);
 	patrolLists.push_back(&patrolPoints2);
+
+
 }
 
 void Enemy::Update(float deltaTime)

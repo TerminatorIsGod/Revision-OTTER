@@ -32,6 +32,8 @@ public:
 	Gameplay::Physics::RigidBody::Sptr body;
 	glm::quat currentRot;
 
+	bool isSiren = false;
+
 	glm::vec3 startPos = glm::vec3(0);
 	glm::vec3 startPos2 = glm::vec3(0);
 
@@ -72,9 +74,10 @@ public:
 	glm::vec3 blue = glm::vec3(0.0f, 0.0f, 0.2f);
 	glm::vec3 yellow = glm::vec3(0.2f, 0.2f, 0);
 
-	const float agroMovingListeningRadius = 12.0f;
-	const float agroStationaryListeningRadius = 6.0f;
-	const float patrolListeningRadius = 4.0f; // this is normmally 4
+	float agroMovingListeningRadius = 12.0f;
+	float agroStationaryListeningRadius = 6.0f;
+	float distractedListeningRadius = 4.0f;
+	float patrolListeningRadius = 4.0f; // this is normmally 4
 
 	float AgroVelocity = 13.0f;
 	float IdleVelocity = 6.0f;
