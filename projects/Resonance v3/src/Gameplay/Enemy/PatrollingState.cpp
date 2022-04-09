@@ -40,6 +40,9 @@ void PatrollingState::Listen(Enemy* e, float deltaTime)
 		if (s->Get<SoundEmmiter>()->volume <= 0.0f)
 			continue;
 
+		if (s->Get<SoundEmmiter>()->isSirenSound && e->isSiren)
+			continue;
+
 		glm::vec3 SoundPos = s->Get<SoundEmmiter>()->soundLight->GetGameObject()->GetPosition();
 		//Checking if any sounds are in listening Radius
 		glm::vec3 dir = SoundPos - e->GetGameObject()->GetPosition();
@@ -57,7 +60,7 @@ void PatrollingState::Listen(Enemy* e, float deltaTime)
 
 		//Should do the second raycast from sound source to enemy to make sure theres no static objects in the way
 
-		if (hit.hasHit() && hit.m_collisionObject->isStaticObject() && glm::length(ToGlm(hit.m_hitPointWorld) - SoundPos) > 0.1f)
+		if (hit.hasHit() && hit.m_collisionObject->isStaticObject() && glm::length(ToGlm(hit.m_hitPointWorld) - SoundPos) > 0.1f && !s->Get<SoundEmmiter>()->isSirenSound)
 			continue;
 
 		//Adding the heard sound to our lists (removing them if already there)

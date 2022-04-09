@@ -6,6 +6,7 @@
 #include "Gameplay/Enemy/PatrollingState.h"
 #include "Gameplay/Enemy/AggravatedState.h"
 #include "fmod_studio.hpp"
+#include "Gameplay/Components/SoundEmmiter.h"
 
 
 #pragma region "Default Functions"
@@ -38,6 +39,7 @@ void Enemy::Awake()
 		agroStationaryListeningRadius = 12.0f;
 		distractedListeningRadius = 11.0f;
 		patrolListeningRadius = 8.0f; // this is normmally 4
+		GetComponent<SoundEmmiter>()->isSirenSound = true;
 	}
 
 	//Light Stuff
@@ -49,8 +51,6 @@ void Enemy::Awake()
 
 	player = scene->MainCamera->GetGameObject()->GetParent();
 	pathManager = scene->pathManager;
-
-	patrolPoints2.push_back(glm::vec3(0.0f));
 
 	patrolLists.push_back(&patrolPoints);
 	patrolLists.push_back(&patrolPoints2);
@@ -211,6 +211,7 @@ nlohmann::json Enemy::ToJson() const {
 	}
 	result["PatrolPointCount2"] = glm::vec3(patrolPoints2.size());
 	result["StartingPosition2"] = startPos2;
+	result["IsSiren"] = isSiren;
 	return result;
 }
 
@@ -227,7 +228,7 @@ Enemy::Sptr Enemy::FromJson(const nlohmann::json& blob) {
 		result->patrolPoints2.push_back(JsonGet(blob, "Patrol2Point" + std::to_string(i), glm::vec3(0.0f)));
 	}
 	result->startPos2 = JsonGet(blob, "StartingPosition2", result->startPos2);
-
+	result->isSiren = JsonGet(blob, "IsSiren", result->isSiren);
 	return result;
 }
 #pragma endregion "Default Functions"
