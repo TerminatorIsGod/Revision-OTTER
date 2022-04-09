@@ -90,7 +90,7 @@ void SwitchIndex(Enemy* e)
 	}
 	else
 	{
-		if (e->pIndex < e->patrolPoints.size() - 1)
+		if (e->pIndex < e->patrolLists[e->pListIndex]->size() - 1)
 			e->pIndex++;
 		else
 			e->pIndex = 0;
@@ -98,11 +98,11 @@ void SwitchIndex(Enemy* e)
 		e->pathRequested = false;
 	}
 }
-
+ 
 void PatrollingState::Pathfind(Enemy* e, float deltaTime)
 {
 	//If the enemy has no patrol points, just stay where you are.
-	if (e->patrolPoints.size() < 1)
+	if (e->patrolLists[e->pListIndex]->size() < 1)
 	{
 		e->target = e->startPos;
 		return;
@@ -111,7 +111,7 @@ void PatrollingState::Pathfind(Enemy* e, float deltaTime)
 	//If the enemy has a direct line of sight to a patrol point, 
 	// just steer toward it directly, no need for pathfinding
 	glm::vec3 enemyPos = e->GetGameObject()->GetPosition();
-	glm::vec3 patrolPos = e->patrolPoints[e->pIndex];
+	glm::vec3 patrolPos = (*e->patrolLists[e->pListIndex])[e->pIndex];
 
 	if (glm::length(patrolPos - enemyPos) > 0)
 	{
@@ -154,7 +154,7 @@ void PatrollingState::Pathfind(Enemy* e, float deltaTime)
 
 void PatrollingState::Move(Enemy* e, float  deltaTime)
 {
-	if (e->patrolPoints.size() < 1)
+	if (e->patrolLists[e->pListIndex]->size() < 1)
 		return;
 	e->Move(deltaTime);
 }
