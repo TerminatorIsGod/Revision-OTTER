@@ -3,6 +3,7 @@
 #include "Gameplay/Physics/RigidBody.h"
 #include "Gameplay/GameObject.h"
 #include "Gameplay/Components/LerpSystem.h"
+#include "Gameplay/Components/SlideLerpSystem.h"
 
 struct GLFWwindow;
 
@@ -30,6 +31,7 @@ public:
 	Gameplay::GameObject::Sptr _player;
 	
 	LerpSystem::Sptr _lerpS;
+	SlideLerpSystem::Sptr _slideLerp;
 
 	float _distance = 0;
 	float _interactDistance = 0;
@@ -41,6 +43,7 @@ public:
 	bool isOpen = false;
 
 	bool isKeyPressed = false;
+	bool _isGenerator = false;
 
 	GLFWwindow* _window;
 

@@ -54,6 +54,8 @@ namespace Gameplay {
 
 		bool requestSceneReload = false;
 
+		bool isGeneratorOn = false;
+
 		bool IsDestroyed;
 
 		Scene();

@@ -45,7 +45,8 @@ nlohmann::json SlideLerpSystem::ToJson() const {
 		{ "endy", endy},
 		{ "endz",  endz},
 		{ "tlength", tLength},
-		{ "updateAI", doUpdateNbors}
+		{ "updateAI", doUpdateNbors},
+		{ "linkedDoor", linkedDoor}
 	};
 }
 
@@ -58,7 +59,8 @@ SlideLerpSystem::SlideLerpSystem() :
 	endy(0),
 	endz(0),
 	tLength(1),
-	doUpdateNbors(0)
+	doUpdateNbors(0),
+	linkedDoor("NULL")
 { }
 
 SlideLerpSystem::~SlideLerpSystem() = default;
@@ -73,6 +75,7 @@ SlideLerpSystem::Sptr SlideLerpSystem::FromJson(const nlohmann::json & blob) {
 	result->endz = blob["endz"];
 	result->tLength = blob["tlength"];
 	result->doUpdateNbors = blob["updateAI"];
+	result->linkedDoor = blob["linkedDoor"];
 	return result;
 }
 

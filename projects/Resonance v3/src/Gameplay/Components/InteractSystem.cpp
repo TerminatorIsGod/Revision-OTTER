@@ -13,6 +13,7 @@ void InteractSystem::Awake()
 {
 	_player = GetGameObject()->GetScene()->MainCamera->GetGameObject()->GetParent();
 	_lerpS = GetGameObject()->Get<LerpSystem>();
+	_slideLerp = GetGameObject()->Get<SlideLerpSystem>();
 	Application& app = Application::Get();
 	_window = app.GetWindow();
 }
@@ -31,7 +32,8 @@ nlohmann::json InteractSystem::ToJson() const {
 		{ "InteractDistance", _interactDistance },
 		{ "RequiresKey", _requiresKey},
 		{ "RequiredKey", _requiredKey},
-		{ "IsKey", _iskey}
+		{ "IsKey", _iskey},
+		( "IsGenerator", _isGenerator)
 	};
 }
 
@@ -41,7 +43,8 @@ InteractSystem::InteractSystem() :
 	_distance(0),
 	_requiresKey(0),
 	_requiredKey(0),
-	_iskey(0)
+	_iskey(0),
+	_isGenerator(0)
 { }
 
 InteractSystem::~InteractSystem() = default;
@@ -53,6 +56,7 @@ InteractSystem::Sptr InteractSystem::FromJson(const nlohmann::json & blob) {
 	result->_requiredKey = blob["RequiredKey"];
 	result->_requiresKey = blob["RequiresKey"];
 	result->_iskey = blob["IsKey"];
+	result->_isGenerator - blob["IsGenerator"];
 	return result;
 }
 
@@ -70,7 +74,7 @@ void InteractSystem::Update(float deltaTime) {
 	}
 
 	//Animated Objects (raycast based)
-	if (!_iskey && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !_player->Get<SimpleCameraControl>()->promptShown) {
+	if (!_iskey && !_isGenerator && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !_player->Get<SimpleCameraControl>()->promptShown) {
 
 		if (_player->Get<InventorySystem>()->getKey(_requiredKey))
 		{
@@ -83,6 +87,10 @@ void InteractSystem::Update(float deltaTime) {
 		{
 			_player->Get<SimpleCameraControl>()->ShowLocked();
 		}
+	}
+
+	if (_isGenerator && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !_player->Get<SimpleCameraControl>()->promptShown) {
+		_player->Get<SimpleCameraControl>()->ShowOpen();
 	}
 
 	if (glfwGetKey(_window, GLFW_KEY_E)) {
@@ -131,6 +139,29 @@ void InteractSystem::interact() {
 			isOpen = true;
 			GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("DoorOpen", 1.1f, GetGameObject()->GetPosition());
 		}
+	}
+	else if (_slideLerp && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos) {
+		_slideLerp->lerpReverse = isOpen;
+		if (_slideLerp->linkedDoor != "NULL") {
+			GetGameObject()->GetScene()->FindObjectByName(_slideLerp->linkedDoor)->Get<InteractSystem>()->isOpen = isOpen;
+			GetGameObject()->GetScene()->FindObjectByName(_slideLerp->linkedDoor)->Get<SlideLerpSystem>()->lerpReverse = isOpen;
+			GetGameObject()->GetScene()->FindObjectByName(_slideLerp->linkedDoor)->Get<SlideLerpSystem>()->beginLerp = true;
+		}
+		_slideLerp->beginLerp = true;
+		if (isOpen)
+		{
+			isOpen = false;
+			GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("DoorClose", 0.8f, GetGameObject()->GetPosition());
+		}
+		else
+		{
+			isOpen = true;
+			GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("DoorOpen", 1.1f, GetGameObject()->GetPosition());
+		}
+	}
+
+	if (_isGenerator && _distance <= _interactDistance) {
+		GetGameObject()->GetScene()->isGeneratorOn = true;
 	}
 
 	//Key (based on distance)

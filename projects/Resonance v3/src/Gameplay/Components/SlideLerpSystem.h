@@ -37,15 +37,13 @@ public:
 
 	float tLength = 1;
 
-	glm::quat startRot = glm::quat(1, 0, 0, 0);
-	glm::quat endRot = glm::quat(1, 0, 0, 0);
-
 	float t = 0;
 	bool beginLerp = false;
 	bool lerpReverse = false;
 
 	bool doUpdateNbors = false;
 
+	std::string linkedDoor = "NULL";
 
 	glm::vec3 lerpstuff(glm::vec3 a, glm::vec3 b, float t);
 
