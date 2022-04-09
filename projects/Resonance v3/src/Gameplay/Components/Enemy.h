@@ -33,6 +33,8 @@ public:
 	glm::quat currentRot;
 
 	glm::vec3 startPos = glm::vec3(0);
+	glm::vec3 startPos2 = glm::vec3(0);
+
 	glm::vec3 target;
 	float soundExpireTimerDefault = 5.0f;
 	float soundExpireTimer;
@@ -57,6 +59,10 @@ public:
 	GameObject* pathManager;
 
 	std::vector<glm::vec3> patrolPoints;
+	std::vector<glm::vec3> patrolPoints2;
+	std::vector<std::vector<glm::vec3>*> patrolLists;
+
+	int pListIndex = 0;
 	int pIndex = 0;
 	std::vector<glm::vec3> pathSet;
 	int nIndex = 0;

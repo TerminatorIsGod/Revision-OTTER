@@ -40,6 +40,10 @@ void Enemy::Awake()
 	player = scene->MainCamera->GetGameObject()->GetParent();
 	pathManager = scene->pathManager;
 
+	patrolPoints2.push_back(glm::vec3(0.0f));
+
+	patrolLists.push_back(&patrolPoints);
+	patrolLists.push_back(&patrolPoints2);
 }
 
 void Enemy::Update(float deltaTime)
@@ -114,35 +118,68 @@ void Enemy::Update(float deltaTime)
 			myChannel->setParameterByName("Lowpass Mix", currentWetVal);
 		}
 	}
+
+	//if (scene->isGeneratorOn)
+	//	pListIndex = 1;
+	//else
+	//	pListIndex = 0;
+
 }
 
 void Enemy::RenderImGui() {
-	for (int i = 0; i < patrolPoints.size(); i++)
-	{
-		std::string name1 = "Patrol Points " + std::to_string(i);
-		const char* name2 = name1.c_str();
-		ImGui::DragFloat3(name2, &patrolPoints[i].x);
-	}
+
+	ImGui::DragFloat3("Starting Position Pre-Generator", &startPos.x);
+	ImGui::DragFloat3("Starting Position Post-Generator", &startPos2.x);
+
+	std::string blank = " ";
+	ImGui::Text(blank.c_str());
+	ImGui::Text(("Patrol List #" + std::to_string(pListIndex)).c_str());
 
 	if (ImGui::Button("[+] Add Patrol Point"))
 	{
-		patrolPoints.push_back(glm::vec3(0));
+		patrolLists[pListIndex]->push_back(glm::vec3(0));
 	}
 
 	if (ImGui::Button("[+] Add Patrol Point (At My Position)"))
 	{
-		patrolPoints.push_back(player->GetPosition());
+		patrolLists[pListIndex]->push_back(player->GetPosition());
 	}
 
 	if (ImGui::Button("[-] Remove Patrol Point"))
 	{
-		if (pIndex != patrolPoints.size() - 1)
-			patrolPoints.pop_back();
+		if (pIndex != patrolLists[pListIndex]->size() - 1)
+			patrolLists[pListIndex]->pop_back();
 		else
 			std::cout << "\n[Enemy]: Can't Delete, Enemy Currently Moving To that Point!";
 	}
 
-	ImGui::DragFloat3("Starting Position", &startPos.x);
+	for (int i = 0; i < patrolLists[pListIndex]->size(); i++)
+	{
+		std::string name1 = "Patrol Points " + std::to_string(i);
+		const char* name2 = name1.c_str();
+		ImGui::DragFloat3(name2, &((*patrolLists[pListIndex])[i].x));
+	}
+
+	ImGui::Text(blank.c_str());
+	ImGui::Text(("Using Patrol List #" + std::to_string(pListIndex)).c_str());
+
+	if (ImGui::Button("[Swap Patrol Point Lists]"))
+	{
+		if (pListIndex == 0)
+		{
+			pListIndex = 1;
+			GetGameObject()->SetPostion(startPos2);
+		}
+		else
+		{
+			pListIndex = 0;
+			GetGameObject()->SetPostion(startPos);
+		}
+
+		pIndex = 0;
+		pathRequested = false;
+	}
+
 }
 
 nlohmann::json Enemy::ToJson() const {
@@ -155,6 +192,13 @@ nlohmann::json Enemy::ToJson() const {
 	}
 	result["PatrolPointCount"] = glm::vec3(patrolPoints.size());
 	result["StartingPosition"] = startPos;
+
+	for (int i = 0; i < patrolPoints2.size(); i++)
+	{
+		result["Patrol2Point" + std::to_string(i)] = patrolPoints2[i];
+	}
+	result["PatrolPointCount2"] = glm::vec3(patrolPoints2.size());
+	result["StartingPosition2"] = startPos2;
 	return result;
 }
 
@@ -165,6 +209,12 @@ Enemy::Sptr Enemy::FromJson(const nlohmann::json& blob) {
 		result->patrolPoints.push_back(JsonGet(blob, "PatrolPoint" + std::to_string(i), glm::vec3(0.0f)));
 	}
 	result->startPos = JsonGet(blob, "StartingPosition", result->startPos);
+
+	for (int i = 0; i < JsonGet(blob, "PatrolPointCount2", glm::vec3(result->patrolPoints2.size())).x; i++)
+	{
+		result->patrolPoints2.push_back(JsonGet(blob, "Patrol2Point" + std::to_string(i), glm::vec3(0.0f)));
+	}
+	result->startPos2 = JsonGet(blob, "StartingPosition2", result->startPos2);
 
 	return result;
 }

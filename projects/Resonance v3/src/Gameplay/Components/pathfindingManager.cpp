@@ -255,7 +255,7 @@ void pathfindingManager::SequencePath()
 		else
 		{
 			pathSet.push_back(current->GetWorldPosition());
-			current = current->Get<NavNode>()->parent;;
+			current = current->Get<NavNode>()->parent;
 		}
 	}
 }
