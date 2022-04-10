@@ -53,7 +53,6 @@ void AudioManager::Awake() {
 	LoadSound("SirenDistracted", "event:/Siren Distracted");
 	LoadSound("SirenAgro", "event:/Siren Aggravated");
 	LoadSound("SirenAlerted", "event:/Siren Alerted");
-	LoadSound("TheLabs", "event:/The Labs");
 
 
 
@@ -62,14 +61,9 @@ void AudioManager::Awake() {
 	{
 		PlaySoundByName("Engines", 1.0f, glm::vec3(13.5f, 28.8f, 0));
 		PlaySoundByName("Engines", 1.0f, glm::vec3(-13.5f, 28.8f, 0));
-		PlaySoundByName(track, 0.5f);
-	}
-	else
-	{
-		PlaySoundByName(track, 1.0f);
 	}
 
-
+	PlaySoundByName(track, 0.5f);
 }
 
 AudioManager::~AudioManager()
