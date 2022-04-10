@@ -2,6 +2,7 @@
 #include "Utils/ImGuiHelper.h"
 #include "Utils/JsonGlmHelpers.h"
 #include "Gameplay/Components/SimpleCameraControl.h"
+#include "Application/Application.h"
 
 void AudioManager::Awake() {
 	GetGameObject()->GetScene()->audioManager = GetGameObject();
@@ -45,6 +46,7 @@ void AudioManager::Awake() {
 	LoadSound("NotePickup", "event:/Note Pickup");
 	LoadSound("NotePutdown", "event:/Note Putdown");
 	LoadSound("ClockTick", "event:/Clock Tick");
+	LoadSound("SafeRoom", "event:/Safe Room");
 
 
 
@@ -79,6 +81,38 @@ void AudioManager::Update(float deltaTime) {
 
 			studioSystem->setListenerAttributes(0, &listenerAttributes);
 		}
+
+		//I apoligize in advance for this nested if statement. Im tired.
+		if (Application::Get().scenePath.substr(Application::Get().scenePath.find_last_of("/\\") + 1) == "level2.json")
+		{
+			if (glm::length(glm::vec3(-40.7f, 115.5f, 6.0f) - player->GetPosition()) <= 20.0f)
+			{
+				if (saferoomEvent == nullptr)
+				{
+					saferoomEvent = PlaySoundByName("SafeRoom", 0.8f);
+				}
+				else
+				{
+					float vol;
+					saferoomEvent->getVolume(&vol);
+					saferoomEvent->setVolume(glm::lerp(vol, 0.8f, deltaTime));
+				}
+			}
+			else
+			{
+				if (saferoomEvent != nullptr)
+				{
+					float vol;
+					saferoomEvent->getVolume(&vol);
+
+					saferoomEvent->setVolume(glm::lerp(vol, 0.0f, deltaTime));
+
+					if (vol <= 0.01f)
+						saferoomEvent = nullptr;
+				}
+			}
+		}
+
 	}
 
 	FMOD::ChannelGroup* masterChannelGroup;

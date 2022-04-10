@@ -16,6 +16,7 @@ public:
 	FMOD::Studio::Bank* soundBank;
 	FMOD::Studio::Bank* soundStringBank;
 	FMOD::Studio::EventDescription* soundEvents[40];
+	FMOD::Studio::EventInstance* saferoomEvent;
 
 	float volume = 1.0f;
 	std::string track = "L1_Ambiance";
