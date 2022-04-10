@@ -60,9 +60,10 @@ void prep_emitter(out float startLife, out int toEmit) {
     float lifetime = inLifetime[0] - u_DeltaTime;
     int emitted = 1;
     vec4 meta = inMetadata[0];
+
     startLife = lifetime;
     toEmit = 0;
-    
+
     while ((lifetime < 0) && (emitted < MAX_VERTS_OUT)) {
         lifetime += meta.x;
         toEmit ++;
@@ -70,7 +71,7 @@ void prep_emitter(out float startLife, out int toEmit) {
     }
 
     // Push the emitter back into the output stream
-    out_Type     = inType[0];
+                out_Type     = inType[0];
     out_TexID    = inTexID[0];
     out_Position = inPosition[0];
     out_Velocity = inVelocity[0];
@@ -110,8 +111,8 @@ void emit_stream() {
         out_Metadata = vec4(out_Lifetime, sizeRange.x + (sizeRange.y - meta.x) * sizeScale, 0, 0);
         
         out_Metadata2 = vec4(0);
-        out_Color    = inColor[0];
-        
+        out_Color    = inColor[0];      
+                
         EmitVertex();
         EndPrimitive();
     }
@@ -128,12 +129,11 @@ void emit_box() {
     vec3 halfExtents = meta2.yzw;
 
     prep_emitter(startLife, toEmit);
-
     // If the lifetime is at 0, we emit a particle
     for (int ix = 0; ix < toEmit; ix++) {
         float timeAdjust = (-startLife + (ix * meta.x));
         out_Type = TYPE_PARTICLE;
-        out_TexID = inTexID[0];
+out_TexID = inTexID[0];
 
         vec3 relative = vec3(
             (random(u_Time + 3) * 2 - 1) * halfExtents.x,
@@ -263,7 +263,7 @@ void main() {
 
         case TYPE_EMITTER_BOX:
             emit_box();
-            return;
+            return; 
 
         case TYPE_EMITTER_CONE:
             emit_cone();
@@ -278,7 +278,7 @@ void main() {
                 // Update position and apply forces
                 out_Position = inPosition[0] + inVelocity[0] * u_DeltaTime;
                 out_Velocity = inVelocity[0] + (u_Gravity * u_DeltaTime);
-                                
+                
                 // Update lifetime
                 out_Lifetime = lifetime;
 
@@ -293,8 +293,9 @@ void main() {
                 EndPrimitive();
             }
             return;
-        // Anything else, for debug purposes
-        default:
+            // Anything else, for debug purposes
+        default:  
             return;
     }
+
 }

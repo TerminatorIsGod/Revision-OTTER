@@ -23,7 +23,6 @@ void InteractSystem::RenderImGui() {
 	LABEL_LEFT(ImGui::DragFloat, "Interact Distance", &_interactDistance, 1.0f);
 	LABEL_LEFT(ImGui::Checkbox, "Requires Key", &_requiresKey);
 	LABEL_LEFT(ImGui::Checkbox, "Is this a Key", &_iskey);
-	LABEL_LEFT(ImGui::Checkbox, "Is this a Generator", &_isGenerator);
 	LABEL_LEFT(ImGui::InputInt, "Key", &_requiredKey, 1.0f);
 }
 
@@ -164,7 +163,6 @@ void InteractSystem::interact() {
 
 	if (_isGenerator && _distance <= _interactDistance) {
 		GetGameObject()->GetScene()->isGeneratorOn = true;
-		LOG_INFO("Generator is now on!");
 	}
 
 	//Key (based on distance)

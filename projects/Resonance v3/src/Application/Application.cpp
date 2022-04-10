@@ -111,7 +111,14 @@ bool Application::PassiveLoadFiles() {
 
 		std::string str;
 		str = asyncObjectFileNames.front();
-		asyncObjectFileNames.remove(str);
+		//asyncObjectFileNames.remove(str);
+		try {
+			asyncObjectFileNames.remove(str);
+		}
+		catch (const std::exception& ex) {
+			LOG_ERROR("Async threads are synced up! Attempting to desync...");
+			std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		}
 
 
 		std::cout << "Loading asset async, Object: " << str << "    Thread number: " << std::this_thread::get_id() << std::endl;
@@ -226,13 +233,9 @@ void Application::_Run()
 	}
 
 	std::future<bool> loadAsync1 = std::async(std::launch::async, PassiveLoadFiles);
-	std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	std::future<bool> loadAsync2 = std::async(std::launch::async, PassiveLoadFiles);
-	std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	std::future<bool> loadAsync3 = std::async(std::launch::async, PassiveLoadFiles);
-	std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	std::future<bool> loadAsync4 = std::async(std::launch::async, PassiveLoadFiles);
-	std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	std::future<bool> loadAsync5 = std::async(std::launch::async, PassiveLoadFiles);
 
 	// TODO: Register layers
@@ -279,7 +282,6 @@ void Application::_Run()
 
 	bool changeSensToGlobal = true;
 
-	LOG_INFO("GAME NOW RUNNING");
 
 	// Infinite loop as long as the application is running
 	while (_isRunning) {

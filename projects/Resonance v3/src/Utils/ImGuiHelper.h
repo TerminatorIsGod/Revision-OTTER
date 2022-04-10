@@ -86,7 +86,7 @@ public:
 
 	static void DrawLinearDepthTexture(const Texture2D::Sptr& image, const glm::ivec2& size, float zNear, float zFar);
 
-	static void DrawTextureArraySlice(const Texture2DArray::Sptr& image, uint32_t slice, const glm::ivec2& size, const ImVec4& border = ImVec4(0,0,0,0));
+	static void DrawTextureArraySlice(const Texture2DArray::Sptr& image, uint32_t slice, const glm::ivec2& size, const ImVec4& border = ImVec4(0, 0, 0, 0));
 
 	/// <summary>
 	/// Notifies ImGui that a new frame has begun
