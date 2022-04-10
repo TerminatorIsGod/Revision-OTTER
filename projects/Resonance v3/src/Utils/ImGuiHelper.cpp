@@ -260,7 +260,7 @@ void ImGuiHelper::DrawLinearDepthTexture(const Texture2D::Sptr& image, const glm
 	ImGui::PopStyleVar();
 }
 
-void ImGuiHelper::DrawTextureArraySlice(const Texture2DArray::Sptr& image, uint32_t slice, const glm::ivec2& size, const ImVec4& border)
+void ImGuiHelper::DrawTextureArraySlice(const Texture2DArray::Sptr& image, uint32_t slice , const glm::ivec2& size, const ImVec4& border)
 {
 	if (image != nullptr) {
 
@@ -313,7 +313,7 @@ void ImGuiHelper::DrawTextureArraySlice(const Texture2DArray::Sptr& image, uint3
 			glUseProgram(data->programId);
 			glUniform1uiv(1, 1, &data->slice);
 			glBindTextureUnit(1, data->texId);
-			}, temp);
+		}, temp);
 
 
 		drawList->PrimReserve(6, 4);
@@ -325,17 +325,16 @@ void ImGuiHelper::DrawTextureArraySlice(const Texture2DArray::Sptr& image, uint3
 			glUseProgram(data->restoreProgram);
 			glBindTextureUnit(1, data->restoreTexId);
 			delete cmd->UserCallbackData;
-			}, temp);
+		}, temp);
 
 		ImGui::PopStyleVar();
 	}
-	else
+	else 
 	{
 		ImGui::BeginChildFrame(ImGui::GetID("img"), ImVec2(size.x, size.y));
 		ImGui::EndChildFrame();
 	}
 }
-
 
 void ImGuiHelper::StartFrame() {
 	LOG_ASSERT(_window != nullptr, "You must initialize ImGuiHelper before use!");
