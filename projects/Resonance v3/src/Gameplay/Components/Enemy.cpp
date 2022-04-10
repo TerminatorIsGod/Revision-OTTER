@@ -33,8 +33,8 @@ void Enemy::Awake()
 
 	if (isSiren)
 	{
-		IdleVelocity = 3.0f;
-		AgroVelocity = 4.0f;
+		IdleVelocity = 4.0f;
+		AgroVelocity = 6.0f;
 		agroMovingListeningRadius = 12.0f;
 		agroStationaryListeningRadius = 12.0f;
 		distractedListeningRadius = 11.0f;
