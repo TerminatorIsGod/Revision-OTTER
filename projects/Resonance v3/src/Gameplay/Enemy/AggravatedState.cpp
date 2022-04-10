@@ -22,7 +22,7 @@ void AggravatedState::Start(Enemy* e)
 	{
 		e->GetGameObject()->Get<SoundEmmiter>()->targetVolume = e->GetGameObject()->Get<SoundEmmiter>()->distractionVolume;
 		e->GetGameObject()->Get<SoundEmmiter>()->isDecaying = false;
-		e->GetGameObject()->Get<SoundEmmiter>()->lerpSpeed = 3.0f;
+		e->GetGameObject()->Get<SoundEmmiter>()->lerpSpeed = 1.5f;
 	}
 
 	e->pathRequested = false;

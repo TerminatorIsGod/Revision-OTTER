@@ -35,6 +35,7 @@ SimpleCameraControl::~SimpleCameraControl()
 	p_Distract->~Texture2D();
 	p_Locked->~Texture2D();
 	p_DropThrow->~Texture2D();
+	p_Read->~Texture2D();
 	blackTex->~Texture2D();
 	gameoverTex->~Texture2D();
 	loadingTex->~Texture2D();
@@ -56,6 +57,7 @@ void SimpleCameraControl::Awake() {
 		p_Distract = ResourceManager::CreateAsset<Texture2D>("textures/ui/DistractPrompt.png");
 		p_Locked = ResourceManager::CreateAsset<Texture2D>("textures/ui/LockedPrompt.png");
 		p_DropThrow = ResourceManager::CreateAsset<Texture2D>("textures/ui/DropThrow Prompt.png");
+		p_Read = ResourceManager::CreateAsset<Texture2D>("textures/ui/Read Prompt.png");
 		blackTex = ResourceManager::CreateAsset<Texture2D>("textures/black.png");
 		gameoverTex = ResourceManager::CreateAsset<Texture2D>("textures/ui/deathScreen.jpg");
 		loadingTex = ResourceManager::CreateAsset<Texture2D>("textures/ui/LoadingScreen.png");
@@ -505,6 +507,13 @@ void SimpleCameraControl::ShowDropThrow()
 	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(p_DropThrow);
 	PlaceUI(3, 53.33f, 30, 1, 0, 12, 1); // Interaction Prompt
 
+	promptShown = true;
+}
+
+void SimpleCameraControl::ShowRead()
+{
+	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
+	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(p_Read);
 	promptShown = true;
 }
 

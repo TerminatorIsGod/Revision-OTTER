@@ -23,13 +23,15 @@ void NoteSystem::Awake()
 void NoteSystem::RenderImGui() {
 	LABEL_LEFT(ImGui::DragFloat, "Distance", &_distance, 1.0f);
 	LABEL_LEFT(ImGui::DragFloat, "Interact Distance", &_interactDistance, 1.0f);
+	LABEL_LEFT(ImGui::Checkbox, "Is Terminal?", &isTerminal);
 }
 
 nlohmann::json NoteSystem::ToJson() const {
 	return {
 		{ "Distance", _distance},
 		{ "InteractDistance", _interactDistance },
-		{ "NoteObjName", noteName }
+		{ "NoteObjName", noteName },
+		{ "IsTerminal", isTerminal}
 	};
 }
 
@@ -47,6 +49,8 @@ NoteSystem::Sptr NoteSystem::FromJson(const nlohmann::json & blob) {
 	result->_distance = blob["Distance"];
 	result->_interactDistance = blob["InteractDistance"];
 	result->noteName = blob["NoteObjName"];
+	result->isTerminal = JsonGet(blob, "IsTerminal", result->isTerminal);
+
 	return result;
 }
 
@@ -66,7 +70,7 @@ void NoteSystem::Update(float deltaTime) {
 	if (_player->Get<SimpleCameraControl>()->interactionObjectPos == opos) {
 
 		//show interact message
-		_player->Get<SimpleCameraControl>()->ShowPickup();
+		_player->Get<SimpleCameraControl>()->ShowRead();
 
 		if (glfwGetKey(_window, GLFW_KEY_E)) {
 			if (!isKeyPressed)
@@ -95,7 +99,11 @@ void NoteSystem::interact() {
 	if (isOpen)
 	{
 		isOpen = false;
-		GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("NotePutdown", 1.0f);
+		if (!isTerminal)
+			GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("NotePutdown", 1.0f);
+		else
+			GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("LoggedOut", 1.0f);
+
 		GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<GuiPanel>()->IsEnabled = false;
 		std::cout << "Note disabled\n\n";
 		//if (GetGameObject()->GetScene()->FindObjectByName("Main Camera"))
@@ -105,7 +113,11 @@ void NoteSystem::interact() {
 	else
 	{
 		isOpen = true;
-		GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("NotePickup", 1.0f);
+		if (!isTerminal)
+			GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("NotePickup", 1.0f);
+		else
+			GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("LoggedIn", 1.0f);
+
 		GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<GuiPanel>()->IsEnabled = true;
 		GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<RectTransform>()->SetPosition(glm::vec2(windx / 2, windy / 2));
 		GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<RectTransform>()->SetSize(glm::vec2((windx / 4), (windy / 4.5)));

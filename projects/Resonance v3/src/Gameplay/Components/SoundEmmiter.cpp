@@ -27,6 +27,7 @@ void SoundEmmiter::Awake()
 
 void SoundEmmiter::Update(float deltaTime)
 {
+
 	Interaction();
 
 	if (!isDecaying)
@@ -137,6 +138,9 @@ void SoundEmmiter::MoveToPos(glm::vec3 pos)
 void SoundEmmiter::Interaction()
 {
 	if (isPlayerLight)
+		return;
+
+	if (isSirenSound)
 		return;
 
 	if (player->Get<SimpleCameraControl>()->interactionObjectPos != GetGameObject()->GetPosition())

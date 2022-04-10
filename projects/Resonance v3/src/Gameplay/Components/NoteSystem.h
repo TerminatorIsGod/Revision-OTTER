@@ -28,23 +28,23 @@ public:
 	virtual nlohmann::json ToJson() const override;
 	static NoteSystem::Sptr FromJson(const nlohmann::json& blob);
 	Gameplay::GameObject::Sptr _player;
-	
+
 	LerpSystem::Sptr _lerpS;
 
 	float _distance = 0;
 	float _interactDistance = 0;
 
-	std::string noteName{""};
+	std::string noteName{ "" };
 
 	bool isOpen = false;
 
 	bool isKeyPressed = false;
-
+	bool isTerminal = false;
 	GLFWwindow* _window;
 
 protected:
 
 	//int _keys;
 
-	
+
 };

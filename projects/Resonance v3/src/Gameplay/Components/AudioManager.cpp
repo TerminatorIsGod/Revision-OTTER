@@ -47,7 +47,8 @@ void AudioManager::Awake() {
 	LoadSound("NotePutdown", "event:/Note Putdown");
 	LoadSound("ClockTick", "event:/Clock Tick");
 	LoadSound("SafeRoom", "event:/Safe Room");
-
+	LoadSound("LoggedIn", "event:/Logged In");
+	LoadSound("LoggedOut", "event:/Logged Out");
 
 
 	if (track == "L1_Ambiance")
