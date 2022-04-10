@@ -7,6 +7,8 @@
 #include "Gameplay/Enemy/AggravatedState.h"
 #include "fmod_studio.hpp"
 #include "Gameplay/Components/SoundEmmiter.h"
+#include <future>
+#include <thread>
 
 
 #pragma region "Default Functions"

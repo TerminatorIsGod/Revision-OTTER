@@ -23,7 +23,7 @@ const uint EMITTER_MASK = 0x0000FFFF;
 
 void main() {
     
-	// If the particle type is an emitter, we can skip it
+    // If the particle type is an emitter, we can skip it
 	if ((inType[0] & EMITTER_MASK) == inType[0]) {
 		return;
 	}
