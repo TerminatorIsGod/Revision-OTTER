@@ -15,14 +15,18 @@ EnemyState& AggravatedState::getInstance()
 void AggravatedState::Start(Enemy* e)
 {
 	std::cout << "\n[Enemy] " << e->GetGameObject()->Name << ": Entered Aggravated State";
-	e->myChannel = e->scene->audioManager->Get<AudioManager>()->PlaySoundByName("LeaflingAgro", 2.0f, e->GetGameObject()->GetPosition(), true);
-	//e->myChannel->addDSP(FMOD_CHANNELCONTROL_DSP_HEAD, e->myDSP);
 
 	if (e->isSiren)
 	{
+		e->myChannel = e->scene->audioManager->Get<AudioManager>()->PlaySoundByName("SirenAgro", 2.0f, e->GetGameObject()->GetPosition(), true);
+
 		e->GetGameObject()->Get<SoundEmmiter>()->targetVolume = e->GetGameObject()->Get<SoundEmmiter>()->distractionVolume;
 		e->GetGameObject()->Get<SoundEmmiter>()->isDecaying = false;
 		e->GetGameObject()->Get<SoundEmmiter>()->lerpSpeed = 1.5f;
+	}
+	else
+	{
+		e->myChannel = e->scene->audioManager->Get<AudioManager>()->PlaySoundByName("LeaflingAgro", 2.0f, e->GetGameObject()->GetPosition(), true);
 	}
 
 	e->pathRequested = false;

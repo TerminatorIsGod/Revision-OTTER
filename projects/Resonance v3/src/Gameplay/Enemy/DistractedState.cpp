@@ -17,7 +17,11 @@ EnemyState& DistractedState::getInstance()
 void DistractedState::Start(Enemy* e)
 {
 	std::cout << "\n[Enemy] " << e->GetGameObject()->Name << ": Entered Distracted State";
-	e->myChannel = e->scene->audioManager->Get<AudioManager>()->PlaySoundByName("LeaflingDistracted", 2.0f, e->GetGameObject()->GetPosition(), true);
+	if (!e->isSiren)
+		e->myChannel = e->scene->audioManager->Get<AudioManager>()->PlaySoundByName("LeaflingDistracted", 2.0f, e->GetGameObject()->GetPosition(), true);
+	else
+		e->myChannel = e->scene->audioManager->Get<AudioManager>()->PlaySoundByName("SirenDistracted", 2.0f, e->GetGameObject()->GetPosition(), true);
+
 	//e->myChannel->addDSP(FMOD_CHANNELCONTROL_DSP_HEAD, e->myDSP);
 
 	e->pathRequested = false;

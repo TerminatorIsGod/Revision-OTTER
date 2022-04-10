@@ -49,6 +49,12 @@ void AudioManager::Awake() {
 	LoadSound("SafeRoom", "event:/Safe Room");
 	LoadSound("LoggedIn", "event:/Logged In");
 	LoadSound("LoggedOut", "event:/Logged Out");
+	LoadSound("SirenPatrol", "event:/Siren Patrolling");
+	LoadSound("SirenDistracted", "event:/Siren Distracted");
+	LoadSound("SirenAgro", "event:/Siren Aggravated");
+	LoadSound("SirenAlerted", "event:/Siren Alerted");
+
+
 
 
 	if (track == "L1_Ambiance")

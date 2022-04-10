@@ -15,7 +15,11 @@ EnemyState& PatrollingState::getInstance()
 void PatrollingState::Start(Enemy* e)
 {
 	std::cout << "\n[Enemy] " << e->GetGameObject()->Name << ": Entered Patrolling State";
-	e->myChannel = e->scene->audioManager->Get<AudioManager>()->PlaySoundByName("LeaflingPatrol", 2.0f, e->GetGameObject()->GetPosition(), true);
+	if (!e->isSiren)
+		e->myChannel = e->scene->audioManager->Get<AudioManager>()->PlaySoundByName("LeaflingPatrol", 2.0f, e->GetGameObject()->GetPosition(), true);
+	else
+		e->myChannel = e->scene->audioManager->Get<AudioManager>()->PlaySoundByName("SirenPatrol", 2.0f, e->GetGameObject()->GetPosition(), true);
+
 	//e->myChannel->addDSP(FMOD_CHANNELCONTROL_DSP_HEAD, e->myDSP);
 
 	e->pathRequested = false;
