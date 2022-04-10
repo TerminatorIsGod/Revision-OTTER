@@ -119,7 +119,7 @@ bool Application::PassiveLoadFiles() {
 			LOG_ERROR("Async threads are synced up! Attempting to desync...");
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		}
-		
+
 
 		std::cout << "Loading asset async, Object: " << str << "    Thread number: " << std::this_thread::get_id() << std::endl;
 		ObjLoader::LoadFromFile(str, true, true);
@@ -368,7 +368,7 @@ void Application::_Run()
 
 		if (isGamePaused && showPauseScreen && _currentScene->FindObjectByName("Main Camera")) {
 
-			if ((glfwGetKey(_window, GLFW_KEY_LEFT) == GLFW_PRESS) || (glfwGetKey(_window, GLFW_KEY_RIGHT) == GLFW_PRESS)) {
+			if ((glfwGetKey(_window, GLFW_KEY_LEFT) == GLFW_PRESS) || (glfwGetKey(_window, GLFW_KEY_RIGHT) == GLFW_PRESS) || (glfwGetKey(_window, GLFW_KEY_UP) == GLFW_PRESS) || (glfwGetKey(_window, GLFW_KEY_DOWN) == GLFW_PRESS)) {
 
 				if (!isBeingInteracted) {
 					isBeingInteracted = true;
@@ -376,11 +376,25 @@ void Application::_Run()
 					glm::vec2 sens = _currentScene->FindObjectByName("Main Camera")->Get<SimpleCameraControl>()->_mouseSensitivity;
 
 					if ((glfwGetKey(_window, GLFW_KEY_LEFT) == GLFW_PRESS) && (sens.x >= 0.026))
+					{
 						sens += glm::vec2(-0.025, -0.025);
-
+						_currentScene->audioManager->Get<AudioManager>()->PlaySoundByName("ClockTick", 1.0f, glm::vec3(0.0f), false, 1.0f + sens.x);
+					}
 					if ((glfwGetKey(_window, GLFW_KEY_RIGHT) == GLFW_PRESS))
+					{
 						sens += glm::vec2(0.025, 0.025);
+						_currentScene->audioManager->Get<AudioManager>()->PlaySoundByName("ClockTick", 1.0f, glm::vec3(0.0f), false, 1.0f + sens.x);
+					}
+					if ((glfwGetKey(_window, GLFW_KEY_DOWN) == GLFW_PRESS) && _currentScene->audioManager->Get<AudioManager>()->volume > 0.0f)
+					{
+						_currentScene->audioManager->Get<AudioManager>()->volume += -0.25f;
+					}
+					if ((glfwGetKey(_window, GLFW_KEY_UP) == GLFW_PRESS) && _currentScene->audioManager->Get<AudioManager>()->volume < 2.0f)
+					{
+						_currentScene->audioManager->Get<AudioManager>()->volume += 0.25f;
+					}
 
+					_currentScene->audioManager->Get<AudioManager>()->Update(1.0f);
 					_currentScene->FindObjectByName("Main Camera")->Get<SimpleCameraControl>()->_mouseSensitivity = sens;
 					globalSens = sens;
 

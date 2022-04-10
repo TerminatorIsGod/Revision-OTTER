@@ -44,6 +44,7 @@ void AudioManager::Awake() {
 	LoadSound("GlassPickup", "event:/Glass Pickup");
 	LoadSound("NotePickup", "event:/Note Pickup");
 	LoadSound("NotePutdown", "event:/Note Putdown");
+	LoadSound("ClockTick", "event:/Clock Tick");
 
 
 
@@ -79,11 +80,12 @@ void AudioManager::Update(float deltaTime) {
 			studioSystem->setListenerAttributes(0, &listenerAttributes);
 		}
 	}
-	studioSystem->update();
 
 	FMOD::ChannelGroup* masterChannelGroup;
 	system->getMasterChannelGroup(&masterChannelGroup);
 	masterChannelGroup->setVolume(volume);
+
+	studioSystem->update();
 }
 
 void AudioManager::RenderImGui() {
@@ -120,7 +122,7 @@ void AudioManager::LoadSound(const std::string& soundName, const std::string& fi
 	events[soundName] = eventDesc;
 }
 
-FMOD::Studio::EventInstance* AudioManager::PlaySoundByName(const std::string& soundName, float vol, glm::vec3 pos, bool lowpass)
+FMOD::Studio::EventInstance* AudioManager::PlaySoundByName(const std::string& soundName, float vol, glm::vec3 pos, bool lowpass, float pitch)
 {
 	FMOD::Studio::EventInstance* eventInst;
 	events[soundName]->createInstance(&eventInst);
@@ -132,6 +134,8 @@ FMOD::Studio::EventInstance* AudioManager::PlaySoundByName(const std::string& so
 		eventInst->set3DAttributes(&attributes);
 	}
 	eventInst->setVolume(vol);
+	eventInst->setPitch(pitch);
+
 	eventInst->start();
 
 	return eventInst;

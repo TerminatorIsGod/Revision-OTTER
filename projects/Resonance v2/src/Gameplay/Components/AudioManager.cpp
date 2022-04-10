@@ -54,6 +54,8 @@ void AudioManager::Awake() {
 	}
 
 	PlaySoundByName(track, 0.5f);
+	system->getMasterChannelGroup(&masterChannelGroup);
+
 }
 
 AudioManager::~AudioManager()
@@ -76,9 +78,6 @@ void AudioManager::Update(float deltaTime) {
 		studioSystem->setListenerAttributes(0, &listenerAttributes);
 	}
 	studioSystem->update();
-
-	FMOD::ChannelGroup* masterChannelGroup;
-	system->getMasterChannelGroup(&masterChannelGroup);
 	masterChannelGroup->setVolume(volume);
 }
 

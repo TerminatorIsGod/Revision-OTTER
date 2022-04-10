@@ -30,28 +30,27 @@ pathfindingManager::~pathfindingManager()
 	startNode = nullptr;
 	endNode = nullptr;
 }
-//Pathfinding Stress-test
+
 void pathfindingManager::Update(float deltaTime)
 {
 	//if (glfwGetKey(_window, GLFW_KEY_P))
 	//{
-	//	std::vector<GameObject::Sptr> yo = requestPath(glm::vec3(0, 50.0f, 100), scene->MainCamera->GetGameObject()->GetPosition());
+	//	float minDistance = 999999;
+	//	GameObject* minNode = navNodes[0];
+	//	float distance;
 
+	//	//Find Start Node
 	//	for (int i = 0; i < navNodes.size(); i++)
 	//	{
-	//		navNodes[i]->SetScale(glm::vec3(1.0f));
-	//		navNodes[i]->SetRotation(glm::vec3(0.0f));
-
+	//		distance = glm::length(navNodes[i]->GetWorldPosition() - scene->MainCamera->GetGameObject()->GetParent()->GetPosition());
+	//		if (distance < minDistance)
+	//		{
+	//			minDistance = distance;
+	//			minNode = navNodes[i];
+	//		}
 	//	}
-
-	//	for (int i = 0; i < yo.size(); i++)
-	//	{
-	//		yo[i]->SetScale(glm::vec3(2.0f, 2.0f, 5.0f));
-	//	}
-
-	//	endNode->SetRotation(glm::vec3(90, 0, 0));
-	//	startNode->SetRotation(glm::vec3(30, 0, 0));
-
+	//	startNode = minNode;
+	//	std::cout << "\nCLOSEST NODE: " << minNode->Name;
 	//}
 }
 
