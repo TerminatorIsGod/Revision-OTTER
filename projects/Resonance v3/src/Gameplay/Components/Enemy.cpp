@@ -131,11 +131,13 @@ void Enemy::Update(float deltaTime)
 		}
 	}
 
-	//if (scene->isGeneratorOn)
-	//	pListIndex = 1;
-	//else
-	//	pListIndex = 0;
-
+	if (scene->isGeneratorOn && pListIndex == 0)
+	{
+		pListIndex = 1;
+		GetGameObject()->SetPostion(startPos2);
+		pIndex = 0;
+		pathRequested = false;
+	}
 }
 
 void Enemy::RenderImGui() {

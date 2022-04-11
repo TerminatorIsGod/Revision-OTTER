@@ -549,7 +549,7 @@ void SimpleCameraControl::FadeOutBlack(float deltaTime)
 	_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f, 1.0f, 1.0f, lerpedAlpha));
 
 }
- 
+
 void SimpleCameraControl::ShowBlack()
 {
 	_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(blackTex);
