@@ -33,25 +33,25 @@ pathfindingManager::~pathfindingManager()
 
 void pathfindingManager::Update(float deltaTime)
 {
-	//if (glfwGetKey(_window, GLFW_KEY_P))
-	//{
-	//	float minDistance = 999999;
-	//	GameObject* minNode = navNodes[0];
-	//	float distance;
+	if (glfwGetKey(_window, GLFW_KEY_P))
+	{
+		float minDistance = 999999;
+		GameObject* minNode = navNodes[0];
+		float distance;
 
-	//	//Find Start Node
-	//	for (int i = 0; i < navNodes.size(); i++)
-	//	{
-	//		distance = glm::length(navNodes[i]->GetWorldPosition() - scene->MainCamera->GetGameObject()->GetParent()->GetPosition());
-	//		if (distance < minDistance)
-	//		{
-	//			minDistance = distance;
-	//			minNode = navNodes[i];
-	//		}
-	//	}
-	//	startNode = minNode;
-	//	std::cout << "\nCLOSEST NODE: " << minNode->Name;
-	//}
+		//Find Start Node
+		for (int i = 0; i < navNodes.size(); i++)
+		{
+			distance = glm::length(navNodes[i]->GetWorldPosition() - scene->MainCamera->GetGameObject()->GetParent()->GetPosition());
+			if (distance < minDistance)
+			{
+				minDistance = distance;
+				minNode = navNodes[i];
+			}
+		}
+		startNode = minNode;
+		std::cout << "\nCLOSEST NODE: " << minNode->Name;
+	}
 }
 
 

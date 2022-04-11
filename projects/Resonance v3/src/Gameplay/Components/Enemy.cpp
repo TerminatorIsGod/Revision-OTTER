@@ -110,6 +110,15 @@ void Enemy::Update(float deltaTime)
 		{
 			currentWetVal = glm::mix(currentWetVal, 1.0f, 1.8f * deltaTime);
 			myChannel->setParameterByName("Lowpass Mix", currentWetVal);
+
+			if (scene->isGeneratorOn && pListIndex == 0 && currentWetVal > 0.9f)
+			{
+				pListIndex = 1;
+				GetGameObject()->SetPostion(startPos2);
+				pIndex = 0;
+				pathRequested = false;
+				SetState(PatrollingState::getInstance());
+			}
 		}
 		else if (glm::round(objectPos) == glm::round(player->GetPosition()))
 		{
@@ -131,13 +140,7 @@ void Enemy::Update(float deltaTime)
 		}
 	}
 
-	if (scene->isGeneratorOn && pListIndex == 0)
-	{
-		pListIndex = 1;
-		GetGameObject()->SetPostion(startPos2);
-		pIndex = 0;
-		pathRequested = false;
-	}
+
 }
 
 void Enemy::RenderImGui() {
