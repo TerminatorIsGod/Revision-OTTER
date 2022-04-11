@@ -77,6 +77,13 @@ void InteractSystem::Update(float deltaTime) {
 	glm::vec3 tpos = ppos - opos;
 	_distance = sqrt(pow(tpos.x, 2) + pow(tpos.y, 2) + pow(tpos.z, 2));
 
+	if (GetGameObject()->GetScene()->isGeneratorOn) {
+		if (_isLockedAfterGenIsOn && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !_player->Get<SimpleCameraControl>()->promptShown) {
+			_player->Get<SimpleCameraControl>()->ShowLocked();
+			return;
+		}
+	}
+
 	//Key (proximity based)
 	if (_iskey && _distance <= _interactDistance && !_player->Get<SimpleCameraControl>()->promptShown) {
 		_player->Get<SimpleCameraControl>()->ShowPickup();
@@ -87,7 +94,18 @@ void InteractSystem::Update(float deltaTime) {
 
 		if (_player->Get<InventorySystem>()->getKey(_requiredKey))
 		{
-			if (!isOpen)
+			if (_isDefaultLockedByGenerator) {
+				if (GetGameObject()->GetScene()->isGeneratorOn) {
+					if (!isOpen)
+						_player->Get<SimpleCameraControl>()->ShowOpen();
+					else if (isOpen)
+						_player->Get<SimpleCameraControl>()->ShowClose();
+				}
+				else {
+					_player->Get<SimpleCameraControl>()->ShowLocked();
+				}
+			}
+			if (!isOpen && !_isDefaultLockedByGenerator)
 				_player->Get<SimpleCameraControl>()->ShowOpen();
 			else if (isOpen)
 				_player->Get<SimpleCameraControl>()->ShowClose();
@@ -105,6 +123,13 @@ void InteractSystem::Update(float deltaTime) {
 	if (glfwGetKey(_window, GLFW_KEY_E)) {
 		if (!isKeyPressed)
 		{
+			if (_isDefaultLockedByGenerator) {
+				if (GetGameObject()->GetScene()->isGeneratorOn)
+					interact();
+				else
+					return;
+			}
+
 			if (_requiresKey) {
 				if (_player->Get<InventorySystem>()->getKey(_requiredKey)) {
 					interact();
