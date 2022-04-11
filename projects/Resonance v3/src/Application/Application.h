@@ -116,6 +116,7 @@ public:
 	bool isGameStarted = true;
 	bool showPauseScreen = false;
 	bool isInteracting = false;
+	bool exitedLeft = false;
 	std::string scenePath;
 	nlohmann::json _backupState;
 

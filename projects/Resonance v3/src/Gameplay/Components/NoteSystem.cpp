@@ -119,8 +119,12 @@ void NoteSystem::interact() {
 			GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("LoggedIn", 1.0f);
 
 		GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<GuiPanel>()->IsEnabled = true;
-		GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<RectTransform>()->SetPosition(glm::vec2(windx / 2, windy / 2));
 		GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<RectTransform>()->SetSize(glm::vec2((windx / 4), (windy / 4.5)));
+
+		//Can't Change The Position of image as rect tranforms control the position of their child. 
+		//glm::vec2 sizeAdj = -glm::vec2(1920, 1080) / 2.0f;
+		//GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<RectTransform>()->SetPosition(glm::vec2(windx / 2, windy / 2) + sizeAdj);
+
 		std::cout << "Note enabled\n\n";
 		app.isInteracting = true;
 	}

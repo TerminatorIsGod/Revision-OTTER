@@ -44,6 +44,12 @@ void Ladder::Update(float deltaTime)
 		{
 			//Loads a frame after pressed so that the loading screen has a frame to render
 			Application& app = Application::Get();
+
+			if (player->GetGameObject()->GetPosition().x > 0)
+				app.exitedLeft = false;
+			else
+				app.exitedLeft = true;
+
 			app.LoadScene("level2.json");
 		}
 

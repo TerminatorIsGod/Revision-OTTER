@@ -36,6 +36,8 @@ SimpleCameraControl::~SimpleCameraControl()
 	p_Locked->~Texture2D();
 	p_DropThrow->~Texture2D();
 	p_Read->~Texture2D();
+	p_Activate->~Texture2D();
+
 	blackTex->~Texture2D();
 	gameoverTex->~Texture2D();
 	loadingTex->~Texture2D();
@@ -45,7 +47,18 @@ void SimpleCameraControl::Awake() {
 	_scene = GetGameObject()->GetScene();
 	Application& app = Application::Get();
 	_window = app.GetWindow();
-	GetGameObject()->SetPostion(startingPos);
+
+	if (app.scenePath.substr(Application::Get().scenePath.find_last_of("/\\") + 1) == "level2.json")
+	{
+		if (app.exitedLeft)
+			GetGameObject()->SetPostion(glm::vec3(-56.4, 7.0, 6.0));
+		else
+			GetGameObject()->SetPostion(glm::vec3(56.4, 7.0, 6.0));
+	}
+	else
+	{
+		GetGameObject()->SetPostion(startingPos);
+	}
 
 	//Prompt Textures
 	if (p_PickUp == nullptr)
@@ -58,9 +71,11 @@ void SimpleCameraControl::Awake() {
 		p_Locked = ResourceManager::CreateAsset<Texture2D>("textures/ui/LockedPrompt.png");
 		p_DropThrow = ResourceManager::CreateAsset<Texture2D>("textures/ui/DropThrow Prompt.png");
 		p_Read = ResourceManager::CreateAsset<Texture2D>("textures/ui/Read Prompt.png");
+		p_Activate = ResourceManager::CreateAsset<Texture2D>("textures/ui/Activate Prompt.png");
 		blackTex = ResourceManager::CreateAsset<Texture2D>("textures/black.png");
 		gameoverTex = ResourceManager::CreateAsset<Texture2D>("textures/ui/deathScreen.jpg");
 		loadingTex = ResourceManager::CreateAsset<Texture2D>("textures/ui/LoadingScreen.png");
+
 	}
 
 	for (int i = 0; i < playerEmmiterCount; i++)
@@ -514,6 +529,13 @@ void SimpleCameraControl::ShowRead()
 {
 	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
 	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(p_Read);
+	promptShown = true;
+}
+
+void SimpleCameraControl::ShowActivate()
+{
+	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
+	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(p_Activate);
 	promptShown = true;
 }
 

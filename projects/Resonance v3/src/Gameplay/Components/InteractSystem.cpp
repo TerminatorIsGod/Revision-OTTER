@@ -116,8 +116,8 @@ void InteractSystem::Update(float deltaTime) {
 		}
 	}
 
-	if (_isGenerator && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !_player->Get<SimpleCameraControl>()->promptShown) {
-		_player->Get<SimpleCameraControl>()->ShowOpen();
+	if (_isGenerator && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !GetGameObject()->GetScene()->isGeneratorOn) {
+		_player->Get<SimpleCameraControl>()->ShowActivate();
 	}
 
 	if (glfwGetKey(_window, GLFW_KEY_E)) {
@@ -194,7 +194,7 @@ void InteractSystem::interact() {
 		}
 	}
 
-	if (_isGenerator && _distance <= _interactDistance && !GetGameObject()->GetScene()->isGeneratorOn) {
+	if (_isGenerator && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !GetGameObject()->GetScene()->isGeneratorOn) {
 		GetGameObject()->GetScene()->isGeneratorOn = true;
 		GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("Generator", 1.0f, GetGameObject()->GetPosition());
 		GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("Message", 1.0f, GetGameObject()->GetPosition() + glm::vec3(0.0f, 0.0f, 3.0f));
