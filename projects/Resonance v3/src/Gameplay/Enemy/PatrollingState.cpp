@@ -56,8 +56,6 @@ void PatrollingState::Listen(Enemy* e, float deltaTime)
 		if (dist >= totalRadius)
 			continue;
 
-
-
 		//Raycasting toward heard sound to determine state change
 		btCollisionWorld::ClosestRayResultCallback hit(ToBt(e->GetGameObject()->GetPosition()), ToBt(SoundPos));
 		e->scene->GetPhysicsWorld()->rayTest(ToBt(e->GetGameObject()->GetPosition()), ToBt(SoundPos), hit);
