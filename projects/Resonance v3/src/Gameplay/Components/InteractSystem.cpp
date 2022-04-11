@@ -23,6 +23,8 @@ void InteractSystem::RenderImGui() {
 	LABEL_LEFT(ImGui::DragFloat, "Interact Distance", &_interactDistance, 1.0f);
 	LABEL_LEFT(ImGui::Checkbox, "Requires Key", &_requiresKey);
 	LABEL_LEFT(ImGui::Checkbox, "Is this a Key", &_iskey);
+	LABEL_LEFT(ImGui::Checkbox, "Is this a Generator", &_isGenerator);
+	LABEL_LEFT(ImGui::Checkbox, "Is this locked default by generator", &_isDefaultLockedByGenerator);
 	LABEL_LEFT(ImGui::InputInt, "Key", &_requiredKey, 1.0f);
 }
 
@@ -33,7 +35,9 @@ nlohmann::json InteractSystem::ToJson() const {
 		{ "RequiresKey", _requiresKey},
 		{ "RequiredKey", _requiredKey},
 		{ "IsKey", _iskey},
-		{ "IsGenerator", _isGenerator}
+		{ "IsGenerator", _isGenerator},
+		{ "IsLockedByDefaultByGenerator", _isDefaultLockedByGenerator},
+		{ "isLockedAfterGenIsOn", _isLockedAfterGenIsOn}
 	};
 }
 
@@ -44,7 +48,9 @@ InteractSystem::InteractSystem() :
 	_requiresKey(0),
 	_requiredKey(0),
 	_iskey(0),
-	_isGenerator(0)
+	_isGenerator(0),
+	_isDefaultLockedByGenerator(0),
+	_isLockedAfterGenIsOn(0)
 { }
 
 InteractSystem::~InteractSystem() = default;
@@ -57,6 +63,8 @@ InteractSystem::Sptr InteractSystem::FromJson(const nlohmann::json & blob) {
 	result->_requiresKey = blob["RequiresKey"];
 	result->_iskey = blob["IsKey"];
 	result->_isGenerator = JsonGet(blob, "IsGenerator", result->_isGenerator);
+	result->_isDefaultLockedByGenerator = JsonGet(blob, "IsLockedByDefaultByGenerator", result->_isDefaultLockedByGenerator);
+	result->_isLockedAfterGenIsOn = JsonGet(blob, "isLockedAfterGenIsOn", result->_isLockedAfterGenIsOn);
 
 	return result;
 }
