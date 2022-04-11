@@ -169,8 +169,10 @@ void InteractSystem::interact() {
 		}
 	}
 
-	if (_isGenerator && _distance <= _interactDistance) {
+	if (_isGenerator && _distance <= _interactDistance && !GetGameObject()->GetScene()->isGeneratorOn) {
 		GetGameObject()->GetScene()->isGeneratorOn = true;
+		GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("Generator", 1.0f, GetGameObject()->GetPosition());
+		GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("Message", 1.0f, GetGameObject()->GetPosition() + glm::vec3(0.0f, 0.0f, 3.0f));
 	}
 
 	//Key (based on distance)
