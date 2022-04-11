@@ -196,6 +196,9 @@ void InteractSystem::interact() {
 
 	if (_isGenerator && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !GetGameObject()->GetScene()->isGeneratorOn) {
 		GetGameObject()->GetScene()->isGeneratorOn = true;
+		if (GetGameObject()->GetScene()->FindObjectByName("Elevator Door1")) {
+			GetGameObject()->GetScene()->FindObjectByName("Elevator Door1")->Get<SlideLerpSystem>()->beginLerp = true;
+		}
 		GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("Generator", 1.0f, GetGameObject()->GetPosition());
 		GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("Message", 1.0f, GetGameObject()->GetPosition() + glm::vec3(0.0f, 0.0f, 3.0f));
 	}

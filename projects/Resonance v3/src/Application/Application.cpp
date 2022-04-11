@@ -233,9 +233,13 @@ void Application::_Run()
 	}
 
 	std::future<bool> loadAsync1 = std::async(std::launch::async, PassiveLoadFiles);
+	std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	std::future<bool> loadAsync2 = std::async(std::launch::async, PassiveLoadFiles);
+	std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	std::future<bool> loadAsync3 = std::async(std::launch::async, PassiveLoadFiles);
+	std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	std::future<bool> loadAsync4 = std::async(std::launch::async, PassiveLoadFiles);
+	std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	std::future<bool> loadAsync5 = std::async(std::launch::async, PassiveLoadFiles);
 
 	// TODO: Register layers
