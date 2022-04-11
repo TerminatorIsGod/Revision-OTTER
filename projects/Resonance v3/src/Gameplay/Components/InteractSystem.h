@@ -44,6 +44,8 @@ public:
 
 	bool isKeyPressed = false;
 	bool _isGenerator = false;
+	bool _isDefaultLockedByGenerator = false;
+	bool _isLockedAfterGenIsOn = false;
 
 	GLFWwindow* _window;
 
