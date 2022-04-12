@@ -82,6 +82,7 @@ SlideLerpSystem::Sptr SlideLerpSystem::FromJson(const nlohmann::json & blob) {
 void SlideLerpSystem::Update(float deltaTime) {
 
 	if (beginLerp) {
+		LOG_INFO("Lerping.");
 		auto _body = GetComponent<Gameplay::Physics::RigidBody>();
 		if(_body != nullptr)
 			_body->SetType(RigidBodyType::Kinematic);
@@ -91,6 +92,7 @@ void SlideLerpSystem::Update(float deltaTime) {
 
 			if (t <= 0) {
 				t = 0;
+				LOG_INFO("Lerp Reverse Finished.");
 				beginLerp = false;
 				if (_body != nullptr)
 					_body->SetType(RigidBodyType::Static);
@@ -105,6 +107,7 @@ void SlideLerpSystem::Update(float deltaTime) {
 			if (t >= tLength) {
 				t = tLength;
 				beginLerp = false;
+				LOG_INFO("Lerp Finished.");
 				if (_body != nullptr)
 					_body->SetType(RigidBodyType::Static);
 				if (doUpdateNbors)
@@ -112,7 +115,6 @@ void SlideLerpSystem::Update(float deltaTime) {
 			}
 			 
 		}
-
 
 		GetGameObject()->SetPostion(lerpstuff(glm::vec3(startx, starty, startz), glm::vec3(endx, endy, endz), (t / tLength)));
 
