@@ -25,34 +25,73 @@ uniform Material u_Material;
 
 // https://learnopengl.com/Advanced-Lighting/Advanced-Lighting
 void main() {
+
 	// Get albedo from the material
-	vec4 albedoColor = texture(u_Material.AlbedoMap, inUV);
+	if (!u_TextureToggle)
+	{
+		vec4 albedoColor;
 
-	// We can use another texture to store things like our lighting settings
-	vec4 lightingParams = texture(u_Material.MetallicShininessMap, inUV);
+		albedoColor = texture(u_Material.AlbedoMap, inUV);
 
-	// Discarding fragments who's alpha is below the material's threshold
-	if (albedoColor.a < u_Material.DiscardThreshold) {
-		discard;
+		// We can use another texture to store things like our lighting settings
+		vec4 lightingParams = texture(u_Material.MetallicShininessMap, inUV);
+
+		// Discarding fragments who's alpha is below the material's threshold
+		if (albedoColor.a < u_Material.DiscardThreshold) {
+			discard;
+		}
+
+		// Extract albedo from material, and store shininess
+		albedo_specPower = vec4(albedoColor.rgb, 1.0f);//lightingParams.x);
+	
+		// Normalize our input normal
+		// Read our tangent from the map, and convert from the [0,1] range to [-1,1] range
+		vec3 normal = texture(u_Material.NormalMap, inUV).rgb;
+		normal = normal * 2.0 - 1.0;
+
+		// Here we apply the TBN matrix to transform the normal from tangent space to view space
+		normal = normalize(inTBN * normal);
+	
+		// Map [-1, 1] to [0, 1]
+		normal = clamp((normal + 1) / 2.0, 0, 1);
+		normal_metallic = vec4(normal, lightingParams.y);
+
+		// Extract emissive from the material
+		emissive = texture(u_Material.EmissiveMap, inUV);
+
 	}
+	else
+	{
+		vec4 albedoColor;
 
-	// Extract albedo from material, and store shininess
-	albedo_specPower = vec4(albedoColor.rgb, 1.0f);//lightingParams.x);
+		albedoColor = vec4(0.5);
+
+		// We can use another texture to store things like our lighting settings
+		vec4 lightingParams = texture(u_Material.MetallicShininessMap, inUV);
+
+		// Discarding fragments who's alpha is below the material's threshold
+		if (albedoColor.a < u_Material.DiscardThreshold) {
+			discard;
+		}
+
+		// Extract albedo from material, and store shininess
+		albedo_specPower = vec4(albedoColor.rgb, 1.0f);//lightingParams.x);
 	
-	// Normalize our input normal
-    // Read our tangent from the map, and convert from the [0,1] range to [-1,1] range
-    vec3 normal = texture(u_Material.NormalMap, inUV).rgb;
-    normal = normal * 2.0 - 1.0;
+		// Normalize our input normal
+		// Read our tangent from the map, and convert from the [0,1] range to [-1,1] range
+		vec3 normal = texture(u_Material.NormalMap, inUV).rgb;
+		normal = normal * 2.0 - 1.0;
 
-    // Here we apply the TBN matrix to transform the normal from tangent space to view space
-    normal = normalize(inTBN * normal);
+		// Here we apply the TBN matrix to transform the normal from tangent space to view space
+		normal = normalize(inTBN * normal);
 	
-	// Map [-1, 1] to [0, 1]
-	normal = clamp((normal + 1) / 2.0, 0, 1);
-	normal_metallic = vec4(normal, lightingParams.y);
+		// Map [-1, 1] to [0, 1]
+		normal = clamp((normal + 1) / 2.0, 0, 1);
+		normal_metallic = vec4(normal, lightingParams.y);
 
-	// Extract emissive from the material
-	emissive = texture(u_Material.EmissiveMap, inUV);
-
-	view_pos = inViewPos;
+		// Extract emissive from the material
+		emissive = texture(u_Material.EmissiveMap, inUV);
+	}
+		view_pos = inViewPos;
+	
 }

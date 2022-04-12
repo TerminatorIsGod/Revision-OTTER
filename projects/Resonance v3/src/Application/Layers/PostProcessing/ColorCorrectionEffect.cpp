@@ -27,7 +27,7 @@ ColorCorrectionEffect::ColorCorrectionEffect(bool defaultLut) :
 
 ColorCorrectionEffect::~ColorCorrectionEffect() = default;
 
-void ColorCorrectionEffect::Apply(const Framebuffer::Sptr& gBuffer)
+void ColorCorrectionEffect::Apply(const Framebuffer::Sptr & gBuffer)
 {
 	_shader->Bind();
 	Lut->Bind(1);
@@ -40,7 +40,7 @@ void ColorCorrectionEffect::RenderImGui()
 	LABEL_LEFT(ImGui::SliderFloat, "Strength", &_strength, 0, 1);
 }
 
-ColorCorrectionEffect::Sptr ColorCorrectionEffect::FromJson(const nlohmann::json& data)
+ColorCorrectionEffect::Sptr ColorCorrectionEffect::FromJson(const nlohmann::json & data)
 {
 	ColorCorrectionEffect::Sptr result = std::make_shared<ColorCorrectionEffect>(false);
 	result->Enabled = JsonGet(data, "enabled", true);
@@ -53,7 +53,7 @@ nlohmann::json ColorCorrectionEffect::ToJson() const
 {
 	return {
 		{ "enabled", Enabled },
-		{ "lut", Lut != nullptr ? Lut->GetGUID().str() : "null" }, 
+		{ "lut", Lut != nullptr ? Lut->GetGUID().str() : "null" },
 		{ "strength", _strength }
 	};
 }

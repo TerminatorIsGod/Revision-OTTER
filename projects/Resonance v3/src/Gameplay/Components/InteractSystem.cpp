@@ -78,8 +78,8 @@ void InteractSystem::Update(float deltaTime) {
 	glm::vec3 tpos = ppos - opos;
 	_distance = sqrt(pow(tpos.x, 2) + pow(tpos.y, 2) + pow(tpos.z, 2));
 
-	std::cout << "interactOBJPos " << _player->Get<SimpleCameraControl>()->interactionObjectPos.x << " " << _player->Get<SimpleCameraControl>()->interactionObjectPos.y << " " << _player->Get<SimpleCameraControl>()->interactionObjectPos.z << std::endl;
-	std::cout << "opos " << opos.x << " " << opos.y << " " << opos.z << std::endl;
+	//std::cout << "interactOBJPos " << _player->Get<SimpleCameraControl>()->interactionObjectPos.x << " " << _player->Get<SimpleCameraControl>()->interactionObjectPos.y << " " << _player->Get<SimpleCameraControl>()->interactionObjectPos.z << std::endl;
+	//std::cout << "opos " << opos.x << " " << opos.y << " " << opos.z << std::endl;
 
 	if (GetGameObject()->GetScene()->isGeneratorOn) {
 		if (_isLockedAfterGenIsOn && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !_player->Get<SimpleCameraControl>()->promptShown) {
@@ -114,7 +114,7 @@ void InteractSystem::Update(float deltaTime) {
 			else if (isOpen)
 				_player->Get<SimpleCameraControl>()->ShowClose();
 		}
-		else if(!_requiresKey)
+		else if (!_requiresKey)
 		{
 			if (!isOpen)
 				_player->Get<SimpleCameraControl>()->ShowOpen();
@@ -184,7 +184,7 @@ void InteractSystem::interact() {
 			GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("DoorOpen", 1.1f, GetGameObject()->GetPosition());
 		}
 	}
-	
+
 	if (_slideLerp && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos) {
 		LOG_INFO("slideLerp and stuff matches... begining lerp");
 		std::cout << "opos " << opos.x << " " << opos.y << " " << opos.z << std::endl;
