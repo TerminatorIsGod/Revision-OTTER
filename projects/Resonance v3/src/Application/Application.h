@@ -29,6 +29,7 @@ public:
 
 
 	static bool PassiveLoadFiles();
+	static void threadManager();
 
 
 	static Application& Get();
