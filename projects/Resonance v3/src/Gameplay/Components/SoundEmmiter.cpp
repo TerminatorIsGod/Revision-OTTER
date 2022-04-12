@@ -9,25 +9,31 @@
 
 void SoundEmmiter::Awake()
 {
-	lerpSpeed = attackSpeed;
 
-	scene = GetGameObject()->GetScene();
-	player = scene->MainCamera->GetGameObject()->GetParent();
-	Application& app = Application::Get();
-	_window = app.GetWindow();
 
-	GameObject::Sptr light = scene->CreateGameObject("Sound Light");
-	light->isGenerated = true;
-	soundLight = light->Add<Light>();
-
-	scene->soundEmmiters.push_back(GetGameObject());
-	colour = defaultColour;
-	soundLight->SetColor(colour);
 }
 
 void SoundEmmiter::Update(float deltaTime)
 {
+	if (!ran)
+	{
+		lerpSpeed = attackSpeed;
+		scene = GetGameObject()->GetScene();
+		player = scene->MainCamera->GetGameObject()->GetParent();
 
+		Application& app = Application::Get();
+		_window = app.GetWindow();
+
+		GameObject::Sptr light = scene->CreateGameObject("Sound Light");
+		light->isGenerated = true;
+		soundLight = light->Add<Light>();
+
+		scene->soundEmmiters.push_back(GetGameObject());
+		colour = defaultColour;
+		soundLight->SetColor(colour);
+
+		ran = true;
+	}
 	Interaction();
 
 	if (!isDecaying)

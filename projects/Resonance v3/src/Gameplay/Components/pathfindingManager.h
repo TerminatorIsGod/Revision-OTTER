@@ -11,6 +11,7 @@ using namespace Gameplay;
 class pathfindingManager : public IComponent {
 public:
 
+	bool ran = false;
 	typedef std::shared_ptr<pathfindingManager> Sptr;
 	pathfindingManager() = default;
 	~pathfindingManager();

@@ -11,14 +11,7 @@
 #pragma region "Default Functions"
 void pathfindingManager::Awake() {
 
-	navNodes = GetGameObject()->GetScene()->navNodes;
-	Application& app = Application::Get();
-	_window = app.GetWindow();
-	scene = GetGameObject()->GetScene();
-	UpdateNbors();
 
-	//GameObject::Sptr myself = std::make_shared<GameObject>(*GetGameObject());
-	scene->pathManager = GetGameObject();
 }
 
 pathfindingManager::~pathfindingManager()
@@ -33,6 +26,19 @@ pathfindingManager::~pathfindingManager()
 
 void pathfindingManager::Update(float deltaTime)
 {
+	if (!ran)
+	{
+		navNodes = GetGameObject()->GetScene()->navNodes;
+		Application& app = Application::Get();
+		_window = app.GetWindow();
+		scene = GetGameObject()->GetScene();
+		UpdateNbors();
+
+		//GameObject::Sptr myself = std::make_shared<GameObject>(*GetGameObject());
+		scene->pathManager = GetGameObject();
+		ran = true;
+	}
+
 	if (glfwGetKey(_window, GLFW_KEY_P))
 	{
 		float minDistance = 999999;

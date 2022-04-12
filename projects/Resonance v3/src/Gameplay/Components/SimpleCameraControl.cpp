@@ -44,64 +44,68 @@ SimpleCameraControl::~SimpleCameraControl()
 }
 
 void SimpleCameraControl::Awake() {
-	_scene = GetGameObject()->GetScene();
-	Application& app = Application::Get();
-	_window = app.GetWindow();
 
-	if (app.scenePath.substr(Application::Get().scenePath.find_last_of("/\\") + 1) == "level2.json")
-	{
-		if (app.exitedLeft)
-			GetGameObject()->SetPostion(glm::vec3(-56.4, 7.0, 6.0));
-		else
-			GetGameObject()->SetPostion(glm::vec3(56.4, 7.0, 6.0));
-	}
-	else
-	{
-		GetGameObject()->SetPostion(startingPos);
-	}
-
-	//Prompt Textures
-	if (p_PickUp == nullptr)
-	{
-		p_PickUp = ResourceManager::CreateAsset<Texture2D>("textures/ui/PickupPrompt.png");
-		p_Climb = ResourceManager::CreateAsset<Texture2D>("textures/ui/ClimbPrompt.png");
-		p_Close = ResourceManager::CreateAsset<Texture2D>("textures/ui/ClosePrompt.png");
-		p_Open = ResourceManager::CreateAsset<Texture2D>("textures/ui/OpenPrompt.png");
-		p_Distract = ResourceManager::CreateAsset<Texture2D>("textures/ui/DistractPrompt.png");
-		p_Locked = ResourceManager::CreateAsset<Texture2D>("textures/ui/LockedPrompt.png");
-		p_DropThrow = ResourceManager::CreateAsset<Texture2D>("textures/ui/DropThrow Prompt.png");
-		p_Read = ResourceManager::CreateAsset<Texture2D>("textures/ui/Read Prompt.png");
-		p_Activate = ResourceManager::CreateAsset<Texture2D>("textures/ui/Activate Prompt.png");
-		blackTex = ResourceManager::CreateAsset<Texture2D>("textures/black.png");
-		gameoverTex = ResourceManager::CreateAsset<Texture2D>("textures/ui/deathScreen.jpg");
-		loadingTex = ResourceManager::CreateAsset<Texture2D>("textures/ui/LoadingScreen.png");
-
-	}
-
-	for (int i = 0; i < playerEmmiterCount; i++)
-	{
-		GameObject::Sptr soundEmmiter = _scene->CreateGameObject("playerEmmiter");
-		{
-			soundEmmiter->isGenerated = true;
-
-			SoundEmmiter::Sptr emmiter = soundEmmiter->Add<SoundEmmiter>();
-			soundEmmiter->Awake();
-			emmiter->muteAtZero = true;
-			emmiter->isPlayerLight = true;
-			emmiter->linearLerp = true;
-			emmiter->defaultColour = glm::vec3(0.1f, 0.0f, 0.45f);
-			emmiter->soundLightOffset = glm::vec3(0, 0, -6.0f);
-			emmiter->soundName = "";
-			playerEmmiters.push_back(emmiter);
-		}
-	}
-	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 }
 
 void SimpleCameraControl::Update(float deltaTime)
 {
 	if (!updateStarted)
 	{
+		_scene = GetGameObject()->GetScene();
+		Application& app = Application::Get();
+		_window = app.GetWindow();
+
+		if (app.scenePath.substr(Application::Get().scenePath.find_last_of("/\\") + 1) == "level2.json")
+		{
+			if (app.exitedLeft)
+				GetGameObject()->SetPostion(glm::vec3(-56.4, 7.0, 6.0));
+			else
+				GetGameObject()->SetPostion(glm::vec3(56.4, 7.0, 6.0));
+		}
+		else
+		{
+			GetGameObject()->SetPostion(startingPos);
+		}
+
+		//Prompt Textures
+		if (p_PickUp == nullptr)
+		{
+			p_PickUp = ResourceManager::CreateAsset<Texture2D>("textures/ui/PickupPrompt.png");
+			p_Climb = ResourceManager::CreateAsset<Texture2D>("textures/ui/ClimbPrompt.png");
+			p_Close = ResourceManager::CreateAsset<Texture2D>("textures/ui/ClosePrompt.png");
+			p_Open = ResourceManager::CreateAsset<Texture2D>("textures/ui/OpenPrompt.png");
+			p_Distract = ResourceManager::CreateAsset<Texture2D>("textures/ui/DistractPrompt.png");
+			p_Locked = ResourceManager::CreateAsset<Texture2D>("textures/ui/LockedPrompt.png");
+			p_DropThrow = ResourceManager::CreateAsset<Texture2D>("textures/ui/DropThrow Prompt.png");
+			p_Read = ResourceManager::CreateAsset<Texture2D>("textures/ui/Read Prompt.png");
+			p_Activate = ResourceManager::CreateAsset<Texture2D>("textures/ui/Activate Prompt.png");
+			blackTex = ResourceManager::CreateAsset<Texture2D>("textures/black.png");
+			gameoverTex = ResourceManager::CreateAsset<Texture2D>("textures/ui/deathScreen.jpg");
+			loadingTex = ResourceManager::CreateAsset<Texture2D>("textures/ui/LoadingScreen.png");
+
+		}
+
+		for (int i = 0; i < playerEmmiterCount; i++)
+		{
+			GameObject::Sptr soundEmmiter = _scene->CreateGameObject("playerEmmiter");
+			{
+				soundEmmiter->isGenerated = true;
+
+				SoundEmmiter::Sptr emmiter = soundEmmiter->Add<SoundEmmiter>();
+				soundEmmiter->Awake();
+				emmiter->muteAtZero = true;
+				emmiter->isPlayerLight = true;
+				emmiter->linearLerp = true;
+				emmiter->defaultColour = glm::vec3(0.1f, 0.0f, 0.45f);
+				emmiter->soundLightOffset = glm::vec3(0, 0, -6.0f);
+				emmiter->soundName = "";
+				playerEmmiters.push_back(emmiter);
+			}
+			std::cout << "\n\nCreated sound emmiter #" << playerEmmiters.size();
+		}
+		glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+
+
 		ShowBlack();
 		_scene->audioManager->Get<AudioManager>()->PlaySoundByName("Gasp", 0.5f);
 		_scene->MainCamera->Aperture = 3.0f;
@@ -111,21 +115,23 @@ void SimpleCameraControl::Update(float deltaTime)
 	else
 	{
 		FadeOutBlack(deltaTime);
+
+		viewDir = currentRot * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f);
+
+		Movement(deltaTime);
+		SwitchState(deltaTime);
+		OxygenSystem(deltaTime);
+		MoveUI(deltaTime);
+
+		if (allowInteraction)
+			Interact(deltaTime);
+		else
+			interactionObjectPos = glm::vec3(0.0f);
+
+		EmitSound(deltaTime);
 	}
 
-	viewDir = currentRot * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f);
 
-	Movement(deltaTime);
-	SwitchState(deltaTime);
-	OxygenSystem(deltaTime);
-	MoveUI(deltaTime);
-
-	if (allowInteraction)
-		Interact(deltaTime);
-	else
-		interactionObjectPos = glm::vec3(0.0f);
-
-	EmitSound(deltaTime);
 }
 
 void SimpleCameraControl::Movement(float deltaTime)

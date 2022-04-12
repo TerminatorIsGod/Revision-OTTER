@@ -8,17 +8,17 @@
 #include "Gameplay/Physics/PhysicsBase.h"
 
 ENUM(RigidBodyType, int,
-	Unknown   = 0,
+	Unknown = 0,
 	// Does not move within the scene, EX: level geometry
-    Static    = 1,
+	Static = 1,
 	// Objects that are driven by physics
-	Dynamic   = 2,
+	Dynamic = 2,
 	// Objects that are driven by some control method, ex: doors, moving
 	// platforms, etc...
 	// kinematic objects will not collide with static or other
 	// kinematic objects
 	Kinematic = 3,
-);
+	);
 
 // We'll need to get stuff from the scene, which we can grab from our parent GO
 namespace Gameplay { class Scene; }
@@ -188,8 +188,8 @@ namespace Gameplay::Physics {
 		mutable bool _isDampingDirty;
 
 		// Our bullet state stuff
-		btRigidBody*     _body;
-		btMotionState*   _motionState;
+		btRigidBody* _body;
+		btMotionState* _motionState;
 		btVector3        _inertia;
 		btVector3        _linearVelocity;
 		bool             _linearVelocityDirty;

@@ -23,37 +23,6 @@ Enemy::Enemy()
 }
 void Enemy::Awake()
 {
-	scene = GetGameObject()->GetScene();
-	body = GetComponent<Gameplay::Physics::RigidBody>();
-	body->SetAngularFactor(glm::vec3(0, 0, 1));
-	body->SetLinearVelocity(glm::vec3(0));
-	body->SetAngularDamping(0.25f);
-	//body->SetLinearDamping(0.0f);
-	GetGameObject()->SetPostion(startPos);
-
-	if (isSiren)
-	{
-		IdleVelocity = 4.0f;
-		AgroVelocity = 6.0f;
-		agroMovingListeningRadius = 12.0f;
-		agroStationaryListeningRadius = 12.0f;
-		distractedListeningRadius = 11.0f;
-		patrolListeningRadius = 8.0f; // this is normmally 4
-		GetComponent<SoundEmmiter>()->isSirenSound = true;
-	}
-
-	//Light Stuff
-	GameObject::Sptr light = scene->CreateGameObject("Sound Light");
-	light->isGenerated = true;
-	soundLight = light->Add<Light>();
-	soundLight->SetRadius(-listeningRadius * 8.0f);
-	soundLight->SetColor(blue);
-
-	player = scene->MainCamera->GetGameObject()->GetParent();
-	pathManager = scene->pathManager;
-
-	patrolLists.push_back(&patrolPoints);
-	patrolLists.push_back(&patrolPoints2);
 
 
 }
@@ -62,6 +31,39 @@ void Enemy::Update(float deltaTime)
 {
 	if (!started)
 	{
+		scene = GetGameObject()->GetScene();
+		body = GetComponent<Gameplay::Physics::RigidBody>();
+		body->SetAngularFactor(glm::vec3(0, 0, 1));
+		body->SetLinearVelocity(glm::vec3(0));
+		body->SetAngularDamping(0.25f);
+		//body->SetLinearDamping(0.0f);
+		GetGameObject()->SetPostion(startPos);
+
+		if (isSiren)
+		{
+			IdleVelocity = 4.0f;
+			AgroVelocity = 6.0f;
+			agroMovingListeningRadius = 12.0f;
+			agroStationaryListeningRadius = 12.0f;
+			distractedListeningRadius = 11.0f;
+			patrolListeningRadius = 8.0f; // this is normmally 4
+			GetComponent<SoundEmmiter>()->isSirenSound = true;
+		}
+
+		//Light Stuff
+		GameObject::Sptr light = scene->CreateGameObject("Sound Light");
+		light->isGenerated = true;
+		soundLight = light->Add<Light>();
+		soundLight->SetRadius(-listeningRadius * 8.0f);
+		soundLight->SetColor(blue);
+
+		player = scene->MainCamera->GetGameObject()->GetParent();
+		pathManager = scene->pathManager;
+
+		patrolLists.push_back(&patrolPoints);
+		patrolLists.push_back(&patrolPoints2);
+
+
 		SetState(PatrollingState::getInstance());
 		started = true;
 	}

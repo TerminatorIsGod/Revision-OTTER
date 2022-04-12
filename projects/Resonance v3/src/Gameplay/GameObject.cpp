@@ -205,7 +205,10 @@ namespace Gameplay {
 
 	void GameObject::Awake() {
 		for (auto& component : _components) {
+			//std::cout << "\n\n\nGAMEOBJECT NAME: " << Name;
+			//std::cout << "\nCOMPONANT NAME: " << component->ComponentTypeName();
 			component->Awake();
+
 		}
 	}
 

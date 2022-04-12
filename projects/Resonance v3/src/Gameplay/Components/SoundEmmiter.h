@@ -18,7 +18,7 @@ public:
 	SoundEmmiter() = default;
 	//Hey, ur probably gonna have to make sure shared pointers get deleted properly so no rings persist during scene changes
 	//~SoundEmmiter(); 
-
+	bool ran = false;
 	//Properties
 	float volume = 0.0f;
 	float targetVolume = 0.0f;
