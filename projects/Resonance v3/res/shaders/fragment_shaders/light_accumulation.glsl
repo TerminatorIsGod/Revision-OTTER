@@ -40,42 +40,47 @@ layout (std140, binding = 2) uniform b_LightBlock {
 // @param Light     The light to caluclate the contribution for
 // @param shininess The specular power for the fragment, between 0 and 1
 void CalcPointLightContribution(vec3 viewPos, vec3 normal, Light light, float shininess, inout vec3 diffuse, inout vec3 specular) {
-vec3 lightViewPos = light.PositionIntensity.xyz;
-        vec3 lightVec = lightViewPos - viewPos;
-        float dist = length(lightVec);
-        vec3 lightDir = lightVec / dist;
 
-        // We'll use a modified distance squared attenuation factor to keep it simple
-        // We add the one to prevent divide by zero errors
-        float attenuation = 1.0 / (1.0 + light.ColorAttenuation.w * pow(dist, 2));
-        if (light.ColorAttenuation.w >= 0.0)
-	    {
-	    	attenuation = attenuation * attenuation;
-	    }
-	    else if (attenuation < 0)
-	    {
-	    	attenuation = 0;
-	    }
+    if (!u_LightingToggle)
+    {
+            vec3 lightViewPos = light.PositionIntensity.xyz;
+            vec3 lightVec = lightViewPos - viewPos;
+            float dist = length(lightVec);
+            vec3 lightDir = lightVec / dist;
 
-        // Dot product between normal and light
-        float NdotL = max(dot(normal, lightDir), 0.0);
-        diffuse += round(NdotL) * attenuation * light.PositionIntensity.w * light.ColorAttenuation.rgb;
+            // We'll use a modified distance squared attenuation factor to keep it simple
+            // We add the one to prevent divide by zero errors
+            float attenuation = 1.0 / (1.0 + light.ColorAttenuation.w * pow(dist, 2));
+            if (light.ColorAttenuation.w >= 0.0)
+	        {
+	    	    attenuation = attenuation * attenuation;
+	        }
+	        else if (attenuation < 0)
+	        {
+	    	    attenuation = 0;
+	        }
+
+            // Dot product between normal and light
+            float NdotL = max(dot(normal, lightDir), 0.0);
+            diffuse += round(NdotL) * attenuation * light.PositionIntensity.w * light.ColorAttenuation.rgb;
 	    
 
-        vec3 reflectDir = reflect(lightDir, normal);
+            vec3 reflectDir = reflect(lightDir, normal);
 
-        float VdotR;
-        if (light.ColorAttenuation.w >= 0.0)
-        {
-           VdotR = pow(max(dot(normalize(-viewPos), reflectDir), 0.0), pow(2, shininess * 8));
-           specular += round(VdotR) * light.ColorAttenuation.rgb * round(shininess) * attenuation * light.PositionIntensity.w;
+            float VdotR;
+            if (light.ColorAttenuation.w >= 0.0)
+            {
+               VdotR = pow(max(dot(normalize(-viewPos), reflectDir), 0.0), pow(2, shininess * 8));
+               specular += round(VdotR) * light.ColorAttenuation.rgb * round(shininess) * attenuation * light.PositionIntensity.w;
 
-        }
-        else
-        { 
-            VdotR = pow(max(dot(normalize(-viewPos), reflectDir), 0.0), 0);
-            specular +=  round(VdotR) * light.ColorAttenuation.rgb * attenuation * light.PositionIntensity.w;
-        }
+            }
+            else
+            { 
+                VdotR = pow(max(dot(normalize(-viewPos), reflectDir), 0.0), 0);
+                specular +=  round(VdotR) * light.ColorAttenuation.rgb * attenuation * light.PositionIntensity.w;
+            }
+    }
+
 } 
 
 void main() {

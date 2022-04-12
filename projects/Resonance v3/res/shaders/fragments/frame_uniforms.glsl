@@ -31,6 +31,9 @@ layout (std140, binding = 0) uniform b_FrameLevelUniforms {
     // Aperture (inverse of F-Stop)
     uniform float u_Aperture;
 
+    uniform bool u_TextureToggle;
+
+    uniform bool u_LightingToggle;
     // New for fun, the viewport rectangle on the output (x, y, w, h)
     uniform vec4 u_Viewport;
 
