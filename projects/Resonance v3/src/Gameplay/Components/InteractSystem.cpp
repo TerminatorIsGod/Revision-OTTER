@@ -25,6 +25,7 @@ void InteractSystem::RenderImGui() {
 	LABEL_LEFT(ImGui::Checkbox, "Is this a Key", &_iskey);
 	LABEL_LEFT(ImGui::Checkbox, "Is this a Generator", &_isGenerator);
 	LABEL_LEFT(ImGui::Checkbox, "Is this locked default by generator", &_isDefaultLockedByGenerator);
+	LABEL_LEFT(ImGui::Checkbox, "Is this locked after generator is powered", &_isLockedAfterGenIsOn);
 	LABEL_LEFT(ImGui::InputInt, "Key", &_requiredKey, 1.0f);
 }
 
@@ -77,6 +78,9 @@ void InteractSystem::Update(float deltaTime) {
 	glm::vec3 tpos = ppos - opos;
 	_distance = sqrt(pow(tpos.x, 2) + pow(tpos.y, 2) + pow(tpos.z, 2));
 
+	std::cout << "interactOBJPos " << _player->Get<SimpleCameraControl>()->interactionObjectPos.x << " " << _player->Get<SimpleCameraControl>()->interactionObjectPos.y << " " << _player->Get<SimpleCameraControl>()->interactionObjectPos.z << std::endl;
+	std::cout << "opos " << opos.x << " " << opos.y << " " << opos.z << std::endl;
+
 	if (GetGameObject()->GetScene()->isGeneratorOn) {
 		if (_isLockedAfterGenIsOn && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !_player->Get<SimpleCameraControl>()->promptShown) {
 			_player->Get<SimpleCameraControl>()->ShowLocked();
@@ -110,8 +114,14 @@ void InteractSystem::Update(float deltaTime) {
 			else if (isOpen)
 				_player->Get<SimpleCameraControl>()->ShowClose();
 		}
-		else
+		else if(!_requiresKey)
 		{
+			if (!isOpen)
+				_player->Get<SimpleCameraControl>()->ShowOpen();
+			else
+				_player->Get<SimpleCameraControl>()->ShowClose();
+		}
+		else {
 			_player->Get<SimpleCameraControl>()->ShowLocked();
 		}
 	}
@@ -174,7 +184,10 @@ void InteractSystem::interact() {
 			GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("DoorOpen", 1.1f, GetGameObject()->GetPosition());
 		}
 	}
-	else if (_slideLerp && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos) {
+	
+	if (_slideLerp && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos) {
+		LOG_INFO("slideLerp and stuff matches... begining lerp");
+		std::cout << "opos " << opos.x << " " << opos.y << " " << opos.z << std::endl;
 		_slideLerp->lerpReverse = isOpen;
 		if (_slideLerp->linkedDoor != "NULL") {
 			GetGameObject()->GetScene()->FindObjectByName(_slideLerp->linkedDoor)->Get<InteractSystem>()->isOpen = isOpen;

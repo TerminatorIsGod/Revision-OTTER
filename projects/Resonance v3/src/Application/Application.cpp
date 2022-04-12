@@ -95,37 +95,61 @@ static std::list<std::string> asyncObjectFileNames;
 
 bool Application::PassiveLoadFiles() {
 
-	//ObjLoader loader;
-	std::cout << "starting async thread: " << std::this_thread::get_id() << std::endl << std::endl;
+	//start = 1 totalCount = 5
 
-	bool wasAbleToLoad = true;
+	//ObjLoader loader;
+	//std::cout << "starting async thread: " << std::this_thread::get_id() << std::endl << std::endl;
+
+	//bool wasAbleToLoad = true;
 
 	if (asyncObjectFileNames.empty()) {
-		wasAbleToLoad = false;
-		LOG_ERROR("Unable to load async, vector was empty!");
+		//wasAbleToLoad = false;
+		LOG_INFO("Unable to load async, vector was empty!");
 		return false;
 	}
 
 
+	std::string str;
+	str = asyncObjectFileNames.front();
+	asyncObjectFileNames.remove(str);
+
+	std::cout << "Loading asset async, Object: " << str << "    Thread number: " << std::this_thread::get_id() << std::endl;
+	ObjLoader::LoadFromFile(str, true, true);
+
+}
+
+void Application::threadManager() {
+
+	std::cout << "starting async thread: " << std::this_thread::get_id() << std::endl << std::endl;
+
 	while (!asyncObjectFileNames.empty()) {
 
-		std::string str;
-		str = asyncObjectFileNames.front();
-		//asyncObjectFileNames.remove(str);
-		try {
-			asyncObjectFileNames.remove(str);
-		}
-		catch (const std::exception& ex) {
-			LOG_ERROR("Async threads are synced up! Attempting to desync...");
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		}
+		std::future<bool> loadAsync1 = std::async(std::launch::async, PassiveLoadFiles);
+		std::this_thread::sleep_for(std::chrono::milliseconds(5));
+		std::future<bool> loadAsync2 = std::async(std::launch::async, PassiveLoadFiles);
+		std::this_thread::sleep_for(std::chrono::milliseconds(5));
+		std::future<bool> loadAsync3 = std::async(std::launch::async, PassiveLoadFiles);
+		std::this_thread::sleep_for(std::chrono::milliseconds(5));
+		std::future<bool> loadAsync4 = std::async(std::launch::async, PassiveLoadFiles);
+		std::this_thread::sleep_for(std::chrono::milliseconds(5));
+		std::future<bool> loadAsync5 = std::async(std::launch::async, PassiveLoadFiles);
+		std::this_thread::sleep_for(std::chrono::milliseconds(5));
+		std::future<bool> loadAsync6 = std::async(std::launch::async, PassiveLoadFiles);
+		std::this_thread::sleep_for(std::chrono::milliseconds(5));
+		std::future<bool> loadAsync7 = std::async(std::launch::async, PassiveLoadFiles);
+		std::this_thread::sleep_for(std::chrono::milliseconds(5));
+		std::future<bool> loadAsync8 = std::async(std::launch::async, PassiveLoadFiles);
 
+		loadAsync1.wait();
+		loadAsync2.wait();
+		loadAsync3.wait();
+		loadAsync4.wait();
+		loadAsync5.wait();
+		loadAsync6.wait();
+		loadAsync7.wait();
+		loadAsync8.wait();
 
-		std::cout << "Loading asset async, Object: " << str << "    Thread number: " << std::this_thread::get_id() << std::endl;
-		ObjLoader::LoadFromFile(str, true, true);
 	}
-
-	return true;
 
 }
 
@@ -133,7 +157,7 @@ Application::Application() :
 	_window(nullptr),
 	_windowSize({ DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT }),
 	_isRunning(false),
-	_isEditor(true),
+	_isEditor(false),
 	_windowTitle("Resonance"),
 	_currentScene(nullptr),
 	_targetScene(nullptr)
@@ -232,15 +256,7 @@ void Application::_Run()
 		LOG_ERROR("Unable to load async, file doesn't exist! File: " + asyncFileName);
 	}
 
-	std::future<bool> loadAsync1 = std::async(std::launch::async, PassiveLoadFiles);
-	std::this_thread::sleep_for(std::chrono::milliseconds(5));
-	std::future<bool> loadAsync2 = std::async(std::launch::async, PassiveLoadFiles);
-	std::this_thread::sleep_for(std::chrono::milliseconds(5));
-	std::future<bool> loadAsync3 = std::async(std::launch::async, PassiveLoadFiles);
-	std::this_thread::sleep_for(std::chrono::milliseconds(5));
-	std::future<bool> loadAsync4 = std::async(std::launch::async, PassiveLoadFiles);
-	std::this_thread::sleep_for(std::chrono::milliseconds(5));
-	std::future<bool> loadAsync5 = std::async(std::launch::async, PassiveLoadFiles);
+	std::future<void> startAsync1 = std::async(std::launch::async, threadManager);
 
 	// TODO: Register layers
 	_layers.push_back(std::make_shared<GLAppLayer>());

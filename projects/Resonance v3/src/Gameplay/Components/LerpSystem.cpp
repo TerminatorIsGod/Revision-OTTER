@@ -115,34 +115,7 @@ void LerpSystem::Update(float deltaTime) {
 
 		}
 
-		//t += deltaTime;
-
-		//std::cout << "StartEular: " << startx << " " << starty << " " << startz << std::endl;
-		//std::cout << "EndEular: " << endx << " " << endy << " " << endz << std::endl;
-
-		//std::cout << "Start: " << startRot.x << " " << startRot.y << " " << startRot.z << std::endl;
-		//std::cout << "End: " << endRot.x << " " << endRot.y << " " << endRot.z << std::endl;
-
-
-		//std::cout << "Rotation: " << lerpstuff(glm::vec3(startx, starty, startz), glm::vec3(endx, endy, endz), (t / tLength)).x << " " << lerpstuff(glm::vec3(startx, starty, startz), glm::vec3(endx, endy, endz), (t / tLength)).y << " " << lerpstuff(glm::vec3(startx, starty, startz), glm::vec3(endx, endy, endz), (t / tLength)).z << std::endl;
-
 		GetGameObject()->SetRotation(lerpstuff(glm::vec3(startx, starty, startz), glm::vec3(endx, endy, endz), (t / tLength)));
-
-		//btTransform trans = _body->GetTransform();
-		//trans.setIdentity();
-		//btQuaternion quat;
-		//btScalar btx = GetGameObject()->GetRotation().x;
-		//btScalar bty = GetGameObject()->GetRotation().y;
-		//btScalar btz = GetGameObject()->GetRotation().z;
-		//quat.setEuler(btx, bty, btz);
-		//trans.setRotation(quat);
-
-		//if (lerpReverse) {
-		//	GetGameObject()->SetRotation(glm::slerp(endRot, startRot, t/tLength));
-		//}
-		//else {
-		//	GetGameObject()->SetRotation(glm::slerp(startRot, endRot, t/tLength));
-		//}
 
 	}
 }
