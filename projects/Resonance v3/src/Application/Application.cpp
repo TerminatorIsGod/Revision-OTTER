@@ -64,6 +64,7 @@
 #include <Gameplay/Components/AnimationSystem.h>
 #include <Gameplay/Components/SlideLerpSystem.h> 
 #include <Gameplay/Components/AnimationSystemManager.h>
+#include <Gameplay/Components/InteractSystem2.h>
 
 // GUI
 #include "Gameplay/Components/GUI/RectTransform.h"
@@ -157,7 +158,7 @@ Application::Application() :
 	_window(nullptr),
 	_windowSize({ DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT }),
 	_isRunning(false),
-	_isEditor(false),
+	_isEditor(true),
 	_windowTitle("Resonance"),
 	_currentScene(nullptr),
 	_targetScene(nullptr)
@@ -537,6 +538,7 @@ void Application::_RegisterClasses()
 	ComponentManager::RegisterType<MenuSystem>();
 	ComponentManager::RegisterType<InventorySystem>();
 	ComponentManager::RegisterType<InteractSystem>();
+	ComponentManager::RegisterType<InteractSystem2>();
 	ComponentManager::RegisterType<LerpSystem>();
 	ComponentManager::RegisterType<CurveLerpSystem>();
 	ComponentManager::RegisterType<MenuSystemNewAndImproved>();

@@ -11,12 +11,12 @@ struct GLFWwindow;
 /// A simple behaviour that applies an impulse along the Z axis to the 
 /// rigidbody of the parent when the space key is pressed
 /// </summary>
-class InteractSystem : public Gameplay::IComponent {
+class InteractSystem2 : public Gameplay::IComponent {
 public:
-	typedef std::shared_ptr<InteractSystem> Sptr;
+	typedef std::shared_ptr<InteractSystem2> Sptr;
 
-	InteractSystem();
-	virtual ~InteractSystem();
+	InteractSystem2();
+	virtual ~InteractSystem2();
 
 	virtual void Awake() override;
 	virtual void Update(float deltaTime) override;
@@ -25,9 +25,9 @@ public:
 
 public:
 	virtual void RenderImGui() override;
-	MAKE_TYPENAME(InteractSystem);
+	MAKE_TYPENAME(InteractSystem2);
 	virtual nlohmann::json ToJson() const override;
-	static InteractSystem::Sptr FromJson(const nlohmann::json& blob);
+	static InteractSystem2::Sptr FromJson(const nlohmann::json& blob);
 	Gameplay::GameObject::Sptr _player;
 	
 	LerpSystem::Sptr _lerpS;
