@@ -49,8 +49,13 @@ public:
 		// Aperture (inverse of F-Stop)
 		float u_Aperture = 20.0f;
 
+		bool u_TextureToggle = false;
+		bool u_LightingToggle = false;
+
 		glm::vec4 u_Viewport;
 	};
+	bool tPressed = false;
+	bool lPressed = false;
 
 	// Structure for our instance-level uniforms, matches layout from
 	// fragments/frame_uniforms.glsl
