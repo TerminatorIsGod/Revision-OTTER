@@ -19,7 +19,7 @@ GuiText::GuiText() :
 
 GuiText::~GuiText() = default;
 
-void GuiText::SetColor(const glm::vec4& color) {
+void GuiText::SetColor(const glm::vec4 & color) {
 	_color = color;
 }
 
@@ -31,7 +31,7 @@ std::string GuiText::GetText() const {
 	return StringConvert.to_bytes(_text);
 }
 
-void GuiText::SetText(const std::string& value) {
+void GuiText::SetText(const std::string & value) {
 	SetTextUnicode(StringConvert.from_bytes(value));
 }
 
@@ -39,9 +39,9 @@ const std::wstring& GuiText::GetTextUnicode() const {
 	return _text;
 }
 
-void GuiText::SetTextUnicode(const std::wstring& value) {
+void GuiText::SetTextUnicode(const std::wstring & value) {
 	_text = value;
-	
+
 	if (_font != nullptr) {
 		_textSize = _font->MeausureString(_text, _textScale);
 	}
@@ -59,7 +59,7 @@ const Font::Sptr& GuiText::GetFont() const {
 	return _font;
 }
 
-void GuiText::SetFont(const Font::Sptr& font) {
+void GuiText::SetFont(const Font::Sptr & font) {
 	_font = font;
 	if (_font != nullptr) {
 		_textSize = _font->MeausureString(_text, _textScale);
@@ -108,16 +108,15 @@ nlohmann::json GuiText::ToJson() const {
 		{ "color", _color },
 		{ "text",  _text },
 		{ "scale", _textScale },
-		{ "font",  _font  ? _font->GetGUID().str() : "null" }
+		{ "font",  _font ? _font->GetGUID().str() : "null" }
 	};
 }
 
-GuiText::Sptr GuiText::FromJson(const nlohmann::json& blob) {
+GuiText::Sptr GuiText::FromJson(const nlohmann::json & blob) {
 	GuiText::Sptr result = std::make_shared<GuiText>();
-	result->_color     = JsonGet(blob, "color", result->_color);
+	result->_color = JsonGet(blob, "color", result->_color);
 	result->_textScale = JsonGet(blob, "scale", 1.0f);
-	result->_text      = JsonGet<std::wstring>(blob, "text", LR"()");
-	result->_font      = ResourceManager::Get<Font>(Guid(JsonGet<std::string>(blob, "font", "null")));
-	result->SetFont(result->_font);
+	result->_text = JsonGet<std::wstring>(blob, "text", LR"()");
+	result->_font = ResourceManager::Get<Font>(Guid(JsonGet<std::string>(blob, "font", "null")));
 	return result;
 }
