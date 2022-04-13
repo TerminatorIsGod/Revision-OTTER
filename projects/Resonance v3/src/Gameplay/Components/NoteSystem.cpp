@@ -8,7 +8,7 @@
 #include "Gameplay/InputEngine.h"
 #include "Application/Application.h"
 #include "Gameplay/Components/AudioManager.h"
-#include "../../../../Resonance/src/Gameplay/Components/GUI/GuiPanel.h"
+#include "Gameplay/Components/GUI/GuiPanel.h"
 #include "Gameplay/Components/AudioManager.h"
 
 void NoteSystem::Awake()
