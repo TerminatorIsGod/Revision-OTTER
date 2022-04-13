@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{35c6ef09-ff39-45c0-b557-afc5b11249fd}">
+		<property name="assetPath">
+			<value>Leaflings_Distracted.wav</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>20.307687074829932</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{02f933e2-251a-4637-af6c-a92960a43cb0}</destination>
+		</relationship>
+	</object>
+</objects>
