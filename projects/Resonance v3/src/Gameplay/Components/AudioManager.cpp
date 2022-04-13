@@ -56,7 +56,7 @@ void AudioManager::Awake() {
 	LoadSound("TheLabs", "event:/The Labs");
 	LoadSound("Generator", "event:/Generator");
 	LoadSound("Message", "event:/Emergency Message");
-
+	LoadSound("Echos", "event:/Echos");
 
 
 	if (track == "L1_Ambiance")
