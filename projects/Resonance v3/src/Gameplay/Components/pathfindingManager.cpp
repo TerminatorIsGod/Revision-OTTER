@@ -7,6 +7,7 @@
 #include "Gameplay/Components/NavNode.h"
 #include "Utils\GlmBulletConversions.h"
 #include "Application/Application.h"
+#include<chrono>
 
 #pragma region "Default Functions"
 void pathfindingManager::Awake() {
@@ -39,25 +40,25 @@ void pathfindingManager::Update(float deltaTime)
 		ran = true;
 	}
 
-	if (glfwGetKey(_window, GLFW_KEY_P))
-	{
-		float minDistance = 999999;
-		GameObject* minNode = navNodes[0];
-		float distance;
+	//if (glfwGetKey(_window, GLFW_KEY_P))
+	//{
+	//	float minDistance = 999999;
+	//	GameObject* minNode = navNodes[0];
+	//	float distance;
 
-		//Find Start Node
-		for (int i = 0; i < navNodes.size(); i++)
-		{
-			distance = glm::length(navNodes[i]->GetWorldPosition() - scene->MainCamera->GetGameObject()->GetParent()->GetPosition());
-			if (distance < minDistance)
-			{
-				minDistance = distance;
-				minNode = navNodes[i];
-			}
-		}
-		startNode = minNode;
-		std::cout << "\nCLOSEST NODE: " << minNode->Name;
-	}
+	//	//Find Start Node
+	//	for (int i = 0; i < navNodes.size(); i++)
+	//	{
+	//		distance = glm::length(navNodes[i]->GetWorldPosition() - scene->MainCamera->GetGameObject()->GetParent()->GetPosition());
+	//		if (distance < minDistance)
+	//		{
+	//			minDistance = distance;
+	//			minNode = navNodes[i];
+	//		}
+	//	}
+	//	startNode = minNode;
+	//	std::cout << "\nCLOSEST NODE: " << minNode->Name;
+	//}
 }
 
 
@@ -121,6 +122,14 @@ void pathfindingManager::UpdateNbors()
 		}
 	}
 	std::cout << "\n\nNavNode Neighbors Updated.";
+
+	//int testNborCount = 0;
+	//for (int i = 0; i < navNodes.size(); i++)
+	//{
+	//	testNborCount += navNodes[i]->Get<NavNode>()->neighbors.size();
+	//}
+
+	//std::cout << "\n\nThe Average Branching Factor Is: " << testNborCount / navNodes.size();
 }
 
 bool pathfindingManager::StartAndEndCheck()
@@ -190,10 +199,16 @@ void pathfindingManager::RunPathfind()
 		closedSet.push_back(startNode);
 		calculatingPath = true;
 
+		//start timer
+		//auto start = std::chrono::high_resolution_clock::now();
 		while (calculatingPath)
 		{
 			CalculatePath();
 		}
+		//end timer
+		//auto stop = std::chrono::high_resolution_clock::now();
+		//auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+		//std::cout << "\nPathfinding Calculation Lasted: " << duration.count() << " micro seconds\n\n";
 	}
 	else
 	{
@@ -254,6 +269,7 @@ void pathfindingManager::SequencePath()
 	{
 		if (current == startNode)
 		{
+			//std::cout << "\nPath Length (In Nodes):  " << pathSet.size();
 			calculatingPath = false;
 			return;
 		}
@@ -312,6 +328,10 @@ std::vector<glm::vec3> pathfindingManager::requestPath(glm::vec3 startPos, glm::
 
 void pathfindingManager::CalculatePath()
 {
+	//start timer
+	//auto start = std::chrono::high_resolution_clock::now();
+
+
 	for (int nbor = 0; nbor < closedSet[cIndex]->Get<NavNode>()->neighbors.size(); nbor++)
 	{
 		//std::cout << "\n\n# NEIGHBORS OF NODE " << closedSet[cIndex]->Name << ": " << nbor;
@@ -331,4 +351,8 @@ void pathfindingManager::CalculatePath()
 
 	cIndex++;
 
+	//end timer
+	//auto stop = std::chrono::high_resolution_clock::now();
+	//auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+	//std::cout << "\nPathfinding Step " << cIndex << " Lasted: " << duration.count() << " micro seconds";
 }
