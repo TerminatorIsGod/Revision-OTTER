@@ -55,6 +55,8 @@ namespace Gameplay {
 		bool requestSceneReload = false;
 
 		bool isGeneratorOn = false;
+		bool isElevatorKeycard = false;
+
 
 		bool IsDestroyed;
 

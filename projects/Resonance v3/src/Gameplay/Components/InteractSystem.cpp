@@ -78,6 +78,18 @@ void InteractSystem::Update(float deltaTime) {
 	glm::vec3 tpos = ppos - opos;
 	_distance = sqrt(pow(tpos.x, 2) + pow(tpos.y, 2) + pow(tpos.z, 2));
 
+	if (GetGameObject()->Name == "ElevatorKeycardObject") {
+		if (_player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !_player->Get<SimpleCameraControl>()->promptShown) {
+			if (_player->Get<InventorySystem>()->getKey(_requiredKey)) {
+				_player->Get<SimpleCameraControl>()->ShowActivate();
+			}
+			else {
+				_player->Get<SimpleCameraControl>()->ShowLocked();
+			}
+			return;
+		}
+	}
+
 	if (!(GetGameObject()->Name == "Map - Elevator Door Left") && !(GetGameObject()->Name == "Map - Elevator Door Right")) {
 		if (GetGameObject()->GetScene()->isGeneratorOn) {
 			if (_isLockedAfterGenIsOn && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !_player->Get<SimpleCameraControl>()->promptShown) {
@@ -125,6 +137,11 @@ void InteractSystem::Update(float deltaTime) {
 		if (glfwGetKey(_window, GLFW_KEY_E)) {
 			if (!isKeyPressed)
 			{
+				if (GetGameObject()->Name == "ElevatorKeycardObject") {
+					GetGameObject()->GetScene()->isElevatorKeycard = true;
+				}
+
+				
 				if (_isDefaultLockedByGenerator) {
 					if (GetGameObject()->GetScene()->isGeneratorOn)
 						interact();
