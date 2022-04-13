@@ -138,6 +138,16 @@ void InteractSystem::Update(float deltaTime) {
 			{
 				if (GetGameObject()->Name == "ElevatorKeycardObject") {
 					if (_player->Get<SimpleCameraControl>()->interactionObjectPos == opos && _player->Get<InventorySystem>()->getKey(_requiredKey)) {
+
+						GetGameObject()->GetScene()->FindObjectByName("Map - Elevator Door Left")->Get<InteractSystem2>()->isOpen = false;
+						GetGameObject()->GetScene()->FindObjectByName("Map - Elevator Door Right")->Get<InteractSystem2>()->isOpen = false;
+
+						GetGameObject()->GetScene()->FindObjectByName("Map - Elevator Door Left")->Get<SlideLerpSystem>()->lerpReverse = true;
+						GetGameObject()->GetScene()->FindObjectByName("Map - Elevator Door Right")->Get<SlideLerpSystem>()->lerpReverse = true;
+
+						GetGameObject()->GetScene()->FindObjectByName("Map - Elevator Door Left")->Get<SlideLerpSystem>()->beginLerp = true;
+						GetGameObject()->GetScene()->FindObjectByName("Map - Elevator Door Right")->Get<SlideLerpSystem>()->beginLerp = true;
+
 						GetGameObject()->GetScene()->isElevatorKeycard = true;
 					}
 				}
