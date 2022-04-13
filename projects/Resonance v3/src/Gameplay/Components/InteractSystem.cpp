@@ -78,73 +78,75 @@ void InteractSystem::Update(float deltaTime) {
 	glm::vec3 tpos = ppos - opos;
 	_distance = sqrt(pow(tpos.x, 2) + pow(tpos.y, 2) + pow(tpos.z, 2));
 
-	if (GetGameObject()->GetScene()->isGeneratorOn) {
-		if (_isLockedAfterGenIsOn && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !_player->Get<SimpleCameraControl>()->promptShown) {
-			_player->Get<SimpleCameraControl>()->ShowLocked();
-			return;
+	if (!(GetGameObject()->Name == "Map - Elevator Door Left") && !(GetGameObject()->Name == "Map - Elevator Door Right")) {
+		if (GetGameObject()->GetScene()->isGeneratorOn) {
+			if (_isLockedAfterGenIsOn && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !_player->Get<SimpleCameraControl>()->promptShown) {
+				_player->Get<SimpleCameraControl>()->ShowLocked();
+				return;
+			}
 		}
-	}
 
-	//Key (proximity based)
-	if (_iskey && _distance <= _interactDistance && !_player->Get<SimpleCameraControl>()->promptShown) {
-		_player->Get<SimpleCameraControl>()->ShowPickup();
-	}
+		//Key (proximity based)
+		if (_iskey && _distance <= _interactDistance && !_player->Get<SimpleCameraControl>()->promptShown) {
+			_player->Get<SimpleCameraControl>()->ShowPickup();
+		}
 
-	//Animated Objects (raycast based)
-	if (!_iskey && !_isGenerator && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !_player->Get<SimpleCameraControl>()->promptShown) {
+		//Animated Objects (raycast based)
+		if (!_iskey && !_isGenerator && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !_player->Get<SimpleCameraControl>()->promptShown) {
 
-		if (_player->Get<InventorySystem>()->getKey(_requiredKey))
-		{
-			if (_isDefaultLockedByGenerator) {
-				if (GetGameObject()->GetScene()->isGeneratorOn) {
-					if (!isOpen)
-						_player->Get<SimpleCameraControl>()->ShowOpen();
-					else if (isOpen)
-						_player->Get<SimpleCameraControl>()->ShowClose();
+			if (_player->Get<InventorySystem>()->getKey(_requiredKey))
+			{
+				if (_isDefaultLockedByGenerator) {
+					if (GetGameObject()->GetScene()->isGeneratorOn) {
+						if (!isOpen)
+							_player->Get<SimpleCameraControl>()->ShowOpen();
+						else if (isOpen)
+							_player->Get<SimpleCameraControl>()->ShowClose();
+					}
+					else {
+						_player->Get<SimpleCameraControl>()->ShowLocked();
+					}
+				}
+				if (!isOpen && !_isDefaultLockedByGenerator)
+					_player->Get<SimpleCameraControl>()->ShowOpen();
+				else if (isOpen)
+					_player->Get<SimpleCameraControl>()->ShowClose();
+			}
+			else
+			{
+				_player->Get<SimpleCameraControl>()->ShowLocked();
+			}
+		}
+
+		if (_isGenerator && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !GetGameObject()->GetScene()->isGeneratorOn) {
+			_player->Get<SimpleCameraControl>()->ShowActivate();
+		}
+
+		if (glfwGetKey(_window, GLFW_KEY_E)) {
+			if (!isKeyPressed)
+			{
+				if (_isDefaultLockedByGenerator) {
+					if (GetGameObject()->GetScene()->isGeneratorOn)
+						interact();
+					else
+						return;
+				}
+
+				if (_requiresKey) {
+					if (_player->Get<InventorySystem>()->getKey(_requiredKey)) {
+						interact();
+					}
 				}
 				else {
-					_player->Get<SimpleCameraControl>()->ShowLocked();
+					interact();
 				}
+				isKeyPressed = true;
 			}
-			if (!isOpen && !_isDefaultLockedByGenerator)
-				_player->Get<SimpleCameraControl>()->ShowOpen();
-			else if (isOpen)
-				_player->Get<SimpleCameraControl>()->ShowClose();
 		}
 		else
 		{
-			_player->Get<SimpleCameraControl>()->ShowLocked();
+			isKeyPressed = false;
 		}
-	}
-
-	if (_isGenerator && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !GetGameObject()->GetScene()->isGeneratorOn) {
-		_player->Get<SimpleCameraControl>()->ShowActivate();
-	}
-
-	if (glfwGetKey(_window, GLFW_KEY_E)) {
-		if (!isKeyPressed)
-		{
-			if (_isDefaultLockedByGenerator) {
-				if (GetGameObject()->GetScene()->isGeneratorOn)
-					interact();
-				else
-					return;
-			}
-
-			if (_requiresKey) {
-				if (_player->Get<InventorySystem>()->getKey(_requiredKey)) {
-					interact();
-				}
-			}
-			else {
-				interact();
-			}
-			isKeyPressed = true;
-		}
-	}
-	else
-	{
-		isKeyPressed = false;
 	}
 
 
@@ -198,10 +200,23 @@ void InteractSystem::interact() {
 	if (_isGenerator && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !GetGameObject()->GetScene()->isGeneratorOn) {
 		GetGameObject()->GetScene()->isGeneratorOn = true;
 
+		GetGameObject()->GetScene()->FindObjectByName("ElevatorStatusScreenOff")->Get<RenderComponent>()->IsEnabled = false;
+		GetGameObject()->GetScene()->FindObjectByName("ElevatorStatusScreenOn")->Get<RenderComponent>()->IsEnabled = true;
+
 		GetGameObject()->GetScene()->FindObjectByName("Map - Elevator Door Left")->Get<SlideLerpSystem>()->lerpReverse = false;
 		GetGameObject()->GetScene()->FindObjectByName("Map - Elevator Door Right")->Get<SlideLerpSystem>()->lerpReverse = false;
+
 		GetGameObject()->GetScene()->FindObjectByName("Map - Elevator Door Left")->Get<SlideLerpSystem>()->beginLerp = true;
 		GetGameObject()->GetScene()->FindObjectByName("Map - Elevator Door Right")->Get<SlideLerpSystem>()->beginLerp = true;
+
+
+
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 1")->Get<SlideLerpSystem>()->lerpReverse = true;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 2")->Get<SlideLerpSystem>()->lerpReverse = true;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 3")->Get<SlideLerpSystem>()->lerpReverse = true;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 4")->Get<SlideLerpSystem>()->lerpReverse = false;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 5")->Get<SlideLerpSystem>()->lerpReverse = true;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 6")->Get<SlideLerpSystem>()->lerpReverse = true;
 
 		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 1")->Get<SlideLerpSystem>()->beginLerp = true;
 		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 2")->Get<SlideLerpSystem>()->beginLerp = true;
@@ -209,6 +224,17 @@ void InteractSystem::interact() {
 		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 4")->Get<SlideLerpSystem>()->beginLerp = true;
 		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 5")->Get<SlideLerpSystem>()->beginLerp = true;
 		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 6")->Get<SlideLerpSystem>()->beginLerp = true;
+
+
+
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Double Door Right 1")->Get<SlideLerpSystem>()->lerpReverse = false;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Double Door Left 1")->Get<SlideLerpSystem>()->lerpReverse = false;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Double Door Right 2")->Get<SlideLerpSystem>()->lerpReverse = false;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Double Door Left 2")->Get<SlideLerpSystem>()->lerpReverse = false;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Double Door Right 3")->Get<SlideLerpSystem>()->lerpReverse = false;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Double Door Left 3")->Get<SlideLerpSystem>()->lerpReverse = false;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Double Door Right 4")->Get<SlideLerpSystem>()->lerpReverse = false;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Double Door Left 4")->Get<SlideLerpSystem>()->lerpReverse = false;
 
 		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Double Door Right 1")->Get<SlideLerpSystem>()->beginLerp = true;
 		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Double Door Left 1")->Get<SlideLerpSystem>()->beginLerp = true;

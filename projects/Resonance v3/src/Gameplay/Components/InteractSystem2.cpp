@@ -82,122 +82,124 @@ void InteractSystem2::Update(float deltaTime) {
 	glm::vec3 tpos = ppos - opos;
 	_distance = sqrt(pow(tpos.x, 2) + pow(tpos.y, 2) + pow(tpos.z, 2));
 
-	if (glfwGetKey(_window, GLFW_KEY_E)) {
-		if (!isKeyPressed)
-		{
-			if (_isDefaultLockedByGenerator) {
-				if (GetGameObject()->GetScene()->isGeneratorOn)
-					interact();
-				else
-					return;
-			}
-
-			if (_isLockedAfterGenIsOn) {
-				if (!GetGameObject()->GetScene()->isGeneratorOn)
-					interact();
-				else
-					return;
-			}
-
-			if (_requiresKey) {
-				if (_player->Get<InventorySystem>()->getKey(_requiredKey)) {
-					interact();
+	if (!(GetGameObject()->Name == "Map - Elevator Door Left") && !(GetGameObject()->Name == "Map - Elevator Door Right")) {
+		if (glfwGetKey(_window, GLFW_KEY_E)) {
+			if (!isKeyPressed)
+			{
+				if (_isDefaultLockedByGenerator) {
+					if (GetGameObject()->GetScene()->isGeneratorOn)
+						interact();
+					else
+						return;
 				}
-				else
-					return;
-			}
-			
-			interact();
-			isKeyPressed = true;
 
-		}
-	}
-	else
-	{
-		isKeyPressed = false;
-	}
-
-	if (GetGameObject()->GetScene()->isGeneratorOn) {
-		if (_isLockedAfterGenIsOn && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !_player->Get<SimpleCameraControl>()->promptShown) {
-			_player->Get<SimpleCameraControl>()->ShowLocked();
-			return;
-		}
-	}
-
-	if (!GetGameObject()->GetScene()->isGeneratorOn) {
-		if (_isDefaultLockedByGenerator && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !_player->Get<SimpleCameraControl>()->promptShown) {
-			_player->Get<SimpleCameraControl>()->ShowLocked();
-			return;
-		}
-	}
-
-	//Key (proximity based)
-	if (_iskey && _distance <= _interactDistance && !_player->Get<SimpleCameraControl>()->promptShown) {
-		_player->Get<SimpleCameraControl>()->ShowPickup();
-	}
-
-	if (_whenOpenUseDistance && isOpen && _distance <= _interactDistance && !_player->Get<SimpleCameraControl>()->promptShown) {
-		if (_player->Get<InventorySystem>()->getKey(_requiredKey))
-		{
-			if (_isDefaultLockedByGenerator) {
-				if (GetGameObject()->GetScene()->isGeneratorOn) {
-					if (!isOpen)
-						_player->Get<SimpleCameraControl>()->ShowOpen();
-					else if (isOpen)
-						_player->Get<SimpleCameraControl>()->ShowClose();
+				if (_isLockedAfterGenIsOn) {
+					if (!GetGameObject()->GetScene()->isGeneratorOn)
+						interact();
+					else
+						return;
 				}
-			}
 
-			if (_isLockedAfterGenIsOn) {
-				if (!GetGameObject()->GetScene()->isGeneratorOn) {
-					if (!isOpen)
-						_player->Get<SimpleCameraControl>()->ShowOpen();
-					else if (isOpen)
-						_player->Get<SimpleCameraControl>()->ShowClose();
+				if (_requiresKey) {
+					if (_player->Get<InventorySystem>()->getKey(_requiredKey)) {
+						interact();
+					}
+					else
+						return;
 				}
+
+				interact();
+				isKeyPressed = true;
+
 			}
-
-			if (!isOpen && !_isDefaultLockedByGenerator && !_isLockedAfterGenIsOn)
-				_player->Get<SimpleCameraControl>()->ShowOpen();
-			else if (isOpen)
-				_player->Get<SimpleCameraControl>()->ShowClose();
 		}
-		else if (!_requiresKey)
+		else
 		{
-			if (!isOpen)
-				_player->Get<SimpleCameraControl>()->ShowOpen();
-			else if (isOpen)
-				_player->Get<SimpleCameraControl>()->ShowClose();
+			isKeyPressed = false;
 		}
-	}
 
-	//Animated Objects (raycast based)
-	if (!_iskey && !_isGenerator && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !_player->Get<SimpleCameraControl>()->promptShown) {
-
-		if (_whenOpenUseDistance && isOpen)
-			return;
-
-		if (_player->Get<InventorySystem>()->getKey(_requiredKey))
-		{
-			if (!isOpen)
-				_player->Get<SimpleCameraControl>()->ShowOpen();
-			else if (isOpen)
-				_player->Get<SimpleCameraControl>()->ShowClose();
+		if (GetGameObject()->GetScene()->isGeneratorOn) {
+			if (_isLockedAfterGenIsOn && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !_player->Get<SimpleCameraControl>()->promptShown) {
+				_player->Get<SimpleCameraControl>()->ShowLocked();
+				return;
+			}
 		}
-		else if(!_requiresKey)
-		{
-			if (!isOpen)
-				_player->Get<SimpleCameraControl>()->ShowOpen();
-			else if (isOpen)
-				_player->Get<SimpleCameraControl>()->ShowClose();
-		}
-		else {
-			_player->Get<SimpleCameraControl>()->ShowLocked();
-		}
-	}
 
-	if (_isGenerator && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !GetGameObject()->GetScene()->isGeneratorOn) {
-		_player->Get<SimpleCameraControl>()->ShowActivate();
+		if (!GetGameObject()->GetScene()->isGeneratorOn) {
+			if (_isDefaultLockedByGenerator && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !_player->Get<SimpleCameraControl>()->promptShown) {
+				_player->Get<SimpleCameraControl>()->ShowLocked();
+				return;
+			}
+		}
+
+		//Key (proximity based)
+		if (_iskey && _distance <= _interactDistance && !_player->Get<SimpleCameraControl>()->promptShown) {
+			_player->Get<SimpleCameraControl>()->ShowPickup();
+		}
+
+		if (_whenOpenUseDistance && isOpen && _distance <= _interactDistance && !_player->Get<SimpleCameraControl>()->promptShown) {
+			if (_player->Get<InventorySystem>()->getKey(_requiredKey))
+			{
+				if (_isDefaultLockedByGenerator) {
+					if (GetGameObject()->GetScene()->isGeneratorOn) {
+						if (!isOpen)
+							_player->Get<SimpleCameraControl>()->ShowOpen();
+						else if (isOpen)
+							_player->Get<SimpleCameraControl>()->ShowClose();
+					}
+				}
+
+				if (_isLockedAfterGenIsOn) {
+					if (!GetGameObject()->GetScene()->isGeneratorOn) {
+						if (!isOpen)
+							_player->Get<SimpleCameraControl>()->ShowOpen();
+						else if (isOpen)
+							_player->Get<SimpleCameraControl>()->ShowClose();
+					}
+				}
+
+				if (!isOpen && !_isDefaultLockedByGenerator && !_isLockedAfterGenIsOn)
+					_player->Get<SimpleCameraControl>()->ShowOpen();
+				else if (isOpen)
+					_player->Get<SimpleCameraControl>()->ShowClose();
+			}
+			else if (!_requiresKey)
+			{
+				if (!isOpen)
+					_player->Get<SimpleCameraControl>()->ShowOpen();
+				else if (isOpen)
+					_player->Get<SimpleCameraControl>()->ShowClose();
+			}
+		}
+
+		//Animated Objects (raycast based)
+		if (!_iskey && !_isGenerator && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !_player->Get<SimpleCameraControl>()->promptShown) {
+
+			if (_whenOpenUseDistance && isOpen)
+				return;
+
+			if (_player->Get<InventorySystem>()->getKey(_requiredKey))
+			{
+				if (!isOpen)
+					_player->Get<SimpleCameraControl>()->ShowOpen();
+				else if (isOpen)
+					_player->Get<SimpleCameraControl>()->ShowClose();
+			}
+			else if (!_requiresKey)
+			{
+				if (!isOpen)
+					_player->Get<SimpleCameraControl>()->ShowOpen();
+				else if (isOpen)
+					_player->Get<SimpleCameraControl>()->ShowClose();
+			}
+			else {
+				_player->Get<SimpleCameraControl>()->ShowLocked();
+			}
+		}
+
+		if (_isGenerator && _player->Get<SimpleCameraControl>()->interactionObjectPos == opos && !GetGameObject()->GetScene()->isGeneratorOn) {
+			_player->Get<SimpleCameraControl>()->ShowActivate();
+		}
 	}
 
 }
