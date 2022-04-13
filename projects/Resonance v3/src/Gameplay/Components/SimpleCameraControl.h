@@ -80,7 +80,6 @@ protected:
 	glm::vec3 _moveSpeeds;
 	glm::dvec2 _prevMousePos;
 	glm::vec2 _currentRot;
-
 	bool _allowMouse = true;
 	bool isJPressed = false;
 	bool isEPressed = false;

@@ -132,9 +132,9 @@ void SimpleCameraControl::Update(float deltaTime)
 
 		EmitSound(deltaTime);
 
-		//if (elevatorKeycard) {
-		TeleportToEnd();
-		//}
+		if (_scene->isElevatorKeycard) {
+			TeleportToEnd();
+		}
 	}
 
 
