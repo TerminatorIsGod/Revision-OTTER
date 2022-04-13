@@ -49,7 +49,7 @@ public:
 	void FadeInBlack(float deltaTime);
 	void FadeOutBlack(float deltaTime);
 	void ShowBlack();
-
+	void TeleportToEnd();
 
 	bool promptShown = false;
 	bool allowInteraction = true;
@@ -140,6 +140,7 @@ protected:
 	Texture2D::Sptr blackTex;
 	Texture2D::Sptr gameoverTex;
 	Texture2D::Sptr loadingTex;
+	Texture2D::Sptr endTex;
 
 
 	bool updateStarted = false;

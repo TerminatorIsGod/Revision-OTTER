@@ -41,6 +41,8 @@ SimpleCameraControl::~SimpleCameraControl()
 	blackTex->~Texture2D();
 	gameoverTex->~Texture2D();
 	loadingTex->~Texture2D();
+	endTex->~Texture2D();
+
 }
 
 void SimpleCameraControl::Awake() {
@@ -82,7 +84,7 @@ void SimpleCameraControl::Update(float deltaTime)
 			blackTex = ResourceManager::CreateAsset<Texture2D>("textures/black.png");
 			gameoverTex = ResourceManager::CreateAsset<Texture2D>("textures/ui/deathScreen.jpg");
 			loadingTex = ResourceManager::CreateAsset<Texture2D>("textures/ui/LoadingScreen.png");
-
+			endTex = ResourceManager::CreateAsset<Texture2D>("textures/resonance_endscreen.png");
 		}
 
 		for (int i = 0; i < playerEmmiterCount; i++)
@@ -129,6 +131,10 @@ void SimpleCameraControl::Update(float deltaTime)
 			interactionObjectPos = glm::vec3(0.0f);
 
 		EmitSound(deltaTime);
+
+		//if (elevatorKeycard) {
+		TeleportToEnd();
+		//}
 	}
 
 
@@ -583,6 +589,14 @@ void SimpleCameraControl::ShowBlack()
 	_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(blackTex);
 	_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
 
+}
+
+void SimpleCameraControl::TeleportToEnd()
+{
+	//CALL THIS EVERY FRAME FROM WHEREVER U CALL IT!
+	_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(endTex);
+	_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
+	PlaceUI(4, windx / 4.0f, windy / 4.0f, 1, 0, 2, 1); // Game Over Screen
 }
 
 
