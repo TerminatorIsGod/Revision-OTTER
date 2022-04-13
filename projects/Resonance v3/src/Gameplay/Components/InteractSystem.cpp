@@ -138,7 +138,9 @@ void InteractSystem::Update(float deltaTime) {
 			if (!isKeyPressed)
 			{
 				if (GetGameObject()->Name == "ElevatorKeycardObject") {
-					GetGameObject()->GetScene()->isElevatorKeycard = true;
+					if (_player->Get<SimpleCameraControl>()->interactionObjectPos == opos) {
+						GetGameObject()->GetScene()->isElevatorKeycard = true;
+					}
 				}
 
 				
