@@ -142,21 +142,19 @@ void SimpleCameraControl::Update(float deltaTime)
 
 void SimpleCameraControl::Movement(float deltaTime)
 {
-	//if (!Application::Get().IsFocused)
-	//	return;
 
 
 	auto _body = GetComponent<Gameplay::Physics::RigidBody>();
 
-	if (glfwGetKey(_window, GLFW_KEY_M) && _allowMouse == false) {
-		_isMousePressed = !_isMousePressed;
-		_allowMouse = true;
+	//if (glfwGetKey(_window, GLFW_KEY_M) && _allowMouse == false) {
+	//	_isMousePressed = !_isMousePressed;
+	//	_allowMouse = true;
 
-		std::cout << "Chaning mouse thing\n";
-	}
-	else if (!glfwGetKey(_window, GLFW_KEY_M)) {
-		_allowMouse = false;
-	}
+	//	std::cout << "Chaning mouse thing\n";
+	//}
+	//else if (!glfwGetKey(_window, GLFW_KEY_M)) {
+	//	_allowMouse = false;
+	//}
 
 	if (_isMousePressed) {
 
@@ -230,19 +228,19 @@ void SimpleCameraControl::Movement(float deltaTime)
 			playerEmmiters[playerEmmiterIndex]->lerpSpeed = playerEmmiters[playerEmmiterIndex]->attackSpeed;
 		}
 
-		if (glfwGetKey(_window, GLFW_KEY_J))
-		{
-			if (!isJPressed)
-			{
-				isJPressed = true;
-				if (freecam)
-					freecam = false;
-				else
-					freecam = true;
-			}
-		}
-		else
-			isJPressed = false;
+		//if (glfwGetKey(_window, GLFW_KEY_J))
+		//{
+		//	if (!isJPressed)
+		//	{
+		//		isJPressed = true;
+		//		if (freecam)
+		//			freecam = false;
+		//		else
+		//			freecam = true;
+		//	}
+		//}
+		//else
+		//	isJPressed = false;
 
 		//input *= deltaTime;
 
@@ -597,6 +595,8 @@ void SimpleCameraControl::TeleportToEnd()
 	_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(endTex);
 	_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
 	PlaceUI(4, windx / 4.0f, windy / 4.0f, 1, 0, 2, 1); // Game Over Screen
+
+	GetGameObject()->SetPostion(glm::vec3(49620.0f));
 }
 
 
