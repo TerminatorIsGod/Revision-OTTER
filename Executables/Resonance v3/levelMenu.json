@@ -1,0 +1,430 @@
+{
+	"ambient": {
+		"x": 0.10000000149011612,
+		"y": 0.10000000149011612,
+		"z": 0.10000000149011612
+	},
+	"default_material": "null",
+	"main_camera": "fa31c75b-5629-4543-9f51-8d44290de538",
+	"objects": [
+		{
+			"children": [],
+			"components": {
+				"Light": {
+					"color": {
+						"x": 1.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"direction": {
+						"x": 0.0,
+						"y": 0.0,
+						"z": -1.0
+					},
+					"enabled": true,
+					"guid": "09ec686a-decc-c446-a18d-455521f92cc2",
+					"intensity": 1.9524593353271484,
+					"params": {
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"range": 224.39999389648438,
+					"type": "Point"
+				}
+			},
+			"guid": "ae98755c-d1dc-2b43-9cbd-713b360f9274",
+			"hide_in_inspector": false,
+			"name": "Light1",
+			"parent": "null",
+			"position": {
+				"x": 17.950000762939453,
+				"y": 29.329999923706055,
+				"z": 6.039999961853027
+			},
+			"rotation": {
+				"w": 1.0,
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"scale": {
+				"x": 1.0,
+				"y": 1.0,
+				"z": 1.0
+			}
+		},
+		{
+			"children": [],
+			"components": {
+				"Light": {
+					"color": {
+						"x": 1.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"direction": {
+						"x": 0.0,
+						"y": 0.0,
+						"z": -1.0
+					},
+					"enabled": true,
+					"guid": "09ec686a-decc-c446-a18d-455521f92cc2",
+					"intensity": 50.0,
+					"params": {
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"range": 244.10000610351563,
+					"type": "Point"
+				}
+			},
+			"guid": "ae98755c-d1dc-2b43-9cbd-713b360f9274",
+			"hide_in_inspector": false,
+			"name": "Light2",
+			"parent": "null",
+			"position": {
+				"x": 23.920000076293945,
+				"y": 32.2599983215332,
+				"z": -6.53000020980835
+			},
+			"rotation": {
+				"w": 1.0,
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"scale": {
+				"x": 1.0,
+				"y": 1.0,
+				"z": 1.0
+			}
+		},
+		{
+			"children": [],
+			"components": {
+				"GuiPanel": {
+					"border": -1,
+					"color": {
+						"w": 1.0,
+						"x": 1.0,
+						"y": 1.0,
+						"z": 1.0
+					},
+					"enabled": false,
+					"guid": "1e135680-8f32-6a4d-a216-131392d26069",
+					"texture": "cd05b3ef-5fc6-2e40-a8e7-512bf2987b69"
+				},
+				"MenuSystemNewAndImproved": {
+					"enabled": true,
+					"guid": "a6d42d38-f595-574f-bc7c-ddf37dc720ec",
+					"key": 0
+				},
+				"RectTransform": {
+					"enabled": true,
+					"guid": "7e6bebc7-c350-4142-ab6a-d9056d44ca64",
+					"half_scale": {
+						"x": 960.0,
+						"y": 540.0
+					},
+					"position": {
+						"x": 10000.0,
+						"y": 10000.0
+					},
+					"rotation": 0.0
+				}
+			},
+			"guid": "0503bf2c-73f0-d343-8455-9311be121c2a",
+			"hide_in_inspector": false,
+			"name": "PauseScreen",
+			"parent": "null",
+			"position": {
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"rotation": {
+				"w": 1.0,
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"scale": {
+				"x": 1.0,
+				"y": 1.0,
+				"z": 1.0
+			}
+		},
+		{
+			"children": [],
+			"components": {
+				"Gameplay::Camera": {
+					"clear_color": {
+						"w": -431602080.0,
+						"x": -431602080.0,
+						"y": -431602080.0,
+						"z": -431602080.0
+					},
+					"enabled": true,
+					"far_plane": 1000.0,
+					"fov_radians": 1.5783535242080688,
+					"guid": "fa31c75b-5629-4543-9f51-8d44290de538",
+					"near_plane": 0.10000000149011612,
+					"ortho_enabled": false,
+					"ortho_size": 50.0
+				},
+				"Gameplay::Physics::RigidBody": {
+					"angular_damping": 0.004999999888241291,
+					"colliders": [
+						{
+							"guid": "261057e6-8a71-9c4c-8562-4184c52eb1df",
+							"name": "Default Name",
+							"position": {
+								"x": 0.0,
+								"y": 0.0,
+								"z": 0.0
+							},
+							"radius": 1.0,
+							"rotation": {
+								"x": 0.0,
+								"y": 0.0,
+								"z": 0.0
+							},
+							"scale": {
+								"x": 1.0,
+								"y": 1.0,
+								"z": 1.0
+							},
+							"type": "Sphere"
+						}
+					],
+					"enabled": true,
+					"group": 1,
+					"guid": "fc290c6a-d190-bb47-91de-3b27d058c664",
+					"linear_damping": 0.0,
+					"mask": -1,
+					"mass": 1.0,
+					"type": "Dynamic"
+				}
+			},
+			"guid": "19f09945-9a51-e84e-a88b-d6dc01ce4d80",
+			"hide_in_inspector": false,
+			"name": "Main Camera",
+			"parent": "null",
+			"position": {
+				"x": 28.549999237060547,
+				"y": 33.18000030517578,
+				"z": 6.039999961853027
+			},
+			"rotation": {
+				"w": 0.4999999701976776,
+				"x": 0.4999999701976776,
+				"y": -0.4999999701976776,
+				"z": -0.4999999701976776
+			},
+			"scale": {
+				"x": 1.0,
+				"y": 1.0,
+				"z": 1.0
+			}
+		},
+		{
+			"children": [],
+			"components": {
+				"RenderComponent": {
+					"enabled": true,
+					"guid": "f1a8887a-7bfa-a644-b52c-89a5ff6f41d3",
+					"material": "0256ce02-06f9-6b49-b8e9-0f345c35f313",
+					"mesh": "23bc8271-21d5-2d43-833b-6969fe1e2f10"
+				}
+			},
+			"guid": "9d449178-420f-5642-bd69-ba8b5cf39889",
+			"hide_in_inspector": false,
+			"name": "StartScreenPlane",
+			"parent": "null",
+			"position": {
+				"x": 30.780000686645508,
+				"y": 33.220001220703125,
+				"z": 6.380000114440918
+			},
+			"rotation": {
+				"w": 0.5,
+				"x": 0.5,
+				"y": -0.5,
+				"z": -0.5
+			},
+			"scale": {
+				"x": 3.2899999618530273,
+				"y": 1.8600000143051147,
+				"z": 1.0
+			}
+		},
+		{
+			"children": [],
+			"components": {
+				"RenderComponent": {
+					"enabled": false,
+					"guid": "f1a8887a-7bfa-a644-b52c-89a5ff6f41d3",
+					"material": "0420ce02-06f9-6b49-b8e9-0f345c35f420",
+					"mesh": "23bc8271-21d5-2d43-833b-6969fe1e2f10"
+				}
+			},
+			"guid": "9d449178-420f-5642-bd69-ba8b5cf39889",
+			"hide_in_inspector": false,
+			"name": "LoadingScreenPlane",
+			"parent": "null",
+			"position": {
+				"x": 30.780000686645508,
+				"y": 33.220001220703125,
+				"z": 6.380000114440918
+			},
+			"rotation": {
+				"w": 0.5,
+				"x": 0.5,
+				"y": -0.5,
+				"z": -0.5
+			},
+			"scale": {
+				"x": 3.2899999618530273,
+				"y": 1.8600000143051147,
+				"z": 1.0
+			}
+		},
+		{
+			"children": [],
+			"components": {
+				"RenderComponent": {
+					"enabled": true,
+					"guid": "8311cfcf-2902-bf4b-b1bc-e55fe1dee189",
+					"material": "null",
+					"mesh": "null"
+				}
+			},
+			"guid": "ec9a4136-dc52-9b4a-8603-637efba73d00",
+			"hide_in_inspector": false,
+			"name": "Map - Walls 1",
+			"parent": "null",
+			"position": {
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"rotation": {
+				"w": 0.7071067690849304,
+				"x": 0.7071067690849304,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"scale": {
+				"x": 4.0,
+				"y": 4.0,
+				"z": 4.0
+			}
+		},
+		{
+			"children": [],
+			"components": {
+				"RenderComponent": {
+					"enabled": true,
+					"guid": "8311cfcf-2902-bf4b-b1bc-e55fe1dee189",
+					"material": "81a013b6-bdce-9347-a53e-376c3b69e777",
+					"mesh": "c774ed5a-0dd4-9f48-94c7-4183b3e7b2f3"
+				}
+			},
+			"guid": "ec9a4236-dc52-9b4a-8603-637efba77d00",
+			"hide_in_inspector": false,
+			"name": "Map - Computers",
+			"parent": "null",
+			"position": {
+				"x": 0.019999999552965164,
+				"y": -0.009999999776482582,
+				"z": 0.8700000047683716
+			},
+			"rotation": {
+				"w": 0.7071067690849304,
+				"x": 0.7071067690849304,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"scale": {
+				"x": 4.0,
+				"y": 3.4600000381469727,
+				"z": 3.999000072479248
+			}
+		},
+		{
+			"children": [],
+			"components": {
+				"RenderComponent": {
+					"enabled": true,
+					"guid": "8311cfcf-2902-bf4b-b1bc-e55fe1dee189",
+					"material": "null",
+					"mesh": "null"
+				}
+			},
+			"guid": "ec9a4336-dc52-9b4a-8603-637efba74d00",
+			"hide_in_inspector": false,
+			"name": "Map - Walls 2",
+			"parent": "null",
+			"position": {
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"rotation": {
+				"w": 0.7071067690849304,
+				"x": 0.7071067690849304,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"scale": {
+				"x": 4.0,
+				"y": 4.0,
+				"z": 4.0
+			}
+		},
+		{
+			"children": [],
+			"components": {
+				"AudioManager": {
+					"enabled": true,
+					"guid": "34a969e0-c8ac-9443-87bd-408f8dba3d7c",
+					"track": "Title",
+					"volume": 1.0
+				}
+			},
+			"guid": "603bcc8c-161e-854e-a68f-4223be333d82",
+			"hide_in_inspector": false,
+			"name": "Audio Manager",
+			"parent": "null",
+			"position": {
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"rotation": {
+				"w": 1.0,
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"scale": {
+				"x": 1.0,
+				"y": 1.0,
+				"z": 1.0
+			}
+		}
+	],
+	"skybox": {
+		"mesh": "b960df6a-55f7-bd44-8df6-04599abb3f32",
+		"orientation": {
+			"w": 0.7071133852005005,
+			"x": 0.7071000933647156,
+			"y": 0.0,
+			"z": 0.0
+		},
+		"shader": "null",
+		"texture": "null"
+	}
+}
