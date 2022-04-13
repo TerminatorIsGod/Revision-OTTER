@@ -137,7 +137,7 @@ void InteractSystem::Update(float deltaTime) {
 			if (!isKeyPressed)
 			{
 				if (GetGameObject()->Name == "ElevatorKeycardObject") {
-					if (_player->Get<SimpleCameraControl>()->interactionObjectPos == opos) {
+					if (_player->Get<SimpleCameraControl>()->interactionObjectPos == opos && _player->Get<InventorySystem>()->getKey(_requiredKey)) {
 						GetGameObject()->GetScene()->isElevatorKeycard = true;
 					}
 				}
@@ -224,17 +224,27 @@ void InteractSystem::interact() {
 		GetGameObject()->GetScene()->FindObjectByName("Map - Elevator Door Left")->Get<SlideLerpSystem>()->lerpReverse = false;
 		GetGameObject()->GetScene()->FindObjectByName("Map - Elevator Door Right")->Get<SlideLerpSystem>()->lerpReverse = false;
 
+		GetGameObject()->GetScene()->FindObjectByName("Map - Elevator Door Left")->Get<InteractSystem2>()->isOpen = true;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Elevator Door Right")->Get<InteractSystem2>()->isOpen = true;
+
 		GetGameObject()->GetScene()->FindObjectByName("Map - Elevator Door Left")->Get<SlideLerpSystem>()->beginLerp = true;
 		GetGameObject()->GetScene()->FindObjectByName("Map - Elevator Door Right")->Get<SlideLerpSystem>()->beginLerp = true;
 
 
 
-		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 1")->Get<SlideLerpSystem>()->lerpReverse = true;
-		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 2")->Get<SlideLerpSystem>()->lerpReverse = true;
-		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 3")->Get<SlideLerpSystem>()->lerpReverse = true;
-		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 4")->Get<SlideLerpSystem>()->lerpReverse = false;
-		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 5")->Get<SlideLerpSystem>()->lerpReverse = true;
-		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 6")->Get<SlideLerpSystem>()->lerpReverse = true;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 1")->Get<InteractSystem2>()->isOpen = false;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 2")->Get<InteractSystem2>()->isOpen = false;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 3")->Get<InteractSystem2>()->isOpen = false;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 4")->Get<InteractSystem2>()->isOpen = true;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 5")->Get<InteractSystem2>()->isOpen = false;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 6")->Get<InteractSystem2>()->isOpen = false;
+
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 1")->Get<SlideLerpSystem>()->beginLerp = true;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 2")->Get<SlideLerpSystem>()->beginLerp = true;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 3")->Get<SlideLerpSystem>()->beginLerp = true;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 4")->Get<SlideLerpSystem>()->beginLerp = true;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 5")->Get<SlideLerpSystem>()->beginLerp = true;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 6")->Get<SlideLerpSystem>()->beginLerp = true;
 
 		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 1")->Get<SlideLerpSystem>()->beginLerp = true;
 		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Door 2")->Get<SlideLerpSystem>()->beginLerp = true;
@@ -262,6 +272,15 @@ void InteractSystem::interact() {
 		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Double Door Left 3")->Get<SlideLerpSystem>()->beginLerp = true;
 		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Double Door Right 4")->Get<SlideLerpSystem>()->beginLerp = true;
 		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Double Door Left 4")->Get<SlideLerpSystem>()->beginLerp = true;
+
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Double Door Right 1")->Get<InteractSystem2>()->isOpen = false;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Double Door Left 1")->Get<InteractSystem2>()->isOpen = false;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Double Door Right 2")->Get<InteractSystem2>()->isOpen = false;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Double Door Left 2")->Get<InteractSystem2>()->isOpen = false;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Double Door Right 3")->Get<InteractSystem2>()->isOpen = false;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Double Door Left 3")->Get<InteractSystem2>()->isOpen = false;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Double Door Right 4")->Get<InteractSystem2>()->isOpen = false;
+		GetGameObject()->GetScene()->FindObjectByName("Map - Glass Double Door Left 4")->Get<InteractSystem2>()->isOpen = false;
 
 		GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("Generator", 1.0f, GetGameObject()->GetPosition());
 		GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("Message", 1.0f, GetGameObject()->GetPosition() + glm::vec3(0.0f, 0.0f, 3.0f));
