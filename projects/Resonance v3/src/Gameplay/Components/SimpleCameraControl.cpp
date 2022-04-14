@@ -37,11 +37,13 @@ SimpleCameraControl::~SimpleCameraControl()
 	p_DropThrow->~Texture2D();
 	p_Read->~Texture2D();
 	p_Activate->~Texture2D();
+	p_Leave->~Texture2D();
 
 	blackTex->~Texture2D();
 	gameoverTex->~Texture2D();
 	loadingTex->~Texture2D();
 	endTex->~Texture2D();
+	logoTex->~Texture2D();
 
 }
 
@@ -81,10 +83,13 @@ void SimpleCameraControl::Update(float deltaTime)
 			p_DropThrow = ResourceManager::CreateAsset<Texture2D>("textures/ui/DropThrow Prompt.png");
 			p_Read = ResourceManager::CreateAsset<Texture2D>("textures/ui/Read Prompt.png");
 			p_Activate = ResourceManager::CreateAsset<Texture2D>("textures/ui/Activate Prompt.png");
+			p_Leave = ResourceManager::CreateAsset<Texture2D>("textures/ui/LeavePrompt.png");
+
 			blackTex = ResourceManager::CreateAsset<Texture2D>("textures/black.png");
 			gameoverTex = ResourceManager::CreateAsset<Texture2D>("textures/ui/deathScreen.jpg");
-			loadingTex = ResourceManager::CreateAsset<Texture2D>("textures/ui/LoadingScreen.png");
+			loadingTex = ResourceManager::CreateAsset<Texture2D>("textures/ui/LoadingScreen2.png");
 			endTex = ResourceManager::CreateAsset<Texture2D>("textures/resonance_endscreen.png");
+			logoTex = ResourceManager::CreateAsset<Texture2D>("textures/Resonance Logo Coloured Small.png");
 		}
 
 		for (int i = 0; i < playerEmmiterCount; i++)
@@ -133,7 +138,16 @@ void SimpleCameraControl::Update(float deltaTime)
 		EmitSound(deltaTime);
 
 		if (_scene->isElevatorKeycard) {
-			TeleportToEnd();
+			GetComponent<Gameplay::Physics::RigidBody>()->SetLinearVelocity(glm::vec3(0.0f));
+			creditsTimer += deltaTime;
+			if (!endStarted)
+			{
+				_scene->audioManager->Get<AudioManager>()->PlaySoundByName("Echos");
+				endStarted = true;
+			}
+
+			if (creditsTimer > 36.5f)
+				TeleportToEnd();
 		}
 	}
 
@@ -146,15 +160,15 @@ void SimpleCameraControl::Movement(float deltaTime)
 
 	auto _body = GetComponent<Gameplay::Physics::RigidBody>();
 
-	if (glfwGetKey(_window, GLFW_KEY_M) && _allowMouse == false) {
-		_isMousePressed = !_isMousePressed;
-		_allowMouse = true;
+	//if (glfwGetKey(_window, GLFW_KEY_M) && _allowMouse == false) {
+	//	_isMousePressed = !_isMousePressed;
+	//	_allowMouse = true;
 
-		std::cout << "Chaning mouse thing\n";
-	}
-	else if (!glfwGetKey(_window, GLFW_KEY_M)) {
-		_allowMouse = false;
-	}
+	//	std::cout << "Chaning mouse thing\n";
+	//}
+	//else if (!glfwGetKey(_window, GLFW_KEY_M)) {
+	//	_allowMouse = false;
+	//}
 
 	if (_isMousePressed) {
 
@@ -228,19 +242,19 @@ void SimpleCameraControl::Movement(float deltaTime)
 			playerEmmiters[playerEmmiterIndex]->lerpSpeed = playerEmmiters[playerEmmiterIndex]->attackSpeed;
 		}
 
-		if (glfwGetKey(_window, GLFW_KEY_J))
-		{
-			if (!isJPressed)
-			{
-				isJPressed = true;
-				if (freecam)
-					freecam = false;
-				else
-					freecam = true;
-			}
-		}
-		else
-			isJPressed = false;
+		//if (glfwGetKey(_window, GLFW_KEY_J))
+		//{
+		//	if (!isJPressed)
+		//	{
+		//		isJPressed = true;
+		//		if (freecam)
+		//			freecam = false;
+		//		else
+		//			freecam = true;
+		//	}
+		//}
+		//else
+		//	isJPressed = false;
 
 		//input *= deltaTime;
 
@@ -539,6 +553,7 @@ void SimpleCameraControl::ShowRead()
 {
 	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
 	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(p_Read);
+	PlaceUI(3, 30, 30, 1, 0, 12, 1);
 	promptShown = true;
 }
 
@@ -546,6 +561,15 @@ void SimpleCameraControl::ShowActivate()
 {
 	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
 	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(p_Activate);
+	promptShown = true;
+}
+
+void SimpleCameraControl::ShowLeave()
+{
+	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
+	_scene->uiImages[3]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(p_Leave);
+	PlaceUI(3, 53.33f, 30, 12, -4, 12, 4);
+
 	promptShown = true;
 }
 
@@ -591,10 +615,18 @@ void SimpleCameraControl::ShowBlack()
 
 void SimpleCameraControl::TeleportToEnd()
 {
-	//CALL THIS EVERY FRAME FROM WHEREVER U CALL IT!
-	_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(endTex);
+	if (creditsTimer < 43.0f)
+		_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(logoTex);
+	else
+	{
+		_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetTexture(endTex);
+
+		if (glfwGetKey(_window, GLFW_KEY_E))
+			Application::Get().LoadScene("levelMenu.json");
+	}
+
 	_scene->uiImages[4]->GetChildren()[0]->Get<GuiPanel>()->SetColor(glm::vec4(1.0f));
-	PlaceUI(4, windx / 4.0f, windy / 4.0f, 1, 0, 2, 1); // Game Over Screen
+	PlaceUI(4, windx / 4.0f, windy / 4.0f, 1, 0, 2, 1);
 
 	GetGameObject()->SetPostion(glm::vec3(49620.0f));
 }

@@ -96,11 +96,11 @@ void DefaultSceneLayer::_CreateScene()
 
 	bool loadScene = true;
 	// For now we can use a toggle to generate our scene vs load from file
-	if (loadScene && std::filesystem::exists("level2.json")) {
+	if (loadScene && std::filesystem::exists("levelMenu.json")) {
 		app.LoadScene("levelMenu.json");
 		//Texture2DArray::Sptr particleTex = ResourceManager::CreateAsset<Texture2DArray>("textures/particles.png", 2, 2);
 		//GameObject::Sptr particles = app.CurrentScene()->CreateGameObject("Particles");
-		//{ 
+		//{
 		//	particles->SetPostion({ -2.0f, 0.0f, 2.0f });
 
 		//	ParticleSystem::Sptr particleManager = particles->Add<ParticleSystem>();
@@ -115,11 +115,11 @@ void DefaultSceneLayer::_CreateScene()
 		//	emitter.SphereEmitterData.Timer = 1.0f / 50.0f;
 		//	emitter.SphereEmitterData.Velocity = 0.5f;
 		//	emitter.SphereEmitterData.LifeRange = { 1.0f, 4.0f };
-		//	emitter.SphereEmitterData.Radius = 1.0f;
-		//	emitter.SphereEmitterData.SizeRange = { 0.5f, 1.5f };
+		//	emitter.SphereEmitterData.Radius = 21.0f;
+		//	emitter.SphereEmitterData.SizeRange = { 0.1f, 0.1f };
 
 		//	particleManager->AddEmitter(emitter);
-		//} 
+		//}
 	}
 	else {
 

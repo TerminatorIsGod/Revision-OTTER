@@ -544,29 +544,29 @@ void RenderLayer::_InitFrameUniforms()
 	frameData.u_LensDepth = camera->LensDepth;
 	frameData.u_FocalDepth = camera->FocalDepth;
 
-	if (glfwGetKey(app.GetWindow(), GLFW_KEY_T)) {
-		if (!tPressed)
-		{
-			frameData.u_TextureToggle = !frameData.u_TextureToggle;
-			tPressed = true;
-		}
-	}
-	else
-	{
-		tPressed = false;
-	}
+	//if (glfwGetKey(app.GetWindow(), GLFW_KEY_T)) {
+	//	if (!tPressed)
+	//	{
+	//		frameData.u_TextureToggle = !frameData.u_TextureToggle;
+	//		tPressed = true;
+	//	}
+	//}
+	//else
+	//{
+	//	tPressed = false;
+	//}
 
-	if (glfwGetKey(app.GetWindow(), GLFW_KEY_L)) {
-		if (!lPressed)
-		{
-			frameData.u_LightingToggle = !frameData.u_LightingToggle;
-			lPressed = true;
-		}
-	}
-	else
-	{
-		lPressed = false;
-	}
+	//if (glfwGetKey(app.GetWindow(), GLFW_KEY_L)) {
+	//	if (!lPressed)
+	//	{
+	//		frameData.u_LightingToggle = !frameData.u_LightingToggle;
+	//		lPressed = true;
+	//	}
+	//}
+	//else
+	//{
+	//	lPressed = false;
+	//}
 
 	_frameUniforms->Update();
 }

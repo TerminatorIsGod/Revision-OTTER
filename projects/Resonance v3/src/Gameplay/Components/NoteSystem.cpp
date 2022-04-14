@@ -70,7 +70,11 @@ void NoteSystem::Update(float deltaTime) {
 	if (_player->Get<SimpleCameraControl>()->interactionObjectPos == opos) {
 
 		//show interact message
-		_player->Get<SimpleCameraControl>()->ShowRead();
+		if (!isOpen)
+			_player->Get<SimpleCameraControl>()->ShowRead();
+		else
+			_player->Get<SimpleCameraControl>()->ShowLeave();
+
 
 		if (glfwGetKey(_window, GLFW_KEY_E)) {
 			if (!isKeyPressed)
@@ -105,6 +109,7 @@ void NoteSystem::interact() {
 			GetGameObject()->GetScene()->audioManager->Get<AudioManager>()->PlaySoundByName("LoggedOut", 1.0f);
 
 		GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<GuiPanel>()->IsEnabled = false;
+
 		std::cout << "Note disabled\n\n";
 		//if (GetGameObject()->GetScene()->FindObjectByName("Main Camera"))
 			//GetGameObject()->GetScene()->FindObjectByName("Main Camera")->Get<SimpleCameraControl>()->IsEnabled = true;
@@ -121,10 +126,12 @@ void NoteSystem::interact() {
 		GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<GuiPanel>()->IsEnabled = true;
 		GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<RectTransform>()->SetSize(glm::vec2((windx / 4), (windy / 4.5)));
 
+		_player->Get<SimpleCameraControl>()->ShowLeave();
+
+
 		//Can't Change The Position of image as rect tranforms control the position of their child. 
 		//glm::vec2 sizeAdj = -glm::vec2(1920, 1080) / 2.0f;
 		//GetGameObject()->GetScene()->FindObjectByName(noteName)->Get<RectTransform>()->SetPosition(glm::vec2(windx / 2, windy / 2) + sizeAdj);
-
 		std::cout << "Note enabled\n\n";
 		app.isInteracting = true;
 	}

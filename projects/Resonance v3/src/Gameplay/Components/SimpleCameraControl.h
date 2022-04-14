@@ -44,6 +44,7 @@ public:
 	void ShowDropThrow();
 	void ShowRead();
 	void ShowActivate();
+	void ShowLeave();
 	void ShowGameOver();
 	void ShowLoading();
 	void FadeInBlack(float deltaTime);
@@ -53,6 +54,8 @@ public:
 
 	bool promptShown = false;
 	bool allowInteraction = true;
+	bool endStarted = false;
+	float creditsTimer = 0.0f;
 	void IdleState(float deltaTime);
 	void SneakState(float deltaTime);
 	void WalkState(float deltaTime);
@@ -135,11 +138,13 @@ protected:
 	Texture2D::Sptr p_DropThrow;
 	Texture2D::Sptr p_Read;
 	Texture2D::Sptr p_Activate;
+	Texture2D::Sptr p_Leave;
 
 	Texture2D::Sptr blackTex;
 	Texture2D::Sptr gameoverTex;
 	Texture2D::Sptr loadingTex;
 	Texture2D::Sptr endTex;
+	Texture2D::Sptr logoTex;
 
 
 	bool updateStarted = false;
