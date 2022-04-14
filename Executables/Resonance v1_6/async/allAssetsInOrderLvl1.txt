@@ -1,0 +1,62 @@
+map/Railings and Stairs.obj
+map/Ceilings.obj
+map/Floors.obj
+map/Pipes.obj
+map/Light Objects.obj
+map/Misc Objects 1.obj
+map/Shipping Containers.obj
+map/Walls.obj
+map/Engine.obj
+map/Walls 2.obj
+map/Elsa.obj
+map/Engine Vents.obj
+map/Static Valves.obj
+map/Computers.obj
+map/Misc Objects 2.obj
+map/Pipes 2.obj
+map/assets/Shelf (Large) (extra).obj
+map/assets/Shelf (Medium) (extra).obj
+map/assets/Shelf (Small) (extra).obj
+map/assets/Crate 1.5 (extra).obj
+map/assets/Crate 2.5 (extra).obj
+map/assets/Crate 3 (extra).obj
+map/assets/Crate 3.5 (extra).obj
+map/Valve.obj
+map/Static Crates.obj
+map/Static Doors.obj
+map/assets/Magenta Door.obj
+map/assets/Orange Door.obj
+map/Key 2.obj
+map/Key 1.obj
+map/Cockroach.obj
+textures/ui/UIPlane.obj
+Leafling_Ver3_-_Rigged.obj
+Monkey.obj
+animations/walking/Walking-0.obj
+animations/walking/Walking-1.obj
+animations/walking/Walking-2.obj
+animations/walking/Walking-3.obj
+animations/walking/Walking-4.obj
+animations/walking/Walking-5.obj
+animations/walking/Walking-6.obj
+animations/walking/Walking-7.obj
+animations/walking/Walking-8.obj
+animations/walking/Walking-9.obj
+animations/walking/Walking-10.obj
+animations/walking/Walking-11.obj
+animations/walking/Walking-12.obj
+animations/walking/Walking-13.obj
+animations/walking/Walking-14.obj
+animations/walking/Walking-15.obj
+animations/walking/Walking-16.obj
+animations/walking/Walking-17.obj
+animations/walking/Walking-18.obj
+animations/walking/Walking-19.obj
+animations/walking/Walking-20.obj
+animations/walking/Walking-21.obj
+animations/walking/Walking-22.obj
+animations/walking/Walking-23.obj
+animations/walking/Walking-24.obj
+animations/walking/Walking-25.obj
+animations/walking/Walking-26.obj
+animations/walking/Walking-27.obj
