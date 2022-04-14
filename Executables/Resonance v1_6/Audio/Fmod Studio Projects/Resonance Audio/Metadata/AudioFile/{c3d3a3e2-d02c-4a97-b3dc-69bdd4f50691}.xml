@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{c3d3a3e2-d02c-4a97-b3dc-69bdd4f50691}">
+		<property name="assetPath">
+			<value>clock tick.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.46634920634920635</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{02f933e2-251a-4637-af6c-a92960a43cb0}</destination>
+		</relationship>
+	</object>
+</objects>

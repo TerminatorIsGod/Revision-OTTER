@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{c88195ad-e6d9-46cf-908e-ac6be11e2b4e}">
+		<property name="assetPath">
+			<value>The_Siren_Alerted.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>4.4471201814058956</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{02f933e2-251a-4637-af6c-a92960a43cb0}</destination>
+		</relationship>
+	</object>
+</objects>
